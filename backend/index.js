@@ -465,7 +465,9 @@ app.post("/upload", upload.single('product'), (req, res) => {
 app.get('/newcollections', async (req, res) => {
     try {
         let products = await Product.find({}); // Fetch all products
-        let newcollection = products.slice(-6); // Get the last 6 products
+        let newcollection = await Product.find({})
+    .sort({ createdAt: -1 }) // Sort by 'createdAt' in descending order
+    .limit(2);
         console.log("NewCollection fetched");
         res.json(newcollection); // Send the result as JSON
     } catch (error) {
