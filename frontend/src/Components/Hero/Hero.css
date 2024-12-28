@@ -1,0 +1,80 @@
+/* Overall Hero Section Styling */
+.hero {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(180deg, #fde1ff, #e1ffea22 60%);
+    padding: 0 50px; /* Add padding for spacing */
+    box-sizing: border-box;
+  }
+  
+  /* Left Section Styling */
+  .hero-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding-left: 150px; /* Adjust for alignment */
+    line-height: 1.2;
+  }
+  
+  .hero-left h2 {
+    color: #090909;
+    font-size: 28px;
+    font-weight: 600;
+  }
+  
+  .hero-left p {
+    color: #171717;
+    font-size: 60px; /* Adjusted for better scalability */
+    font-weight: 700;
+    margin: 5px 0;
+  }
+  
+  /* Hero User Styling */
+  .hero-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .hero-user img {
+    width: 80px;
+  }
+  
+  /* Latest Collection Button */
+  .hero-latest-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 300px;
+    height: 65px;
+    border-radius: 50px;
+    margin-top: 20px;
+    background: #ff4141;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .hero-latest-btn:hover {
+    background: #d93636;
+  }
+  
+  /* Right Section Styling */
+  .hero-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .hero-right img.hero-logo {
+    max-width: 80%;
+    height: auto;
+    object-fit: contain; /* Maintain aspect ratio */
+  }
+  

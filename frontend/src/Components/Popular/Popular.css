@@ -1,0 +1,42 @@
+.popular {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    height: 90vh;
+  }
+  
+  .popular h1 {
+    color: #171717;
+    font-size: 50px;
+    font-weight: 600;
+  }
+  
+  .popular hr {
+    width: 200px;
+    height: 6px;
+    border-radius: 10px;
+    background: #252525;
+  }
+  
+  .popular-item {
+    margin-top: 50px;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap; /* Ensures responsiveness for smaller screens */
+    justify-content: center;
+  }
+  
+  .popular-item img {
+    max-width: 200px; /* Limits the maximum width */
+    max-height: 200px; /* Limits the maximum height */
+    object-fit: cover; /* Ensures images are cropped neatly without distortion */
+    border-radius: 10px; /* Adds smooth rounded edges */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Adds a soft shadow for better aesthetics */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .popular-item img:hover {
+    transform: scale(1.05); /* Slight zoom on hover for interactivity */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Adds a stronger shadow when hovering */
+  }

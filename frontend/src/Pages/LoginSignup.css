@@ -1,0 +1,83 @@
+/* General Container */
+.login-signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f3e9fd, #e9fdf5); /* Pastel gradient */
+  font-family: 'Arial', sans-serif;
+}
+
+/* Form Wrapper */
+.form-wrapper {
+  background-color: #ffffff; /* White form background */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Form Title */
+.form-wrapper h2 {
+  color: #333333; /* Dark gray for strong contrast */
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Labels */
+form label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+  font-size: 14px;
+  color: #555555; /* Medium gray for readability */
+}
+
+/* Input Fields */
+form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #d3d3d3; /* Light gray border */
+  border-radius: 5px;
+  background-color: #f9f9f9; /* Slightly off-white */
+  font-size: 16px;
+  color: #555555;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  border-color: #6ea8fe; /* Soft blue border when focused */
+}
+
+/* Button */
+form button {
+  background-color: #ff6f61; /* Warm coral */
+  color: #ffffff;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #e65a50; /* Slightly darker coral on hover */
+}
+
+/* Toggle Text */
+.toggle-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #00796b; /* Teal for links */
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.toggle-text:hover {
+  color: #005f5a; /* Darker teal on hover */
+}

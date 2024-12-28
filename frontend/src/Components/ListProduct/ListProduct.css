@@ -1,0 +1,73 @@
+/* ListProduct.css */
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #FFEDD5, #EDEAFF); /* Light Peach to Lavender Gradient */
+    min-height: 100vh; /* Ensures background covers full page */
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .list-product {
+    flex: 1; /* Ensures the component stretches to fill the page */
+    width: 90%; /* Adjust width as per design */
+    margin: 20px auto; /* Center the content horizontally and vertically */
+    padding: 20px;
+    background-color: #FFFFFF; /* Card-like white background */
+    border-radius: 15px; /* Rounded corners for the box */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Soft shadow for a modern feel */
+  }
+  
+  h1 {
+    text-align: center;
+    color: #1E293B; /* Deep Navy Blue for the title */
+    margin-bottom: 20px;
+  }
+  
+  .listproduct-format-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; /* Adjust grid columns */
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #374151; /* Neutral Gray for text */
+  }
+  
+  .listproduct-format {
+    background-color: #F8FAFC; /* Soft Gray for product rows */
+    padding: 10px;
+    border-radius: 10px; /* Rounded corners for product rows */
+    transition: background-color 0.3s;
+  }
+  
+  .listproduct-format:hover {
+    background-color: #E5E7EB; /* Slightly darker shade on hover */
+  }
+  
+  .listproduct-product-icon {
+    max-width: 50px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 50%; /* Circular icons for a modern touch */
+  }
+  
+  .listproduct-remove-icon {
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  
+  .listproduct-remove-icon:hover {
+    transform: scale(1.2); /* Slight zoom effect on hover */
+    opacity: 0.8; /* Lower opacity on hover */
+  }
+  
+  hr {
+    border: none;
+    height: 1px;
+    background: #D1D5DB; /* Subtle Gray for dividers */
+    margin: 10px 0;
+  }
+  

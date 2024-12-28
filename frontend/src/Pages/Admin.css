@@ -1,0 +1,40 @@
+/* Admin.css */
+.admin {
+  display: flex;
+  background-color: #F4F6F9; /* Light Gray */
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #2C3E50; /* Deep Blue */
+  color: #FFFFFF; /* White text */
+  padding: 20px;
+}
+
+.sidebar a {
+  color: #BDC3C7; /* Light Gray */
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  color: #1ABC9C; /* Vibrant Teal */
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #FFFFFF; /* White background */
+  color: #2E3A47; /* Dark Gray text */
+}
+
+.button {
+  background-color: #FF8C00; /* Orange */
+  color: #FFFFFF;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #E67E00; /* Darker Orange */
+}
