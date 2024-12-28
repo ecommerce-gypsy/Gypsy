@@ -1,0 +1,79 @@
+/* Reset styles for consistency */
+body, html, .sidebar {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Sidebar container */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #f8f9fa; /* Light background color */
+    width: 250px; /* Sidebar width */
+    height: 100vh; /* Full height */
+    padding: 20px;
+    border-right: 1px solid #ddd; /* Optional border for separation */
+  }
+  
+  /* Sidebar item */
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Spacing between icon and text */
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .sidebar-item:hover {
+    background-color: #e2e6ea; /* Highlight on hover */
+  }
+  
+  /* Sidebar item text */
+  .sidebar-item p {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+    color: #333;
+  }
+  
+  /* Icon styling */
+  .sidebar-item img {
+    height: 35px; /* Icon size */
+    width: 35px;
+  }
+  
+  /* Remove link underline */
+  a {
+    text-decoration: none;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 800px) {
+    .sidebar {
+      width: 100px; /* Smaller sidebar for narrow screens */
+      height: auto; /* Adjust height for horizontal layout */
+      padding: 10px;
+      flex-direction: row; /* Arrange items horizontally */
+      justify-content: space-around; /* Evenly distribute items */
+    }
+  
+    .sidebar-item {
+      flex-direction: column; /* Stack icon and text vertically */
+      gap: 5px; /* Reduce gap */
+    }
+  
+    .sidebar-item img {
+      height: 30px; /* Smaller icons for narrow screens */
+      width: 30px;
+    }
+  
+    .sidebar-item p {
+      font-size: 12px; /* Smaller text for narrow screens */
+      text-align: center;
+    }
+  }

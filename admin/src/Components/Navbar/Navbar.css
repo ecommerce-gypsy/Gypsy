@@ -1,0 +1,58 @@
+/* Reset styles for consistency */
+body, html, .navbar {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Navbar container */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white; /* Background color */
+    padding: 10px 20px;
+    color: #fff; /* White text color */
+  }
+  
+  /* Logo container */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spacing between logo image and text */
+  }
+  
+  .nav-logo img {
+    height: 120px; /* Increased logo size */
+    width: auto;
+  }
+  
+  .nav-logo p {
+    font-size: 18px; /* Adjust text size */
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  /* User icon */
+  .nav-user-icon {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%; /* Circular user icon */
+    cursor: pointer; /* Pointer on hover */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 800px) {
+    .navbar {
+      padding: 150;
+    }
+  
+    .nav-logo img {
+      height: 50px; /* Reduced size for smaller screens */
+    }
+  
+    .nav-user-icon {
+      height: 30px;
+      width: 30px;
+    }
+  }
