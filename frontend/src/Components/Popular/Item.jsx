@@ -20,8 +20,8 @@ const Item = ({ id, name, image, new_price, old_price }) => {
 
       {/* Item Prices */}
       <div className="item-prices">
-        <span className="item-price-new">${new_price}</span>
-        <span className="item-price-old">${old_price}</span>
+        <span className="item-price-new">₹{new_price}</span>
+        <span className="item-price-old">₹{old_price}</span>
       </div>
     </div>
   );
