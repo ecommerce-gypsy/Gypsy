@@ -81,3 +81,35 @@ form button:hover {
 .toggle-text:hover {
   color: #005f5a; /* Darker teal on hover */
 }
+/* Logout View Container */
+.logout-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f3e9fd, #e9fdf5); /* Pastel gradient */
+  font-family: 'Arial', sans-serif;
+}
+/* Logout Button */
+.logout-wrapper button {
+
+    background-color: #ff6f61; /* Warm coral */
+    color: #ffffff;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-wrapper button:hover {
+  background-color: #e65a50; /* Slightly darker coral on hover */
+}
+
+/* Optional: Ensure button styling consistency with form wrapper */
+.logout-wrapper button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(110, 168, 254, 0.6); /* Soft blue glow on focus */
+}

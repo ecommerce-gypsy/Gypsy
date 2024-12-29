@@ -223,7 +223,7 @@ app.get('/newcollections', async (req, res) => {
         let products = await Product.find({}); // Fetch all products
         let newcollection = await Product.find({})
     .sort({ createdAt: -1 }) // Sort by 'createdAt' in descending order
-    .limit(2);
+    .limit(4);
         console.log("NewCollection fetched");
         res.json(newcollection); // Send the result as JSON
     } catch (error) {
@@ -254,7 +254,7 @@ const fetchUser = async (req, res, next) => {
       return res.status(401).send({ errors: 'Please authenticate using a valid token' });
     }
   };
-  
+  /*
   // Endpoint to add an item to the cart
   app.post('/addtocart', fetchUser, async (req, res) => {
     try {
@@ -274,7 +274,74 @@ const fetchUser = async (req, res, next) => {
       res.status(500).send({ error: 'Server Error' });
     }
   });
-  
+  */
+ // Endpoint to add an item to the cart
+// Add Item to Cart (Updates cartData in User)
+app.post("/addtocart", fetchUser, async (req, res) => {
+    try {
+        const { item } = req.body;
+        if (!item) return res.status(400).json({ error: "No item provided" });
+
+        // Find the user
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        // Update the cartData with the new item
+        const updatedCart = { ...user.cartData, [item.id]: (user.cartData[item.id] || 0) + 1 }; // Increment item quantity
+        user.cartData = updatedCart;
+
+        await user.save();
+        res.json({ success: "Item added to cart", cartData: user.cartData });
+    } catch (error) {
+        console.error("Error adding to cart:", error.message);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+// Fetch Cart Data
+app.get("/fetchcart", fetchUser, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        res.json({ success: true, cartData: user.cartData });
+    } catch (error) {
+        console.error("Error fetching cart:", error.message);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+// Remove Item from Cart (Updates cartData in User)
+app.delete("/removefromcart", fetchUser, async (req, res) => {
+    try {
+        const { itemId } = req.body;
+        if (!itemId) return res.status(400).json({ error: "No item ID provided" });
+
+        // Find the user
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        // Remove or decrement the item quantity
+        const updatedCart = { ...user.cartData };
+        if (updatedCart[itemId]) {
+            updatedCart[itemId] -= 1; // Decrement quantity
+            if (updatedCart[itemId] <= 0) {
+                delete updatedCart[itemId]; // Remove item if quantity is 0 or less
+            }
+        } else {
+            return res.status(400).json({ error: "Item not found in cart" });
+        }
+
+        user.cartData = updatedCart;
+        await user.save();
+
+        res.json({ success: "Item removed from cart", cartData: user.cartData });
+    } catch (error) {
+        console.error("Error removing from cart:", error.message);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 // Root Endpoint
 app.get("/", (req, res) => {
     res.send("Express App is Running");
