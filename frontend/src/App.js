@@ -4,13 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './Components/Navbar/Navbar';
 import { LoginSignup } from './Pages/LoginSignup';
 import Cart from './Pages/Cart';
-import { Product } from './Pages/Product';
-
-
 import Wishlist from './Pages/Wishlist';
-
-
-
 import CustProduct from './Pages/custproduct';
 import { Home } from './Pages/Home';
 import Anklets from './Pages/Anklets';
@@ -22,7 +16,6 @@ import ListProduct from './Components/ListProduct/ListProduct';
 import Sidebar from './Components/Sidebar/Sidebar';
 
 
-
 const App = () => {
   return (
     <BrowserRouter>
@@ -32,22 +25,19 @@ const App = () => {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<LoginSignup />} />
-        <Route path="/product/:productId" element={<Product />} />
-    <Route path="/admin" element={<Admin/>}/>
-    <Route path="/addproduct" element={<AddProduct/>}/>
-    <Route path="/listproduct" element={<ListProduct/>}/>
-    <Route path="/sidebar" element={<Sidebar/>}/>
-       
-
+  
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/addproduct" element={<AddProduct />} />
+      
+        <Route path="/listproduct" element={<ListProduct />} />
+        <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/anklets" element={<Anklets />} />
-      <Route path="/bracelets" element={<Bracelets/>}/>
-      <Route path="/neckpieces" element={<Neckpieces/>}/>
-        <Route path="/custproduct" element={<CustProduct/>}/> 
-        
+        <Route path="/bracelets" element={<Bracelets />} />
+        <Route path="/neckpieces" element={<Neckpieces />} />
+        <Route path="/custproduct" element={<CustProduct />} />
       </Routes>
     </BrowserRouter>
   );
 };
-
 
 export default App;

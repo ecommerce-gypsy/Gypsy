@@ -1,70 +1,69 @@
-import React, { useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import A1_img from '../Components/Assets/a1.png';
-import A2_img from '../Components/Assets/a2.png';
-import A3_img from '../Components/Assets/a3.png';
-import A4_img from '../Components/Assets/a4.png';
-import A5_img from '../Components/Assets/a5.png';
-import './Anklets.css';
-import { WishlistContext } from '../WishlistContext';
-import { CartContext } from '../CartContext';
-import Header from '../Components/Header/Header';
+import React from "react";
+import { Link } from "react-router-dom";
 
-const anklets = [
-  { id: 1, name: 'Floral Coaster', image: A1_img, new_price: 250, oldPrice: 500 },
-  { id: 2, name: 'Wooden Coaster', image: A2_img, new_price: 300, oldPrice: 600 },
-  { id: 3, name: 'Abstract Coaster', image: A3_img, new_price: 200, oldPrice: 450 },
-  { id: 4, name: 'Marble Coaster', image: A4_img, new_price: 350, oldPrice: 700 },
-  { id: 5, name: 'Vintage Coaster', image: A5_img, new_price: 400, oldPrice: 800 },
-];
+import evilEyeBracelet from '../Components/Assets/a1.png'; 
+import TropicalRainbowAnklet from '../Components/Assets/a2.png'; 
+import boldbeads from '../Components/Assets/a3.png'; 
+import OceanAuraAnklets from '../Components/Assets/a4.png'; 
+import multicolour from '../Components/Assets/a5.png'; 
+
+import "./Anklets.css"; // Import the CSS file
 
 const Anklets = () => {
-  const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
-  const { addToCart } = useContext(CartContext);
-  const navigate = useNavigate();
-
-  const isInWishlist = (coaster) => wishlist.some((item) => item.id === coaster.id);
-
-  const handleAddToCart = (coaster) => {
-    addToCart(coaster);
-    navigate('/cart');
-  };
+  // Sample product data
+  const products = [
+    {
+      id: 1,
+      name: "Evil Eye Bracelet",
+      price: 250,
+      originalPrice: 500,
+      image: evilEyeBracelet,
+    },
+    {
+      id: 2,
+      name: "Tropical Rainbow Anklet",
+      price: 300,
+      originalPrice: 600,
+      image: TropicalRainbowAnklet,
+    },
+    {
+      id: 3,
+      name: "Evil eye broad beads",
+      price: 350,
+      originalPrice: 700,
+      image: boldbeads,
+    },
+    {
+      id: 4,
+      name: "Ocean Aura Anklets",
+      price: 350,
+      originalPrice: 700,
+      image: OceanAuraAnklets,
+    },
+    {
+      id: 5,
+      name: "Multicolour with small pendant",
+      price: 350,
+      originalPrice: 700,
+      image: multicolour,
+    },
+  ];
 
   return (
-    <div>
-      <Header />
-      <h1>Welcome to the ANKLETS Collection!</h1>
-
-      <div className="container">
-        {anklets.map((coaster) => (
-          <div key={coaster.id} className="anklets-card">
-            <div className="anklets-image-container">
-              <div
-                className={`heart-icon ${isInWishlist(coaster) ? 'active' : ''}`}
-                onClick={() =>
-                  isInWishlist(coaster)
-                    ? removeFromWishlist(coaster)
-                    : addToWishlist(coaster)
-                }
-              ></div>
-              <img className="anklets-image" src={coaster.image} alt={coaster.name} />
-            </div>
-            <div className="anklets-name">{coaster.name}</div>
-            <div className="anklets-price">
-              <span className="new-price">₹{coaster.new_price}</span>{' '}
-              <span className="old-price">₹{coaster.oldPrice}</span>
-            </div>
-            <button className="add-to-cart-btn" onClick={() => handleAddToCart(coaster)}>
-              Add to Cart
-            </button>
+    <div className="anklets-container">
+      <h1>Welcome to the Anklets Collection!</h1>
+      <div className="product-grid">
+        {products.map((product) => (
+          <div className="product-card" key={product.id}>
+            <Link to={`/product/${product.id}`}>
+              <img src={product.image} alt={product.name} className="product-image" />
+            </Link>
+            <h3>{product.name}</h3>
+            <p>Price: ₹{product.price}</p>
+            <p className="original-price">Original Price: ₹{product.originalPrice}</p>
           </div>
         ))}
       </div>
-
-      <Link to="/custproduct" className="customize-btn">
-        <center>Click Here</center>
-        
-      </Link>
     </div>
   );
 };

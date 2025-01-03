@@ -1,131 +1,79 @@
-/* Paperfiles Page Styles */
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Main container styling */
+.anklets-container {
+  text-align: center;
+  padding: 40px;
+  background: linear-gradient(to bottom, #FFEDD5, #EDEAFF); /* Subtle gradient background */
+  font-family: 'Poppins', sans-serif; /* Modern font */
+  color: #333; /* Text color */
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+/* Heading styling */
+.anklets-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #1E293B; /* Navy blue */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the heading */
 }
 
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+/* Product grid layout */
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
 }
 
-.anklets-card {
-    position: relative;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    width: 220px;
+/* Product card styling */
+.product-card {
+  background-color: #FFFFFF; /* White background */
+  border: 1px solid #E5E7EB; /* Light gray border */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px;
+  text-align: center;
+  width: 220px; /* Uniform card width */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Modern shadow effect */
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.anklets-card:hover {
-    transform: translateY(-5px);
+.product-card:hover {
+  transform: translateY(-10px); /* Slight lift on hover */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-.anklets-image-container {
-    position: relative;
+/* Product image */
+.product-image {
+  width: 180px; /* Set a fixed width for all images */
+  height: 180px; /* Set a fixed height for all images */
+  object-fit: cover; /* Ensures the image fits the container while maintaining its aspect ratio */
+  border-radius: 10px; /* Smooth image corners */
+  margin-bottom: 15px;
 }
 
-.anklets-image {
-    width: 200px;
-    height: 200px;
-    border-radius: 10px;
+/* Product title styling */
+.product-card h2 {
+  font-size: 1.2rem;
+  color: #374151; /* Neutral dark gray */
+  margin-bottom: 10px;
 }
 
-.heart-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out, background-color 0.3s;
+/* Price styling */
+.product-card .price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #10B981; /* Vibrant green for current price */
+  margin-bottom: 8px;
 }
 
-.heart-icon::before {
-    content: "\2665"; /* Unicode for heart symbol */
-    font-size: 18px;
-    color: black;
+/* Original price styling */
+.product-card .original-price {
+  text-decoration: line-through;
+  color: #135ac5; /* Light gray for original price */
+  font-size: 0.9rem;
 }
 
-.heart-icon:hover {
-    transform: scale(1.2);
-    background-color: red;
-}
-
-.heart-icon:hover::before {
-    color: white;
-}
-
-.anklets-name {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-.anklets-price {
-    margin: 10px 0;
-}
-
-.new-price {
-    color: green;
-    font-weight: bold;
-}
-
-.old-price {
-    color: red;
-    text-decoration: line-through;
-}
-
-.add-to-cart-btn {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 5px;
-}
-
-.add-to-cart-btn:hover {
-    background-color: #45a049;
-}
-
-/* Customize Button Styles */
-.customize-btn {
-    background-color: #008cba;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    transition: background-color 0.3s;
-}
-
-.customize-btn:hover {
-    background-color: #006f8e;
+/* Add subtle hover effect for the image */
+.product-image:hover {
+  opacity: 0.9;
+  transform: scale(1.02); /* Slight zoom on hover */
+  transition: all 0.3s ease-in-out;
 }

@@ -12,11 +12,11 @@ import Header from '../Components/Header/Header';  // Corrected import path
 
 // Example array for Bamboo products
 const bracelets = [
-  { id: 1, name: 'Floral Bamboo', image: b1_img, new_price: 250, oldPrice: 500 },
-  { id: 2, name: 'Wicker Storage Basket', image: b2_img, new_price: 300, oldPrice: 600 },
-  { id: 3, name: 'Bamboo House', image: b3_img, new_price: 200, oldPrice: 450 },
-  { id: 4, name: 'Marble Bamboo', image: b4_img, new_price: 350, oldPrice: 700 },
-  { id: 5, name: 'Vintage Bamboo Products', image: b5_img, new_price: 400, oldPrice: 800 },
+  { id: 1, name: 'Starry Serenity Bracelets', image: b1_img, new_price: 250, oldPrice: 500 },
+  { id: 2, name: 'Ocean Sparkle Charm', image: b2_img, new_price: 300, oldPrice: 600 },
+  { id: 3, name: 'Galaxy Dreams Bracelet', image: b3_img, new_price: 200, oldPrice: 450 },
+  { id: 4, name: 'Protective Grace Chain', image: b4_img, new_price: 350, oldPrice: 700 },
+  { id: 5, name: 'Pebble Spectrum Bracelet', image: b5_img, new_price: 400, oldPrice: 800 },
 ];
 
 const Bracelets= () => {
