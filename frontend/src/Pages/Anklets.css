@@ -1,79 +1,98 @@
-/* Main container styling */
+/* Overall container for the anklets collection */
 .anklets-container {
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 1200px;
   text-align: center;
-  padding: 40px;
-  background: linear-gradient(to bottom, #FFEDD5, #EDEAFF); /* Subtle gradient background */
-  font-family: 'Poppins', sans-serif; /* Modern font */
-  color: #333; /* Text color */
+  background: linear-gradient(to bottom, #f7f7f7, #eaeaea);
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Heading styling */
-.anklets-container h1 {
+h1 {
   font-size: 2.5rem;
-  margin-bottom: 30px;
-  color: #1E293B; /* Navy blue */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for the heading */
+  color: #333;
+  margin-bottom: 2rem;
+  font-family: "Arial", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-/* Product grid layout */
+/* Grid layout for product cards */
 .product-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-/* Product card styling */
+/* Individual product card */
 .product-card {
-  background-color: #FFFFFF; /* White background */
-  border: 1px solid #E5E7EB; /* Light gray border */
-  border-radius: 12px; /* Rounded corners */
-  padding: 20px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
   text-align: center;
-  width: 220px; /* Uniform card width */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Modern shadow effect */
-  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
-  transform: translateY(-10px); /* Slight lift on hover */
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Product image */
+/* Product image styling */
 .product-image {
-  width: 180px; /* Set a fixed width for all images */
-  height: 180px; /* Set a fixed height for all images */
-  object-fit: cover; /* Ensures the image fits the container while maintaining its aspect ratio */
-  border-radius: 10px; /* Smooth image corners */
-  margin-bottom: 15px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+  transition: transform 0.3s ease;
 }
 
-/* Product title styling */
-.product-card h2 {
-  font-size: 1.2rem;
-  color: #374151; /* Neutral dark gray */
-  margin-bottom: 10px;
+.product-card:hover .product-image {
+  transform: scale(1.05);
 }
 
-/* Price styling */
-.product-card .price {
+/* Product title */
+h3 {
+  font-size: 1.3rem;
+  color: #222;
+  margin: 1rem 0 0.5rem;
+  font-family: "Arial", sans-serif;
+}
+
+/* Price and details */
+p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+.new-price {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #10B981; /* Vibrant green for current price */
-  margin-bottom: 8px;
+  color: #28a745;
 }
 
-/* Original price styling */
-.product-card .original-price {
-  text-decoration: line-through;
-  color: #135ac5; /* Light gray for original price */
+.original-price {
   font-size: 0.9rem;
+  text-decoration: line-through;
+  color: #d9534f;
+  margin-left: 0.5rem;
 }
 
-/* Add subtle hover effect for the image */
-.product-image:hover {
-  opacity: 0.9;
-  transform: scale(1.02); /* Slight zoom on hover */
-  transition: all 0.3s ease-in-out;
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
 }
