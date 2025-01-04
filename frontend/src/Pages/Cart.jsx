@@ -59,7 +59,7 @@ const Cart = () => {
                 className="add-btn"
                 onClick={() => addToCart(item)}
               >
-                Add to Cart
+                
               </button>
               <button
                 className="remove-btn"

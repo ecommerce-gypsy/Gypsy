@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./ProductDetail.css";
 
-// Import towel images
+// Import images
 import a1_img from "../Components/Assets/a1.png";
 import a2_img from "../Components/Assets/a2.png";
 import a3_img from "../Components/Assets/a3.png";
 import a4_img from "../Components/Assets/a4.png";
 import a5_img from "../Components/Assets/a5.png";
 
-// Define the towel data
+// Define product data
 const anklets = [
   {
     id: 1,
@@ -18,50 +18,33 @@ const anklets = [
     new_price: 130.0,
     old_price: 180.0,
   },
-  {
-    id: 2,
-    name: "Tropical Rainbow Anklet",
-    images: [a1_img, a2_img, a3_img, a4_img, a5_img],
-    new_price: 130.0,
-    old_price: 180.0,
-  },
-  {
-    id: 3,
-    name: "Evil eye broad beads",
-    images: [a1_img, a2_img, a3_img, a4_img, a5_img],
-    new_price: 130.0,
-    old_price: 180.0,
-  },
-  {
-    id: 4,
-    name: "Ocean Aura Anklets",
-    images: [a1_img, a2_img, a3_img, a4_img, a5_img],
-    new_price: 130.0,
-    old_price: 180.0,
-  },
-  {
-    id: 5,
-    name: "Multicolour with small pendant",
-    images: [a1_img, a2_img, a3_img, a4_img, a5_img],
-    new_price: 130.0,
-    old_price: 180.0,
-  },
+  // Other products...
 ];
 
 const ProductDetail = () => {
-  const { id } = useParams(); // Retrieve the product ID from the URL
-  const product = anklets.find((anklet) => anklet.id === parseInt(id)); // Find the product by ID
+  const { id } = useParams(); // Get product ID from URL
+  const navigate = useNavigate(); // Create navigate instance
+  const product = anklets.find((anklet) => anklet.id === parseInt(id));
 
-  const [mainImage, setMainImage] = useState(product?.images?.[0] || ""); // Main image state
-  const [pincode, setPincode] = useState(""); // Pincode state
+  const [mainImage, setMainImage] = useState(product?.images?.[0] || "");
+  const [pincode, setPincode] = useState("");
+  const [size, setSize] = useState("2.5 x 5");
+  const [quantity, setQuantity] = useState(1);
+  const [printedSide, setPrintedSide] = useState("Single Side");
 
-  // Handle pincode input
+  const calculateTotalPrice = () => {
+    const basePrice = product.new_price;
+    const sizeMultiplier = size === "2.5 x 5" ? 1 : size === "3 x 6" ? 1.2 : 1.5;
+    const sideMultiplier = printedSide === "Single Side" ? 1 : 1.5;
+    return (basePrice * sizeMultiplier * sideMultiplier * quantity).toFixed(2);
+  };
+
   const handlePincodeCheck = () => {
     alert(`Checking delivery availability for pincode: ${pincode}`);
   };
 
   if (!product) {
-    return <div>Product not found!</div>; // Handle case where the product isn't found
+    return <div>Product not found!</div>;
   }
 
   return (
@@ -69,7 +52,6 @@ const ProductDetail = () => {
       {/* Left Section - Image Gallery */}
       <div className="image-gallery">
         <img src={mainImage} alt={product.name} className="main-image" />
-        {/* Thumbnails */}
         <div className="thumbnails">
           {product.images.map((image, index) => (
             <img
@@ -77,7 +59,7 @@ const ProductDetail = () => {
               src={image}
               alt={`Thumbnail ${index + 1}`}
               className="thumbnail"
-              onClick={() => setMainImage(image)} // Update the main image on click
+              onClick={() => setMainImage(image)}
               role="button"
               aria-label={`Thumbnail ${index + 1}`}
             />
@@ -96,8 +78,7 @@ const ProductDetail = () => {
           </span>
         </p>
         <p className="description">
-          <strong>Description:</strong> A detailed description about the product. You can customize this description as
-          needed.
+          <strong>Description:</strong> A unique anklet designed to complement your style.
         </p>
 
         {/* Delivery Check */}
@@ -112,9 +93,43 @@ const ProductDetail = () => {
           <button onClick={handlePincodeCheck}>Check</button>
         </div>
 
+        {/* Price Calculator */}
+        <div className="price-calculator">
+          <h2>Price Calculator</h2>
+          <div className="calculator-row">
+            <label>Category:</label>
+            <select value={size} onChange={(e) => setSize(e.target.value)}>
+              <option value="Adult">Adult</option>
+              <option value="child">Child</option>
+            
+            </select>
+          </div>
+          <div className="calculator-row">
+            <label>Quantity:</label>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              min="1"
+            />
+          </div>
+          <div className="calculator-row">
+            <label>Set</label>
+            <select value={printedSide} onChange={(e) => setPrintedSide(e.target.value)}>
+              <option value="Single">Single</option>
+              <option value="Pair">Pair</option>
+            </select>
+          </div>
+          <div className="calculator-row">
+            <strong>Total (Incl. of all Taxes):</strong>
+            <span>₹ {calculateTotalPrice()}</span>
+          </div>
+        </div>
+
         {/* Add to Cart Button */}
         <button className="add-to-cart">Add To Cart</button>
 
+      
         {/* Offers Section */}
         <div className="offers">
           <p>Save extra with below offers:</p>
