@@ -53,7 +53,7 @@ const Cart = () => {
               />
               <div className="cart-item-details">
                 <p className="cart-item-name">{item.name}</p>
-                <p className="cart-item-price">Price: ${item.new_price}</p>
+                <p className="cart-item-price">Price: ₹{item.new_price}</p>
               </div>
               <button
                 className="add-btn"

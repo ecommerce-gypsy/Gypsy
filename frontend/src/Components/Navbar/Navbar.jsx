@@ -22,21 +22,18 @@ export const Navbar = () => {
       {/* Navigation Menu */}
       <ul className="nav-menu">
         <li>
-          <Link to="/" className="active">
+          <Link to="/" activeclassName="active" exact>
             HOME
           </Link>
         </li>
         <li>
-          <Link to="/anklets">ANKLETS</Link>
+          <Link to="/anklets" activeclassName="active">ANKLETS</Link>
         </li>
         <li>
-          <Link to="/neckpieces">NECKPIECES</Link>
+          <Link to="/neckpieces" activeclassName="active">NECKPIECES</Link>
         </li>
         <li>
-          <Link to="/bracelets">BRACELETS</Link>
-        </li>
-        <li>
-          <Link to="/admin">ADMIN</Link>
+          <Link to="/bracelets" activeclassName="active">BRACELETS</Link>
         </li>
       </ul>
 

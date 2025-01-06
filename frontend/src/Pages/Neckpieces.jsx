@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import np1_img from '../Components/Assets/np1.png';
 import np2_img from '../Components/Assets/np2.png';
 import np3_img from '../Components/Assets/np3.png';
@@ -10,20 +10,34 @@ import { WishlistContext } from '../WishlistContext'; // Wishlist context
 import { CartContext } from '../CartContext'; // Cart context
 import Header from '../Components/Header/Header'; // Corrected import path
 
-const neckpieces = [
-  { id: 1, name: 'EarthTone Pendant Folder', image: np1_img, new_price: 100, oldPrice: 200 },
-  { id: 2, name: 'Green Multi-Strand Beaded Necklace', image: np2_img, new_price: 150, oldPrice: 300 },
-  { id: 3, name: 'Green and Gold Accented Beaded Necklace', image: np3_img, new_price: 120, oldPrice: 250 },
-  { id: 4, name: 'Black and Gold Multi-Layer Necklace', image: np4_img, new_price: 180, oldPrice: 350 },
-  { id: 5, name: 'Black and Amber Beaded Necklace', image: np5_img, new_price: 220, oldPrice: 450 },
-];
-
 const Neckpieces = () => {
   // Access context values
-  const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext); // Wishlist context
-  const { addToCart } = useContext(CartContext); // Cart context
-
-  const navigate = useNavigate(); // React Router navigation
+  const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
+   const { addToCart } = useContext(CartContext);
+   const navigate = useNavigate();
+ 
+   const [neckpieces, setNeckpieces] = useState([]);
+   const [error, setError] = useState('');
+ 
+   useEffect(() => {
+     fetch('http://localhost:4000/neckpieces') // Replace with your API endpoint
+       .then((response) => {
+         if (!response.ok) {
+           throw new Error('Failed to fetch data');
+         }
+         return response.json();
+       })
+       .then((data) => {
+         if (data.success) {
+          setNeckpieces(data.data);
+         } else {
+           setError('No neckpieces found.');
+         }
+       })
+       .catch((error) => {
+         setError('Error fetching neckpieces: ' + error.message);
+       });
+   }, []);
 
   const isInWishlist = (file) => wishlist.some((item) => item.id === file.id); // Check if in wishlist
 

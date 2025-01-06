@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import b1_img from '../Components/Assets/b1.png';  // Example images for Bamboo
 import b2_img from '../Components/Assets/b2.png';
 import b3_img from '../Components/Assets/b3.png';
@@ -11,20 +11,35 @@ import { CartContext } from '../CartContext';  // Cart context
 import Header from '../Components/Header/Header';  // Corrected import path
 
 // Example array for Bamboo products
-const bracelets = [
-  { id: 1, name: 'Starry Serenity Bracelets', image: b1_img, new_price: 250, oldPrice: 500 },
-  { id: 2, name: 'Ocean Sparkle Charm', image: b2_img, new_price: 300, oldPrice: 600 },
-  { id: 3, name: 'Galaxy Dreams Bracelet', image: b3_img, new_price: 200, oldPrice: 450 },
-  { id: 4, name: 'Protective Grace Chain', image: b4_img, new_price: 350, oldPrice: 700 },
-  { id: 5, name: 'Pebble Spectrum Bracelet', image: b5_img, new_price: 400, oldPrice: 800 },
-];
-
 const Bracelets= () => {
   // Access context values
-  const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);  // Wishlist context
-  const { addToCart } = useContext(CartContext);  // Cart context
+  const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
+   const { addToCart } = useContext(CartContext);
+   const navigate = useNavigate();
+ 
+   const [bracelets, setBracelets] = useState([]);
+   const [error, setError] = useState('');
+ 
+   useEffect(() => {
+     fetch('http://localhost:4000/bracelets') // Replace with your API endpoint
+       .then((response) => {
+         if (!response.ok) {
+           throw new Error('Failed to fetch data');
+         }
+         return response.json();
+       })
+       .then((data) => {
+         if (data.success) {
+          setBracelets(data.data);
+         } else {
+           setError('No bracelets found.');
+         }
+       })
+       .catch((error) => {
+         setError('Error fetching bracelets: ' + error.message);
+       });
+   }, []);
 
-  const navigate = useNavigate();  // React Router navigation
 
   const isInWishlist = (product) => wishlist.some((item) => item.id === product.id);  // Check if in wishlist
 
@@ -59,7 +74,7 @@ const Bracelets= () => {
       <div className="bracelets-name">{product.name}</div>
       <div className="bracelets-price">
         <span className="new-price">₹{product.new_price}</span>{' '}
-        <span className="old-price">₹{product.oldPrice}</span>
+        <span className="old-price">₹{product.old_price}</span>
       </div>
       {/* Add to Cart Button */}
       <button

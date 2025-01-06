@@ -1,71 +1,60 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import evilEyeBracelet from "../Components/Assets/a1.png";
-import TropicalRainbowAnklet from "../Components/Assets/a2.png";
-import boldbeads from "../Components/Assets/a3.png";
-import OceanAuraAnklets from "../Components/Assets/a4.png";
-import multicolour from "../Components/Assets/a5.png";
+import Header from "../Components/Header/Header";
+import { WishlistContext } from "../WishlistContext";
+import { CartContext } from "../CartContext";
 
 import "./Anklets.css";
-import { WishlistContext } from "../WishlistContext";
-import { CartContext } from "../CartContext"; // Import Cart Context
-import Header from "../Components/Header/Header";
 
 const Anklets = () => {
+  // Access context values
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
-  const { cart, addToCart } = useContext(CartContext); // Access Cart Context
-  const navigate = useNavigate(); // Navigation hook
+  const { cart, addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
-  const products = [
-    {
-      id: 1,
-      name: "Evil Eye Bracelet",
-      price: 250,
-      originalPrice: 500,
-      image: evilEyeBracelet,
-    },
-    {
-      id: 2,
-      name: "Tropical Rainbow Anklet",
-      price: 300,
-      originalPrice: 600,
-      image: TropicalRainbowAnklet,
-    },
-    {
-      id: 3,
-      name: "Evil eye broad beads",
-      price: 350,
-      originalPrice: 700,
-      image: boldbeads,
-    },
-    {
-      id: 4,
-      name: "Ocean Aura Anklets",
-      price: 350,
-      originalPrice: 700,
-      image: OceanAuraAnklets,
-    },
-    {
-      id: 5,
-      name: "Multicolour with small pendant",
-      price: 350,
-      originalPrice: 700,
-      image: multicolour,
-    },
-  ];
+  // State for neckpieces and error handling
+  const [anklets, setAnklets] = useState([]);
+  const [error, setError] = useState("");
 
+  // Fetch neckpieces data
+  useEffect(() => {
+    fetch("http://localhost:4000/anklets") // Replace with your API endpoint
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setAnklets(data.data);
+        } else {
+          setError("No anklets found.");
+        }
+      })
+      .catch((error) => {
+        setError("Error fetching anklets: " + error.message);
+      });
+  }, []);
+
+  // Check if product is in wishlist
   const isInWishlist = (product) => wishlist.some((item) => item.id === product.id);
+
+  // Check if product is in cart
   const isInCart = (product) => cart.some((item) => item.id === product.id);
 
   return (
     <div className="anklets-container">
       <Header />
-      <h1>Welcome to the Anklets Collection!</h1>
+
+      <h1>Welcome to the anklets Collection!</h1>
+
+      {error && <p className="error-message">{error}</p>}
 
       {/* Product Grid */}
       <div className="product-grid">
-        {products.map((product) => (
+        {anklets.map((product) => (
           <div className="product-card" key={product.id}>
             {/* Wishlist Icon */}
             <div
@@ -77,7 +66,9 @@ const Anklets = () => {
                   addToWishlist(product);
                 }
               }}
-            ></div>
+            >
+              ♥
+            </div>
 
             {/* Product Image */}
             <Link to={`/product/${product.id}`}>
@@ -86,8 +77,8 @@ const Anklets = () => {
 
             {/* Product Details */}
             <h3>{product.name}</h3>
-            <p>Price: ₹{product.price}</p>
-            <p className="original-price">Original Price: ₹{product.originalPrice}</p>
+            <p>Price: ₹{product.new_price}</p>
+            <p className="original-price">Original Price: ₹{product.old_price}</p>
 
             {/* Add to Cart Button */}
             <button

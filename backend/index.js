@@ -133,7 +133,7 @@ app.post('/login', async (req, res) => {
         const passCompare = req.body.password === user.password;
         if (passCompare) {
             const token = jwt.sign({ user: { id: user.id } }, 'secret-ecom');
-            res.json({ success: true, token });
+            res.json({ success: true, token, username: user.username }); // Ensure username is included
         } else {
             res.status(400).json({ success: false, message: "Wrong password" });
         }
@@ -141,6 +141,21 @@ app.post('/login', async (req, res) => {
         res.status(400).json({ success: false, message: "Email not found" });
     }
 });
+
+app.get('/user-details', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, 'secret-ecom');
+      const user = await Users.findById(decoded.user.id); 
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json({ username: user.username });
+    } catch (error) {
+      res.status(401).json({ message: 'Invalid token' });
+    }
+  });
+  
 
 // Add Product
 app.post('/addproduct', async (req, res) => {
@@ -220,12 +235,12 @@ app.post("/upload", upload.single('product'), (req, res) => {
 //fetch new products
 app.get('/newcollections', async (req, res) => {
     try {
-        let products = await Product.find({}); // Fetch all products
+        let products = await Product.find({}); 
         let newcollection = await Product.find({})
-    .sort({ createdAt: -1 }) // Sort by 'createdAt' in descending order
+    .sort({ createdAt: -1 }) 
     .limit(4);
         console.log("NewCollection fetched");
-        res.json(newcollection); // Send the result as JSON
+        res.json(newcollection); 
     } catch (error) {
         console.error("Error fetching new collections:", error);
         res.status(500).json({ success: false, message: "Error fetching new collections", error: error.message });
@@ -239,7 +254,6 @@ app.get('/popularbracelet',async(req,res)=>{
     console.log("Popular in Bracelet category");
     res.send(popular_in_bracelet);
 })
-//creating middleware to fetch
 // Middleware to fetch user from token
 const fetchUser = async (req, res, next) => {
     const token = req.header('auth-token');
@@ -254,94 +268,106 @@ const fetchUser = async (req, res, next) => {
       return res.status(401).send({ errors: 'Please authenticate using a valid token' });
     }
   };
-  /*
-  // Endpoint to add an item to the cart
-  app.post('/addtocart', fetchUser, async (req, res) => {
-    try {
-      const { item } = req.body;
-      if (!item) {
-        console.log('No item provided in the request body.');
-        return res.status(400).send({ error: 'No item provided' });
-      }
-  
-      console.log('User:', req.user); // Log user details
-      console.log('Item to add:', item); // Log the item details
-  
-      // Simulate saving the item (replace with DB logic)
-      return res.status(200).send({ success: 'Item added to cart', item });
-    } catch (error) {
-      console.error('Error in /addtocart:', error.message);
-      res.status(500).send({ error: 'Server Error' });
-    }
+ 
+app.use(express.json());
+
+// Middleware 
+const authenticateToken = (req, res, next) => {
+  const token = req.header('auth-token');
+  if (!token) return res.status(401).json({ message: 'Access denied' });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Invalid token' });
+    req.user = user; // store user info 
+    next();
   });
-  */
- // Endpoint to add an item to the cart
-// Add Item to Cart (Updates cartData in User)
-app.post("/addtocart", fetchUser, async (req, res) => {
-    try {
-        const { item } = req.body;
-        if (!item) return res.status(400).json({ error: "No item provided" });
+};
 
-        // Find the user
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ error: "User not found" });
+// Endpoint to add an item to the user's cart
+app.post('/addtocart', authenticateToken, async (req, res) => {
+  const { item } = req.body;  
+  const userId = req.user._id; 
 
-        // Update the cartData with the new item
-        const updatedCart = { ...user.cartData, [item.id]: (user.cartData[item.id] || 0) + 1 }; // Increment item quantity
-        user.cartData = updatedCart;
-
-        await user.save();
-        res.json({ success: "Item added to cart", cartData: user.cartData });
-    } catch (error) {
-        console.error("Error adding to cart:", error.message);
-        res.status(500).json({ error: "Server error" });
+  try {
+    // Find the product by its ID
+    const product = await Product.findOne({ id: item.id });
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
     }
+
+    // Find the user by userId
+    const user = await Users.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the item is already in the cart
+    const itemIndex = user.cartData.findIndex(cartItem => cartItem.id === item.id);
+    if (itemIndex !== -1) {
+      // If item exists, you can update it or prevent duplicates (optional)
+      return res.status(400).json({ message: 'Item already in the cart' });
+    }
+
+    // Add the item to the user's cartData
+    user.cartData.push(item);
+    await user.save();
+
+    res.status(200).json({ message: 'Item added to cart', cartData: user.cartData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
-// Fetch Cart Data
-app.get("/fetchcart", fetchUser, async (req, res) => {
+
+// Route to fetch anklet products
+app.get('/anklets', async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ error: "User not found" });
-
-        res.json({ success: true, cartData: user.cartData });
-    } catch (error) {
-        console.error("Error fetching cart:", error.message);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
-// Remove Item from Cart (Updates cartData in User)
-app.delete("/removefromcart", fetchUser, async (req, res) => {
-    try {
-        const { itemId } = req.body;
-        if (!itemId) return res.status(400).json({ error: "No item ID provided" });
-
-        // Find the user
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ error: "User not found" });
-
-        // Remove or decrement the item quantity
-        const updatedCart = { ...user.cartData };
-        if (updatedCart[itemId]) {
-            updatedCart[itemId] -= 1; // Decrement quantity
-            if (updatedCart[itemId] <= 0) {
-                delete updatedCart[itemId]; // Remove item if quantity is 0 or less
-            }
-        } else {
-            return res.status(400).json({ error: "Item not found in cart" });
+        const anklets = await Product.find({ category: 'anklets' });
+        if (anklets.length === 0) {
+            return res.status(404).json({ success: false, message: 'No anklets found' });
         }
-
-        user.cartData = updatedCart;
-        await user.save();
-
-        res.json({ success: "Item removed from cart", cartData: user.cartData });
+        res.json({ success: true, data: anklets });
+        console.log("Fetching anklets...");
+        console.log("Anklets found:", anklets);
     } catch (error) {
-        console.error("Error removing from cart:", error.message);
-        res.status(500).json({ error: "Server error" });
+        console.error('Error fetching anklets:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch anklets', error: error.message });
     }
+    
 });
-
+// Route to fetch anklet products
+app.get('/bracelets', async (req, res) => {
+    try {
+        const bracelets = await Product.find({ category: 'bracelets' });
+        if (bracelets.length === 0) {
+            return res.status(404).json({ success: false, message: 'No bracelets found' });
+        }
+        res.json({ success: true, data: bracelets });
+        console.log("Fetching bracelets...");
+        console.log("bracelets found:", bracelets);
+    } catch (error) {
+        console.error('Error fetching bracelets:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch bracelets', error: error.message });
+    }
+    
+});
+// Route to fetch anklet products
+app.get('/neckpieces', async (req, res) => {
+    try {
+        const neckpieces = await Product.find({ category: 'neckpieces' });
+        if (neckpieces.length === 0) {
+            return res.status(404).json({ success: false, message: 'No neckpieces found' });
+        }
+        res.json({ success: true, data: neckpieces });
+        console.log("Fetching neckpieces...");
+        console.log("neckpieces found:", neckpieces);
+    } catch (error) {
+        console.error('Error fetching neckpieces:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch neckpieces', error: error.message });
+    }
+    
+});
 // Root Endpoint
 app.get("/", (req, res) => {
     res.send("Express App is Running");
