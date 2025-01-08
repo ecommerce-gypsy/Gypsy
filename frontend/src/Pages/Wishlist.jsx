@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import './Wishlist.css'; // Add custom styles if needed
+import './Wishlist.css'; // Ensure you have the custom styles imported
 import { WishlistContext } from '../WishlistContext';
+import closeIcon from '../Components/Assets/close.png'; // Ensure the close icon path is correct
 
 const Wishlist = () => {
   const { wishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -27,14 +28,14 @@ const Wishlist = () => {
                   <h3>{item.name}</h3>
                   <p>Price: ${item.new_price}</p>
                   <button
-                    className="remove-icon"
+                    className="remove-btn"
                     onClick={() => {
                       if (window.confirm('Remove this item from your Wishlist?')) {
                         removeFromWishlist(item); // Pass the entire object to remove it
                       }
                     }}
                   >
-                    ❤️
+                    <img src={closeIcon} alt="Remove" className="close-icon" />
                   </button>
                 </div>
               </div>

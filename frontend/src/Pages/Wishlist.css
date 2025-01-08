@@ -1,173 +1,140 @@
-/* Wishlist container styles */
+/* Main container styling */
 .wishlist-container {
-  padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  min-height: 100vh;
-  box-sizing: border-box;
 }
 
-/* Empty wishlist styles */
+.wishlist-container h1 {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333333;
+  margin-bottom: 15px;
+}
+
+.wishlist-container h2 {
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  color: #555555;
+  margin-bottom: 25px;
+}
+
+/* Wishlist items grid layout */
+.wishlist-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Individual wishlist item styling */
+.wishlist-item {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.wishlist-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+/* Item details */
+.wishlist-details {
+  flex-grow: 1;
+}
+
+.wishlist-details h3 {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 5px;
+}
+
+.wishlist-details p {
+  font-size: 14px;
+  color: #777777;
+}
+
+/* Buttons styling */
+.remove-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.remove-btn img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.remove-btn img:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+/* Empty wishlist message */
 .empty-wishlist {
   text-align: center;
-  margin-top: 50px;
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .empty-wishlist h2 {
   font-size: 24px;
-  color: #333;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 10px;
 }
 
 .empty-wishlist p {
   font-size: 16px;
-  color: #666;
-  margin: 10px 0 20px;
+  color: #555555;
+  margin-bottom: 20px;
 }
 
 .shop-now-btn {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
+  background-color: #0077cc;
+  color: #ffffff;
   padding: 10px 20px;
+  font-size: 14px;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
   transition: background-color 0.3s ease;
 }
 
 .shop-now-btn:hover {
-  background-color: #0056b3;
+  background-color: #005fa3;
 }
 
-/* Wishlist items section */
-.wishlist-items {
-  text-align: center;
-}
-
-.wishlist-items h2 {
-  font-size: 28px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* Items container */
-.items-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-/* Individual wishlist item */
-.wishlist-item {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  width: 250px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-}
-
-.wishlist-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-/* Item image styling */
-.wishlist-item img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Item text styling */
-.wishlist-item h3 {
-  font-size: 18px;
-  color: #333;
-  margin: 10px 0;
-}
-
-.wishlist-item p {
-  font-size: 16px;
-  color: #777;
-}
-
-.remove-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: white;
-    color: red;
-    font-size: 18px;
-    padding: 5px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-.remove-icon:hover {
-  background: red;
-    color: white;
-}
-
-
-/* Responsive styles */
+/* Responsive design */
 @media (max-width: 768px) {
   .wishlist-item {
-    width: 90%;
-    margin: 10px auto;
-  }
-
-  .items-container {
     flex-direction: column;
-    gap: 15px;
+    align-items: flex-start;
   }
 
-  .wishlist-items h2 {
-    font-size: 24px;
+  .wishlist-image {
+    margin-bottom: 10px;
   }
-}
-
-@media (max-width: 480px) {
-  .wishlist-container {
-    padding: 10px;
-  }
-
-  .empty-wishlist h2 {
-    font-size: 20px;
-  }
-
-  .empty-wishlist p {
-    font-size: 14px;
-  }
-
-  .shop-now-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-  }
-
-  .wishlist-item h3 {
-    font-size: 16px;
-  }
-
-  .wishlist-item p {
-    font-size: 14px;
-  }
-
-  .remove-icon {
-    font-size: 20px;
-  }
-}
-.remove-btn {
-  font-size: 0; /* Hides the text */
-}
-
-.remove-btn i {
-  font-size: 24px; /* Keeps the heart icon visible */
 }

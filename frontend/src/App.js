@@ -19,15 +19,22 @@ import ProductDetail from './Pages/ProductDetail';
 
 
 
+ 
+
 const App = () => {
+  
   return (
+    
     <BrowserRouter>
       <Navbar /> {/* Cart count is handled in Navbar via CartContext */}
+      
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<LoginSignup />} />
+        
         <Route path="/product/:id" element={<ProductDetail/>}/>
         <Route path="/admin" element={<Admin />} />
         <Route path="/addproduct" element={<AddProduct />} />
@@ -38,8 +45,10 @@ const App = () => {
         <Route path="/bracelets" element={<Bracelets />} />
         <Route path="/neckpieces" element={<Neckpieces />} />
         <Route path="/custproduct" element={<CustProduct />} />
+      
       </Routes>
     </BrowserRouter>
+    
   );
 };
 
