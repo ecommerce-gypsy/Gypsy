@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import Header from "../Components/Header/Header";
 import { WishlistContext } from "../WishlistContext";
 import { CartContext } from "../CartContext";
-
 import "./Anklets.css";
 
 const Anklets = () => {
@@ -72,8 +70,9 @@ const Anklets = () => {
 
             {/* Product Image */}
             <Link to={`/product/${product.id}`}>
-              <img src={product.image} alt={product.name} className="product-image" />
+            <img src={product.image} alt={product.name} className="product-image" />
             </Link>
+
 
             {/* Product Details */}
             <h3>{product.name}</h3>

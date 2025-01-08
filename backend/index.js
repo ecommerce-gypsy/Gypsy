@@ -7,11 +7,24 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
+const { console } = require("inspector");
 
 // Middleware
 app.use(express.json());
 app.use(cors());
+// Root Endpoint
+app.get("/", (req, res) => {
+    res.send("Express App is Running");
+});
 
+// Start Server
+app.listen(port, (error) => {
+    if (!error) {
+        console.log("Running on Port", port);
+    } else {
+        console.log("Error:", error);
+    }
+});
 // Ensure upload directory exists
 const dir = './upload/images';
 if (!fs.existsSync(dir)) {
@@ -27,10 +40,7 @@ mongoose.connect("mongodb+srv://sornapriyamvatha:%23Priya24@cluster0.ihjp2.mongo
 
 // Product Schema
 const Product = mongoose.model("Product", {
-    id: {
-        type: Number,
-        required: true,
-    },
+    id: { type: Number, unique: true ,required: true}, 
     name: {
         type: String,
         required: true,
@@ -58,7 +68,16 @@ const Product = mongoose.model("Product", {
     available: {
         type: Boolean,
         default: true,
-    }
+    },
+    description: {
+        type: String, // Add description field
+        default: "Default value for the description", // Default value for the description
+    },
+    stock: {
+        type: Number, // Field for stock management
+        required: true,
+        default: 10,
+    },
 });
 
 // User Schema
@@ -76,12 +95,22 @@ const Users = mongoose.model("Users", {
         type: String,
         required: true,
     },
-    cartData: {
-        type: Object,
-    },
+    cartData: [{
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        quantity: { type: Number, default: 1 }
+    }],
+       
     date: {
         type: Date,
         default: Date.now,
+    },
+    address: {
+        type: String, // Added an address field
+        default: "", // Default is an empty string
+    },
+    phone_number: {
+        type: String, // Added phone number field
+        default: "", // Default is an empty string
     },
 });
 
@@ -94,7 +123,8 @@ app.post('/signup', async (req, res) => {
     try {
         if (!req.body.name) {
             return res.status(400).json({ success: false, message: "Name is required" });
-        }
+    
+       }
 
         let check = await Users.findOne({ email: req.body.email });
         if (check) {
@@ -127,20 +157,28 @@ app.post('/signup', async (req, res) => {
 });
 
 // Login
+// Login
 app.post('/login', async (req, res) => {
-    let user = await Users.findOne({ email: req.body.email });
-    if (user) {
-        const passCompare = req.body.password === user.password;
-        if (passCompare) {
-            const token = jwt.sign({ user: { id: user.id } }, 'secret-ecom');
-            res.json({ success: true, token, username: user.username }); // Ensure username is included
+    try {
+        let user = await Users.findOne({ email: req.body.email });
+        if (user) {
+            const passCompare = req.body.password === user.password;
+            if (passCompare) {
+                // Add expiresIn correctly to the token
+                const token = jwt.sign({ user: { id: user.id } }, 'secret-ecom', { expiresIn: '1h' });
+                res.json({ success: true, token, username: user.username }); // Send username and token
+            } else {
+                res.status(400).json({ success: false, message: "Wrong password" });
+            }
         } else {
-            res.status(400).json({ success: false, message: "Wrong password" });
+            res.status(400).json({ success: false, message: "Email not found" });
         }
-    } else {
-        res.status(400).json({ success: false, message: "Email not found" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
     }
 });
+
 
 app.get('/user-details', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -272,54 +310,83 @@ const fetchUser = async (req, res, next) => {
 app.use(express.json());
 
 // Middleware 
+// Middleware for Token Authentication
 const authenticateToken = (req, res, next) => {
-  const token = req.header('auth-token');
-  if (!token) return res.status(401).json({ message: 'Access denied' });
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid token' });
-    req.user = user; // store user info 
-    next();
+    const token = req.header('Authorization')?.split(' ')[1]; // Get the token from the header
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Access Denied, No Token Provided' });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, 'secret-ecom');
+      req.user = decoded.user;  // Attach the user information to the request
+      next();  // Proceed to the next middleware or route handler
+    } catch (error) {
+      return res.status(403).json({ message: 'Invalid Token' });
+    }
+  };
+  
+  // Route to add item to the cart
+  app.post('/addtocart', authenticateToken, async (req, res) => {
+    const { item } = req.body;
+    const userId = req.user.id;  // Use the user ID from the decoded JWT token
+  
+    try {
+      // Find the product by its ID
+      const product = await Product.findOne({ id: item.id });
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      // Find the user by userId
+      const user = await Users.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Check if the item is already in the user's cart
+      const existingCartItem = user.cartData.find(cartItem => cartItem.productId.toString() === product._id.toString());
+      if (existingCartItem) {
+        // Item already exists, update its quantity
+        existingCartItem.quantity += item.quantity || 1;
+        await user.save();
+        return res.status(200).json({ message: 'Item quantity updated', cartData: user.cartData });
+      }
+  
+      // Item is not in the cart, add it
+      user.cartData.push({ productId: product._id, quantity: item.quantity || 1 });
+      await user.save();
+  
+      res.status(200).json({ message: 'Item added to cart', cartData: user.cartData });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
   });
-};
+  
 
-// Endpoint to add an item to the user's cart
-app.post('/addtocart', authenticateToken, async (req, res) => {
-  const { item } = req.body;  
-  const userId = req.user._id; 
-
-  try {
-    // Find the product by its ID
-    const product = await Product.findOne({ id: item.id });
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+app.get("/product/:id", async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      // Use $or to handle both _id and custom id fields
+      const product = await Product.findOne({
+        $or: [{ id: parseInt(id) }, { id: id }], // Match both number and string
+      });
+  
+      if (!product) {
+        return res.status(404).json({ success: false, message: "Product not found." });
+      }
+  
+      res.status(200).json(product);
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Server error: " + error.message });
     }
-
-    // Find the user by userId
-    const user = await Users.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Check if the item is already in the cart
-    const itemIndex = user.cartData.findIndex(cartItem => cartItem.id === item.id);
-    if (itemIndex !== -1) {
-      // If item exists, you can update it or prevent duplicates (optional)
-      return res.status(400).json({ message: 'Item already in the cart' });
-    }
-
-    // Add the item to the user's cartData
-    user.cartData.push(item);
-    await user.save();
-
-    res.status(200).json({ message: 'Item added to cart', cartData: user.cartData });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-
+  });
+  
+  
+  
 // Route to fetch anklet products
 app.get('/anklets', async (req, res) => {
     try {
@@ -336,6 +403,24 @@ app.get('/anklets', async (req, res) => {
     }
     
 });
+// Route to fetch details of a specific anklet
+app.get('/anklets/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const anklet = await Product.findById(id);
+        if (!anklet) {
+            return res.status(404).json({ success: false, message: 'Anklet not found' });
+        }
+        res.json({ success: true, data: anklet });
+        console.log("Fetching anklet details...");
+        console.log("Anklet found:", anklet);
+    } catch (error) {
+        console.error('Error fetching anklet details:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch anklet details', error: error.message });
+    }
+});
+
 // Route to fetch anklet products
 app.get('/bracelets', async (req, res) => {
     try {
@@ -368,16 +453,25 @@ app.get('/neckpieces', async (req, res) => {
     }
     
 });
-// Root Endpoint
-app.get("/", (req, res) => {
-    res.send("Express App is Running");
-});
+/*
+// Assuming you are using Express.js and Mongoose
+app.get('/product/:id', async (req, res) => {
+    try {
+        const productId = parseInt(req.params.id);  // Convert string to integer
+        console.log("Requested product ID:", productId);  // Log the requested product ID
 
-// Start Server
-app.listen(port, (error) => {
-    if (!error) {
-        console.log("Running on Port", port);
-    } else {
-        console.log("Error:", error);
+        const product = await Product.findOne({ id: productId });  // Use 'id' field in query
+        console.log("Found product:", product);  // Log the fetched product
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.json(product);  // Send the product details as JSON
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
-});
+});*/
+
+
