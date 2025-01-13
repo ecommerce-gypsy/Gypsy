@@ -1,43 +1,39 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import np1_img from '../Components/Assets/np1.png';
-import np2_img from '../Components/Assets/np2.png';
-import np3_img from '../Components/Assets/np3.png';
-import np4_img from '../Components/Assets/np4.png';
-import np5_img from '../Components/Assets/np5.png';
 import './Neckpieces.css';
 import { WishlistContext } from '../WishlistContext'; // Wishlist context
 import { CartContext } from '../CartContext'; // Cart context
-import Header from '../Components/Header/Header'; // Corrected import path
+import Header from '../Components/Header/Header'; // Corrected import 
+import "./ProductDetail.css";
 
 const Neckpieces = () => {
   // Access context values
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
-   const { addToCart } = useContext(CartContext);
-   const navigate = useNavigate();
- 
-   const [neckpieces, setNeckpieces] = useState([]);
-   const [error, setError] = useState('');
- 
-   useEffect(() => {
-     fetch('http://localhost:4000/neckpieces') // Replace with your API endpoint
-       .then((response) => {
-         if (!response.ok) {
-           throw new Error('Failed to fetch data');
-         }
-         return response.json();
-       })
-       .then((data) => {
-         if (data.success) {
+  const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  const [neckpieces, setNeckpieces] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:4000/neckpieces') // Replace with your API endpoint
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
           setNeckpieces(data.data);
-         } else {
-           setError('No neckpieces found.');
-         }
-       })
-       .catch((error) => {
-         setError('Error fetching neckpieces: ' + error.message);
-       });
-   }, []);
+        } else {
+          setError('No neckpieces found.');
+        }
+      })
+      .catch((error) => {
+        setError('Error fetching neckpieces: ' + error.message);
+      });
+  }, []);
 
   const isInWishlist = (file) => wishlist.some((item) => item.id === file.id); // Check if in wishlist
 
@@ -51,7 +47,9 @@ const Neckpieces = () => {
     <div>
       <Header/>
 
-      <h1>Welcome to the NECKPIECES  page!</h1>
+      <h1>Welcome to the NECKPIECES page!</h1>
+
+      {error && <p className="error-message">{error}</p>} {/* Display error message */}
 
       <div className="container">
         {neckpieces.map((file) => (
@@ -68,7 +66,10 @@ const Neckpieces = () => {
                   }
                 }}
               ></div>
-              <img className="neckpiece-image" src={file.image} alt={file.name} />
+              {/* Product Image */}
+              <Link to={`/product/${file.id}`}>
+                <img src={file.image} alt={file.name} className="product-image" />
+              </Link>
             </div>
             <div className="neckpiece-name">{file.name}</div>
             <div className="neckpiece-price">
@@ -85,6 +86,7 @@ const Neckpieces = () => {
           </div>
         ))}
       </div>
+
       {/* Customize Button */}
       <button className="customize-btn">Customize</button>
     </div>

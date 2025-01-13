@@ -1,47 +1,70 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import "./ProductDetail.css";
 
-// Import images
-import a1_img from "../Components/Assets/a1.png";
-import a2_img from "../Components/Assets/a2.png";
-import a3_img from "../Components/Assets/a3.png";
-import a4_img from "../Components/Assets/a4.png";
-import a5_img from "../Components/Assets/a5.png";
-
-// Define product data
-const anklets = [
-  {
-    id: 1,
-    name: "Evil Eye Bracelet",
-    images: [a1_img, a2_img, a3_img, a4_img, a5_img],
-    new_price: 130.0,
-    old_price: 180.0,
-  },
-  // Other products...
-];
-
 const ProductDetail = () => {
-  const { id } = useParams(); // Get product ID from URL
-  const navigate = useNavigate(); // Create navigate instance
-  const product = anklets.find((anklet) => anklet.id === parseInt(id));
+  const { id } = useParams();
+  const productId = Number(id);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [mainImage, setMainImage] = useState(product?.images?.[0] || "");
-  const [pincode, setPincode] = useState("");
-  const [size, setSize] = useState("2.5 x 5");
+  const [mainImage, setMainImage] = useState("");
+
+  const [category, setCategory] = useState("Adult"); // Default category
+  const [setOption, setSetOption] = useState("Single"); // Default set
   const [quantity, setQuantity] = useState(1);
-  const [printedSide, setPrintedSide] = useState("Single Side");
 
+  // Fetch product data from the API
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/product/${productId}`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+
+        // Check if no subimages are available and set mainImage accordingly
+        const images = data.images || [];
+        if (images.length === 0) {
+          setMainImage(""); // Set to empty if no subimages available
+        } else if (images.length === 1) {
+          setMainImage(images[0]); // If one image, set it as mainImage
+        } else {
+          setMainImage(images[0]); // Set the first image as the default mainImage
+        }
+
+        setProduct({
+          ...data,
+          images, // Ensure images are properly set
+        });
+
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  // Calculate total price based on category, set, and quantity
   const calculateTotalPrice = () => {
-    const basePrice = product.new_price;
-    const sizeMultiplier = size === "2.5 x 5" ? 1 : size === "3 x 6" ? 1.2 : 1.5;
-    const sideMultiplier = printedSide === "Single Side" ? 1 : 1.5;
-    return (basePrice * sizeMultiplier * sideMultiplier * quantity).toFixed(2);
+    const basePrice = product?.new_price || 0;
+    const categoryMultiplier = category === "Adult" ? 1 : 0.8; // Adult: full price, Child: 80%
+    const setMultiplier = setOption === "Single" ? 1 : 2; // Single: 1x, Pair: 2x
+    return (basePrice * categoryMultiplier * setMultiplier * quantity).toFixed(2);
   };
 
-  const handlePincodeCheck = () => {
-    alert(`Checking delivery availability for pincode: ${pincode}`);
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   if (!product) {
     return <div>Product not found!</div>;
@@ -51,19 +74,23 @@ const ProductDetail = () => {
     <div className="product-detail">
       {/* Left Section - Image Gallery */}
       <div className="image-gallery">
-        <img src={mainImage} alt={product.name} className="main-image" />
+        <img src={mainImage || "default-image-url"} alt={product.name} className="main-image" />
         <div className="thumbnails">
-          {product.images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`Thumbnail ${index + 1}`}
-              className="thumbnail"
-              onClick={() => setMainImage(image)}
-              role="button"
-              aria-label={`Thumbnail ${index + 1}`}
-            />
-          ))}
+          {product.images?.length > 0 ? (
+            product.images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`Thumbnail ${index + 1}`}
+                className="thumbnail"
+                onClick={() => setMainImage(image)}
+                role="button"
+                aria-label={`Thumbnail ${index + 1}`}
+              />
+            ))
+          ) : (
+            <p>No images available</p>
+          )}
         </div>
       </div>
 
@@ -78,58 +105,47 @@ const ProductDetail = () => {
           </span>
         </p>
         <p className="description">
-          <strong>Description:</strong> A unique anklet designed to complement your style.
+          <strong>Description:</strong> {product.description}
         </p>
 
-        {/* Delivery Check */}
-        <div className="delivery-check">
-          <input
-            type="text"
-            placeholder="Enter a Pincode"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            aria-label="Enter your pincode"
-          />
-          <button onClick={handlePincodeCheck}>Check</button>
+        {/* Category Selector */}
+        <div className="category">
+          <label>Category:</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="Adult">Adult</option>
+            <option value="Child">Child</option>
+          </select>
         </div>
 
-        {/* Price Calculator */}
-        <div className="price-calculator">
-          <h2>Price Calculator</h2>
-          <div className="calculator-row">
-            <label>Category:</label>
-            <select value={size} onChange={(e) => setSize(e.target.value)}>
-              <option value="Adult">Adult</option>
-              <option value="child">Child</option>
-            
-            </select>
-          </div>
-          <div className="calculator-row">
-            <label>Quantity:</label>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              min="1"
-            />
-          </div>
-          <div className="calculator-row">
-            <label>Set</label>
-            <select value={printedSide} onChange={(e) => setPrintedSide(e.target.value)}>
-              <option value="Single">Single</option>
-              <option value="Pair">Pair</option>
-            </select>
-          </div>
-          <div className="calculator-row">
-            <strong>Total (Incl. of all Taxes):</strong>
-            <span>₹ {calculateTotalPrice()}</span>
-          </div>
+        {/* Set Selector */}
+        <div className="set">
+          <label>Set:</label>
+          <select value={setOption} onChange={(e) => setSetOption(e.target.value)}>
+            <option value="Single">Single</option>
+            <option value="Pair">Pair</option>
+          </select>
+        </div>
+
+        {/* Quantity Selector */}
+        <div className="quantity">
+          <label>Quantity:</label>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
+            min="1"
+          />
+        </div>
+
+        {/* Total Price */}
+        <div className="total-price">
+          <strong>Total Price (Incl. of all Taxes):</strong>
+          <span>₹ {calculateTotalPrice()}</span>
         </div>
 
         {/* Add to Cart Button */}
         <button className="add-to-cart">Add To Cart</button>
 
-      
         {/* Offers Section */}
         <div className="offers">
           <p>Save extra with below offers:</p>

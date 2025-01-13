@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'; // Removed unused useState
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; // Use NavLink instead of Link
 import './Navbar.css';
 import logo from '../Assets/logo.png'; // Path to your logo
 import cart from '../Assets/cart.png'; // Path to your cart icon
@@ -22,42 +22,48 @@ export const Navbar = () => {
       {/* Navigation Menu */}
       <ul className="nav-menu">
         <li>
-          <Link to="/" activeclassName="active" exact>
+          <NavLink to="/"  activeClassName="active">
             HOME
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/anklets" activeclassName="active">ANKLETS</Link>
+          <NavLink to="/anklets" activeClassName="active">
+            ANKLETS
+          </NavLink>
         </li>
         <li>
-          <Link to="/neckpieces" activeclassName="active">NECKPIECES</Link>
+          <NavLink to="/neckpieces" activeClassName="active">
+            NECKPIECES
+          </NavLink>
         </li>
         <li>
-          <Link to="/bracelets" activeclassName="active">BRACELETS</Link>
+          <NavLink to="/bracelets" activeClassName="active">
+            BRACELETS
+          </NavLink>
         </li>
       </ul>
 
       {/* Icons and Login Section */}
       <div className="nav-icons">
         {/* Wishlist */}
-        <Link to="/wishlist">
+        <NavLink to="/wishlist">
           <div className="nav-icon">
             <img src={heart} alt="Heart" className="nav-heart-logo" />
           </div>
-        </Link>
+        </NavLink>
 
         {/* Cart */}
         <div className="nav-cart">
-          <Link to="/cart" className="nav-cart-link">
+          <NavLink to="/cart" className="nav-cart-link">
             <img src={cart} alt="Cart" className="nav-cart-icon" />
             <div className="nav-cart-count">{cartCount}</div> {/* Dynamic count */}
-          </Link>
+          </NavLink>
         </div>
 
         {/* Login Button */}
-        <Link to="/login">
+        <NavLink to="/login">
           <img src={user} alt="User" className="nav-user-icon" />
-        </Link>
+        </NavLink>
       </div>
     </div>
   );
