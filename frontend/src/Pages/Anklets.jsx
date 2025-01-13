@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
+import Footer from "../Components/Footer/Footer";
 import { WishlistContext } from "../WishlistContext";
 import { CartContext } from "../CartContext";
 import "./Anklets.css";
@@ -124,8 +125,11 @@ const Anklets = () => {
           </div>
         </div>
       </div>
+    <Footer/>
     </div>
+    
   );
+ 
 };
 
 export default Anklets;

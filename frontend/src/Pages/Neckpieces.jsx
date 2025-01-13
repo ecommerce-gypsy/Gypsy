@@ -1,25 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import './Neckpieces.css';
-import { WishlistContext } from '../WishlistContext'; // Wishlist context
-import { CartContext } from '../CartContext'; // Cart context
-import Header from '../Components/Header/Header'; // Corrected import 
-import "./ProductDetail.css";
+import "./Neckpieces.css";
+import { WishlistContext } from "../WishlistContext"; // Wishlist context
+import { CartContext } from "../CartContext"; // Cart context
+import Header from "../Components/Header/Header"; // Header component
 
 const Neckpieces = () => {
-  // Access context values
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [neckpieces, setNeckpieces] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch('http://localhost:4000/neckpieces') // Replace with your API endpoint
+    fetch("http://localhost:4000/neckpieces") // Replace with your API endpoint
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          throw new Error("Failed to fetch data");
         }
         return response.json();
       })
@@ -27,45 +25,47 @@ const Neckpieces = () => {
         if (data.success) {
           setNeckpieces(data.data);
         } else {
-          setError('No neckpieces found.');
+          setError("No neckpieces found.");
         }
       })
       .catch((error) => {
-        setError('Error fetching neckpieces: ' + error.message);
+        setError("Error fetching neckpieces: " + error.message);
       });
   }, []);
 
-  const isInWishlist = (file) => wishlist.some((item) => item.id === file.id); // Check if in wishlist
+  const isInWishlist = (file) => wishlist.some((item) => item.id === file.id);
 
-  // Handle Add to Cart
   const handleAddToCart = (file) => {
-    addToCart(file); // Add item to cart
-    navigate('/cart'); // Navigate to Cart page
+    addToCart(file);
+    navigate("/cart");
   };
 
   return (
-    <div>
-      <Header/>
+    <div className="neckpieces-container">
+      <Header />
 
-      <h1>Welcome to the NECKPIECES page!</h1>
+      <h1>Welcome to the NECKPIECES Collection!</h1>
 
-      {error && <p className="error-message">{error}</p>} {/* Display error message */}
+      {error && <p className="error-message">{error}</p>}
 
       <div className="container">
         {neckpieces.map((file) => (
           <div key={file.id} className="neckpiece-card">
             <div className="neckpiece-image-container">
-              {/* Wishlist Heart Button */}
+              {/* Wishlist Icon - Only Rendered Once */}
               <div
-                className={`heart-icon ${isInWishlist(file) ? 'active' : ''}`}
+                className={`heart-icon ${isInWishlist(file) ? "active" : ""}`}
                 onClick={() => {
                   if (isInWishlist(file)) {
-                    removeFromWishlist(file); // Remove from wishlist
+                    removeFromWishlist(file);
                   } else {
-                    addToWishlist(file); // Add to wishlist
+                    addToWishlist(file);
                   }
                 }}
-              ></div>
+              >
+              
+              </div>
+
               {/* Product Image */}
               <Link to={`/product/${file.id}`}>
                 <img src={file.image} alt={file.name} className="product-image" />
@@ -73,10 +73,9 @@ const Neckpieces = () => {
             </div>
             <div className="neckpiece-name">{file.name}</div>
             <div className="neckpiece-price">
-              <span className="new-price">₹{file.new_price}</span>{' '}
-              <span className="old-price">₹{file.oldPrice}</span>
+              <span className="new-price">₹{file.new_price}</span>{" "}
+              <span className="old-price">₹{file.old_price}</span>
             </div>
-            {/* Add to Cart Button */}
             <button
               className="add-to-cart-btn"
               onClick={() => handleAddToCart(file)}
@@ -87,8 +86,9 @@ const Neckpieces = () => {
         ))}
       </div>
 
-      {/* Customize Button */}
-      <button className="customize-btn">Customize</button>
+      <button className="customize-btn" onClick={() => navigate("/customize")}>
+        Customize
+      </button>
     </div>
   );
 };

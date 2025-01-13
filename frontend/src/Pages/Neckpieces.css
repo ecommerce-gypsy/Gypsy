@@ -1,131 +1,184 @@
-/* Paperfiles Page Styles */
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-h1 {
+/* General Container Styles */
+.neckpieces-container {
+    padding: 20px;
     text-align: center;
-    margin-bottom: 20px;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9; /* Light background for better contrast */
+    min-height: 100vh;
+  }
+  
+  h1 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .error-message {
+    color: #d9534f;
+    margin: 10px 0;
+    font-size: 1.2rem;
+  }
+  
+  /* Product Grid */
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid layout */
     gap: 20px;
-    flex-wrap: wrap;
-}
-
-.neckpiece-card {
-    position: relative;
-    border: 1px solid #ddd;
+    justify-items: center;
     padding: 10px;
-    border-radius: 10px;
+  }
+  
+  /* Card Styles */
+  .neckpiece-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+    max-width: 300px;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    width: 220px;
-}
-
-.neckpiece-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .neckpiece-card:hover {
     transform: translateY(-5px);
-}
-
-.neckpiece-image-container {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Wishlist Icon */
+  .heart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: #bbb;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 2;
+  }
+  
+  .heart-icon.active {
+    color: #ff4757;
+  }
+  
+  /* Product Image */
+  .neckpiece-image-container {
     position: relative;
-}
-
-.neckpiece-image {
-    width: 200px;
-    height: 200px;
-    border-radius: 10px;
-}
-
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .neckpiece-image-container:hover .product-image {
+    transform: scale(1.05);
+  }
+  
+  /* Product Name */
+  .neckpiece-name {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #333;
+  }
+  
+  /* Product Price */
+  .neckpiece-price {
+    margin: 10px 0;
+    color: #666;
+    font-size: 1rem;
+  }
+  
+  .new-price {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .old-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-left: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Add to Cart Button */
+  .add-to-cart-btn {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .add-to-cart-btn:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Customize Button */
+  .customize-btn {
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .customize-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.8rem;
+    }
+  
+    .add-to-cart-btn,
+    .customize-btn {
+      font-size: 1rem;
+      padding: 10px;
+    }
+  
+    .neckpiece-card {
+      max-width: 100%;
+    }
+  }
+  
+/* Wishlist Icon */
 .heart-icon {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 1.5rem; /* Adjust font size if needed */
+    color: #bbb;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out, background-color 0.3s;
-}
-
-.heart-icon::before {
-    content: "\2665"; /* Unicode for heart symbol */
-    font-size: 18px;
-    color: black;
-}
-
-.heart-icon:hover {
-    transform: scale(1.2);
-    background-color: red;
-}
-
-.heart-icon:hover::before {
-    color: white;
-}
-
-.neckpiece-name {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-.neckpiece-price {
-    margin: 10px 0;
-}
-
-.new-price {
-    color: green;
-    font-weight: bold;
-}
-
-.old-price {
-    color: red;
-    text-decoration: line-through;
-}
-
-.add-to-cart-btn {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 5px;
-}
-
-.add-to-cart-btn:hover {
-    background-color: #45a049;
-}
-
-/* Customize Button Styles */
-.customize-btn {
-    background-color: #008cba;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    transition: background-color 0.3s;
-}
-
-.customize-btn:hover {
-    background-color: #006f8e;
-}
+    transition: color 0.3s;
+    z-index: 2;
+  }
+  
+  /* Ensure the parent container has sufficient space */
+  .neckpiece-image-container {
+    position: relative;
+    overflow: visible; /* Ensure the icon isn't clipped */
+    padding: 10px; /* Add padding to prevent overlap */
+  }
+  
