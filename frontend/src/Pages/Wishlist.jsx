@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Wishlist.css'; // Ensure you have the custom styles imported
-import { WishlistContext } from '../Context/WishlistContext';
+import { WishlistContext } from '../Context/WishlistContext';//hi
 import closeIcon from '../Components/Assets/close.png'; // Ensure the close icon path is correct
 
 const Wishlist = () => {
