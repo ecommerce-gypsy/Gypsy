@@ -1,2 +1,2 @@
 node_modules/
-echo "frontend/node_modules/.cache/" >> .gitignore
+
