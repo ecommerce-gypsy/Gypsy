@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Footer from "../Components/Footer/Footer";
-import { WishlistContext } from "../WishlistContext";
-import { CartContext } from "../CartContext";
+import { WishlistContext } from "../Context/WishlistContext";
+import { CartContext } from "../Context/CartContext";
 import "./Anklets.css";
 
 const Anklets = () => {
@@ -38,10 +38,10 @@ const Anklets = () => {
   }, []);
 
   // Check if product is in wishlist
-  const isInWishlist = (product) => wishlist.some((item) => item.id === product.id);
+  const isInWishlist = (product) => wishlist.some((item) => item.productid === product.productid);
 
   // Check if product is in cart
-  const isInCart = (product) => cart.some((item) => item.id === product.id);
+  const isInCart = (product) => cart.some((item) => item.productid === product.productid);
 
   return (
     <div className="anklets-container">
@@ -54,7 +54,7 @@ const Anklets = () => {
       {/* Product Grid */}
       <div className="product-grid">
         {anklets.map((product) => (
-          <div className="product-card" key={product.id}>
+          <div className="product-card" key={product.productid}>
             {/* Wishlist Icon */}
             <div
               className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
@@ -70,8 +70,8 @@ const Anklets = () => {
             </div>
 
             {/* Product Image */}
-            <Link to={`/product/${product.id}`}>
-            <img src={product.image} alt={product.name} className="product-image" />
+            <Link to={`/product/${product.productid}`}>
+            <img src={product.images[0]} alt={product.name} className="product-image" />
             </Link>
 
 

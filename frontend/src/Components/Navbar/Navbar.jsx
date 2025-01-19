@@ -5,7 +5,8 @@ import logo from '../Assets/logo.png'; // Path to your logo
 import cart from '../Assets/cart.png'; // Path to your cart icon
 import heart from '../Assets/heart-logo.png'; // Path to your heart icon
 import user from '../Assets/user.png'; // Path to your user icon
-import { CartContext } from '../../CartContext'; // Import CartContext
+import { CartContext } from '../../Context/CartContext';
+// Import CartContext
 
 export const Navbar = () => {
   // Access cartCount from CartContext
@@ -16,7 +17,7 @@ export const Navbar = () => {
       {/* Logo Section */}
       <div className="nav-logo">
         <img src={logo} alt="Logo" />
-        <p>Shop</p>
+        <p>Narikurava Jewelery</p>
       </div>
 
       {/* Navigation Menu */}

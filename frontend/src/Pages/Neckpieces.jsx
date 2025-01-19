@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Neckpieces.css";
-import { WishlistContext } from "../WishlistContext"; // Wishlist context
-import { CartContext } from "../CartContext"; // Cart context
+import { WishlistContext } from "../Context/WishlistContext";
+import { CartContext } from "../Context/CartContext";
 import Header from "../Components/Header/Header"; // Header component
 
 const Neckpieces = () => {
@@ -33,10 +33,11 @@ const Neckpieces = () => {
       });
   }, []);
 
-  const isInWishlist = (file) => wishlist.some((item) => item.id === file.id);
+  const isInWishlist = (product) =>
+    wishlist.some((item) => item.productid === product.productid);
 
-  const handleAddToCart = (file) => {
-    addToCart(file);
+  const handleAddToCart = (product) => {
+    addToCart(product);
     navigate("/cart");
   };
 
@@ -48,37 +49,43 @@ const Neckpieces = () => {
 
       {error && <p className="error-message">{error}</p>}
 
-      <div className="container">
-        {neckpieces.map((file) => (
-          <div key={file.id} className="neckpiece-card">
-            <div className="neckpiece-image-container">
-              {/* Wishlist Icon - Only Rendered Once */}
-              <div
-                className={`heart-icon ${isInWishlist(file) ? "active" : ""}`}
-                onClick={() => {
-                  if (isInWishlist(file)) {
-                    removeFromWishlist(file);
-                  } else {
-                    addToWishlist(file);
-                  }
-                }}
-              >
-              
-              </div>
+      {/* Product Grid */}
+      <div className="product-grid">
+        {neckpieces.map((product) => (
+          <div className="product-card" key={product.productid}>
+            {/* Wishlist Icon */}
+            <div
+              className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
+              onClick={() => {
+                if (isInWishlist(product)) {
+                  removeFromWishlist(product);
+                } else {
+                  addToWishlist(product);
+                }
+              }}
+            >
+              ♥
+            </div>
 
-              {/* Product Image */}
-              <Link to={`/product/${file.id}`}>
-                <img src={file.image} alt={file.name} className="product-image" />
-              </Link>
-            </div>
-            <div className="neckpiece-name">{file.name}</div>
+            {/* Product Image */}
+            <Link to={`/product/${product.productid}`}>
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="product-image"
+              />
+            </Link>
+
+            {/* Product Details */}
+            <div className="neckpiece-name">{product.name}</div>
             <div className="neckpiece-price">
-              <span className="new-price">₹{file.new_price}</span>{" "}
-              <span className="old-price">₹{file.old_price}</span>
+              <span className="new-price">₹{product.new_price}</span>{" "}
+              <span className="old-price">₹{product.old_price}</span>
             </div>
+
             <button
               className="add-to-cart-btn"
-              onClick={() => handleAddToCart(file)}
+              onClick={() => handleAddToCart(product)}
             >
               Add to Cart
             </button>
@@ -86,6 +93,7 @@ const Neckpieces = () => {
         ))}
       </div>
 
+      {/* Customize Button */}
       <button className="customize-btn" onClick={() => navigate("/customize")}>
         Customize
       </button>

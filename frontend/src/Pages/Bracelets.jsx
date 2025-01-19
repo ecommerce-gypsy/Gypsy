@@ -1,25 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import './Bracelets.css';  // Import Bamboo styles
-import { WishlistContext } from '../WishlistContext';  // Wishlist context
-import { CartContext } from '../CartContext';  // Cart context
-import Header from '../Components/Header/Header';  // Corrected import path
-import "./ProductDetail.css";
+import "./Bracelets.css"; // Styles for Bracelets
+import { WishlistContext } from "../Context/WishlistContext";
+import { CartContext } from "../Context/CartContext";
+import Header from "../Components/Header/Header"; // Header component
 
 const Bracelets = () => {
-  // Access context values
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [bracelets, setBracelets] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch('http://localhost:4000/bracelets') // Replace with your API endpoint
+    fetch("http://localhost:4000/bracelets")
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          throw new Error("Failed to fetch data");
         }
         return response.json();
       })
@@ -27,67 +25,67 @@ const Bracelets = () => {
         if (data.success) {
           setBracelets(data.data);
         } else {
-          setError('No bracelets found.');
+          setError("No bracelets found.");
         }
       })
       .catch((error) => {
-        setError('Error fetching bracelets: ' + error.message);
+        setError("Error fetching bracelets: " + error.message);
       });
   }, []);
 
-  const isInWishlist = (product) => wishlist.some((item) => item.id === product.id);  // Check if in wishlist
+  const isInWishlist = (product) =>
+    wishlist.some((item) => item.productid === product.productid);
 
-  // Handle Add to Cart
   const handleAddToCart = (product) => {
-    addToCart(product);  // Add item to cart
-    navigate('/cart');  // Navigate to Cart page
+    addToCart(product);
+    navigate("/cart");
   };
 
   return (
     <div>
-      <Header />  {/* Add the header component */}
-
+      <Header />
       <h1>Welcome to the BRACELETS category page!</h1>
-      {error && <p className="error-message">{error}</p>} {/* Display error message */}
 
-      <div className="container">
-        {bracelets.map((product) => (
-          <div key={product.id} className="bracelets-card">
-            <div className="bracelets-image-container">
-              {/* Wishlist Heart Button */}
+      {error ? (
+        <p className="error-message">{error}</p>
+      ) : (
+        <div className="product-grid">
+          {bracelets.map((product) => (
+            <div className="product-card" key={product.productid}>
               <div
-                className={`heart-icon ${isInWishlist(product) ? 'active' : ''}`}
+                className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
                 onClick={() => {
                   if (isInWishlist(product)) {
-                    removeFromWishlist(product); // Remove from wishlist
+                    removeFromWishlist(product);
                   } else {
-                    addToWishlist(product); // Add to wishlist
+                    addToWishlist(product);
                   }
                 }}
-              ></div>
-              {/* Product Image */}
-              <Link to={`/product/${product.id}`}>
-                <img src={product.image} alt={product.name} className="product-image" />
+              >
+                ♥
+              </div>
+              <Link to={`/product/${product.productid}`}>
+                <img src={product.images[0]} alt={product.name} className="product-image" />
               </Link>
+              <div className="bracelets-name">{product.name}</div>
+              <div className="bracelets-price">
+                <span className="new-price">₹{product.new_price}</span>{" "}
+                <span className="old-price">₹{product.old_price}</span>
+              </div>
+              <button
+                className="add-to-cart-btn"
+                onClick={() => handleAddToCart(product)}
+              >
+                Add to Cart
+              </button>
             </div>
-            <div className="bracelets-name">{product.name}</div>
-            <div className="bracelets-price">
-              <span className="new-price">₹{product.new_price}</span>{' '}
-              <span className="old-price">₹{product.old_price}</span>
-            </div>
-            {/* Add to Cart Button */}
-            <button
-              className="add-to-cart-btn"
-              onClick={() => handleAddToCart(product)}
-            >
-              Add to Cart
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Customize Button */}
-      <button className="customize-btn">Customize</button>
+      <button className="customize-btn" onClick={() => navigate("/customize")}>
+        Customize
+      </button>
     </div>
   );
 };

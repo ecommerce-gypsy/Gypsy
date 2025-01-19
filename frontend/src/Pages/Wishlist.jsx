@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Wishlist.css'; // Ensure you have the custom styles imported
-import { WishlistContext } from '../WishlistContext';
+import { WishlistContext } from '../Context/WishlistContext';
 import closeIcon from '../Components/Assets/close.png'; // Ensure the close icon path is correct
 
 const Wishlist = () => {
@@ -23,10 +23,10 @@ const Wishlist = () => {
           <div className="items-container">
             {wishlist.map((item, index) => (
               <div key={index} className="wishlist-item">
-                <img src={item.image} alt={item.name} className="wishlist-image" />
+                <img src={item.images[0]} alt={item.name} className="wishlist-image" />
                 <div className="wishlist-details">
                   <h3>{item.name}</h3>
-                  <p>Price: ${item.new_price}</p>
+                  <p>Price: ₹{item.new_price}</p>
                   <button
                     className="remove-btn"
                     onClick={() => {

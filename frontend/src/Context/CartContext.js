@@ -7,7 +7,7 @@ export const CartProvider = ({ children }) => {
 
   // Function to add an item to the cart
   const addToCart = (item) => {
-    if (!cart.some((cartItem) => cartItem.id === item.id)) {
+    if (!cart.some((cartItem) => cartItem.productid === item.productid)) {
       setCart([...cart, item]);
       alert(`${item.name} added to cart!`);
     } else {
@@ -16,8 +16,8 @@ export const CartProvider = ({ children }) => {
   };
 
   // Function to remove an item from the cart
-  const removeItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+  const removeItem = (productid) => {
+    setCart(cart.filter((item) => item.productid !== productid));
   };
 
   // Derive the cart count dynamically

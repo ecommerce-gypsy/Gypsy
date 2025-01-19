@@ -1,74 +1,154 @@
-/* AddProduct.css */
+/* Base Styling */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fef7f7; /* Soft off-white background */
+}
 
+/* Add Product Container */
 .add-product {
-    width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background: #f8f8f8;
-  }
-  
-  .addproduct-itemfield {
-    margin-bottom: 15px;
-  }
-  
-  .addproduct-itemfield p {
-    font-weight: 500;
-    margin-bottom: 5px;
-  }
-  
-  .addproduct-itemfield input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .addproduct-price {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .addproduct-price .addproduct-itemfield {
-    width: 48%;
-  }
-  
-  .add-product-selector {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #fff;
-  }
-  
-  .addproduct-thumnail-img {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    border: 1px dashed #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .addproduct-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .addproduct-btn:hover {
-    background-color: #218838;
-  }
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
 
-  @media(max-width:800px){
-    .add-product{
-        width: auto;
-        padding: 30px;
-        margin: 20px;
-    }
-  }
+/* Title */
+.add-product h1 {
+  text-align: center;
+  color: #e4a1b9; /* Glistlishly Rose */
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+/* Form Fields */
+.addproduct-itemfield {
+  margin-bottom: 20px;
+}
+
+.addproduct-itemfield p {
+  font-size: 14px;
+  color: #6f6f6f;
+  margin-bottom: 8px;
+}
+
+.addproduct-itemfield input,
+.addproduct-itemfield select,
+.addproduct-itemfield textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  color: #333;
+  border: 1px solid #d0b5c1; /* Subtle pink border */
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.addproduct-itemfield input:focus,
+.addproduct-itemfield select:focus,
+.addproduct-itemfield textarea:focus {
+  border-color: #e4a1b9; /* Focus border with Glistlishly Rose */
+  outline: none;
+}
+
+/* Price Section */
+.addproduct-price {
+  display: flex;
+  justify-content: space-between;
+}
+
+.addproduct-itemfield {
+  width: 30%;
+}
+
+.addproduct-price input {
+  width: 100%;
+}
+
+/* Upload Thumbnail */
+.addproduct-itemfield label {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: #f9e6f2; /* Soft light pink */
+  border: 2px dashed #e4a1b9;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  line-height: 200px;
+  cursor: pointer;
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.addproduct-itemfield label:hover {
+  background-color: #f6d3e3; /* Lighter pink when hovered */
+  border-color: #d08b99;
+}
+
+.addproduct-thumnail-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+#file-input {
+  display: none;
+}
+
+/* Button */
+.addproduct-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  color: #fff;
+  background-color: #e4a1b9; /* Glistlishly Rose */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.addproduct-btn:hover {
+  background-color: #d08b99; /* Slightly darker pink on hover */
+}
+
+.addproduct-btn:disabled {
+  background-color: #e9d1d8;
+  cursor: not-allowed;
+}
+
+/* Select Dropdown */
+.add-product-selector {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #d0b5c1;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s;
+}
+
+.add-product-selector:focus {
+  border-color: #e4a1b9;
+  outline: none;
+}
+
+.addproduct-price input:focus {
+  border-color: #e4a1b9;
+}
+
+.addproduct-itemfield textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+.addproduct-itemfield textarea:focus {
+  border-color: #e4a1b9;
+}

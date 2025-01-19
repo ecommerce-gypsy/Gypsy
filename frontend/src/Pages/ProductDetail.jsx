@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext,useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./ProductDetail.css";
+import { CartContext } from "../Context/CartContext";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -8,7 +9,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const { cart, addToCart } = useContext(CartContext);
   const [mainImage, setMainImage] = useState("");
 
   const [category, setCategory] = useState("Adult"); // Default category
@@ -19,7 +20,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/product/${productId}`);
+        const response = await fetch(`http://localhost:4000/products/${productId}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -69,7 +70,7 @@ const ProductDetail = () => {
   if (!product) {
     return <div>Product not found!</div>;
   }
-
+  const isInCart = (product) => cart.some((item) => item.productid === product.productid);
   return (
     <div className="product-detail">
       {/* Left Section - Image Gallery */}
@@ -143,9 +144,17 @@ const ProductDetail = () => {
           <span>₹ {calculateTotalPrice()}</span>
         </div>
 
-        {/* Add to Cart Button */}
-        <button className="add-to-cart">Add To Cart</button>
-
+         {/* Add to Cart Button */}
+            <button
+              className="add-to-cart"
+              onClick={() => {
+                if (!isInCart(product)) {
+                  addToCart(product);
+                }
+              }}
+            >
+              {isInCart(product) ? "In Cart" : "Add to Cart"}
+            </button>
         {/* Offers Section */}
         <div className="offers">
           <p>Save extra with below offers:</p>
