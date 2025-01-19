@@ -1,43 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import "./Account.css";
 
-function Account() {
-  const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-        const response = await fetch("/api/account", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUserData(data);
-        } else {
-          console.error("Failed to fetch account details.");
-        }
-      } catch (error) {
-        console.error("Error fetching account details:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (!userData) return <div>Loading...</div>;
-
+const Account = () => {
   return (
-    <div>
-      <h1>Account</h1>
-      <p>Name: {userData.name}</p>
-      <p>Country: {userData.country}</p>
-      <p>
-        <a href="/addresses">View addresses ({userData.addresses.length})</a>
-      </p>
-      <a href="/logout">Log out</a>
+    <div className="account">
+     
+      {/* Main Content */}
+      <main className="account-content">
+        <h1>Account</h1>
+        <section className="order-history">
+          <h2>Order history</h2>
+          <p>You haven't placed any orders yet.</p>
+        </section>
+        <section className="account-details">
+          <h3>Account details</h3>
+          <p>Roshni VR</p>
+          <p>India</p>
+          <button onClick={() => alert("View addresses clicked")}>View addresses (1)</button>
+        </section>
+        <button className="logout-link" onClick={() => alert("Logout clicked")}>Log out</button>
+      </main>
     </div>
   );
-}
+};
 
 export default Account;

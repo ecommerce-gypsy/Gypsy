@@ -15,6 +15,7 @@ import AddProduct from './Components/AddProduct/AddProduct';
 import ListProduct from './Components/ListProduct/ListProduct';
 import Sidebar from './Components/Sidebar/Sidebar';
 import ProductDetail from './Pages/ProductDetail';
+import Account from './Pages/Account';
 
 
 
@@ -34,7 +35,7 @@ const App = () => {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<LoginSignup />} />
-        
+        <Route path="/account" element={<Account/>}/>
         <Route path="/product/:id" element={<ProductDetail/>}/>
         <Route path="/admin" element={<Admin />} />
         <Route path="/addproduct" element={<AddProduct />} />
