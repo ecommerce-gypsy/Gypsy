@@ -33,6 +33,7 @@ body {
   border-radius: 5px;
 }
 
+
 /* Product Grid */
 .product-grid {
   display: grid;
@@ -44,6 +45,7 @@ body {
 }
 
 /* Product Card */
+/* Product Card */
 .product-card {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -53,32 +55,22 @@ body {
   padding: 20px;
   text-align: center;
   transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px; /* Allow the card to grow if content needs more space */
 }
 
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced hover shadow */
+/* Ensure text content doesn't overflow and allows multiple lines */
+.product-card h3, .product-card p {
+  overflow: visible; /* Allow text to wrap */
+  text-overflow: unset;
+  white-space: normal; /* Allow multiple lines of text */
 }
 
-/* Product Image */
-.product-image {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-/* Product Details */
-.product-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #333;
-  cursor: pointer;
-  transition: color 0.3s; /* Added hover effect */
-}
-
-.product-card h3:hover {
-  color: #007bff; /* Matches the design-option color */
+/* If you want to allow multiline text but still want even height */
+.product-card .product-details {
+  flex-grow: 1; /* Allow the details section to take up available space */
 }
 
 .product-card p {
@@ -87,32 +79,34 @@ body {
   color: #555;
 }
 
-.original-price {
-  text-decoration: line-through;
-  color: #999;
-  font-size: 0.9rem;
-}
-
 /* Add to Cart Button */
-.add-to-cart-btn {
-  background-color: #ff9800; /* Vibrant orange */
-  color: #fff;
+/* Add to Cart Button */
+button.add-to-cart-btn {
+  background: linear-gradient(to right, #ff69b4, #ff3385); /* Vibrant pink gradient */
+  color: black !important; /* Ensure text color is black */
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s, transform 0.2s; /* Smooth transitions */
 }
 
-.add-to-cart-btn:hover {
-  background-color: #e68900; /* Slightly darker orange */
+/* Hover State */
+button.add-to-cart-btn:hover {
+  background: linear-gradient(to right, #ff3385, #ff69b4); /* Reverse gradient on hover */
+  color: black !important; /* Ensure hover text color remains black */
+  transform: scale(1.05); /* Slight zoom effect on hover */
 }
 
-.add-to-cart-btn:disabled {
-  background-color: #aaa;
+/* Disabled State */
+button.add-to-cart-btn:disabled {
+  background: linear-gradient(to right, #aaa, #bbb); /* Neutral gradient when disabled */
+  color: #666; /* Grey text for disabled state */
   cursor: not-allowed;
 }
+
+
 
 /* Wishlist Icon */
 .wishlist-icon-container {
@@ -130,11 +124,11 @@ body {
 }
 
 .wishlist-icon.active {
-  color: red;
+  color: #ff69b4;
 }
 
 .wishlist-icon:hover {
-  color: #e60000;
+  color: #ff3385;
 }
 
 /* Design Steps Section */

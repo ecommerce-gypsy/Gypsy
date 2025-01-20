@@ -75,10 +75,12 @@ const Anklets = () => {
               <img src={product.images[0]} alt={product.name} className="product-image" />
             </Link>
 
-            {/* Product Details */}
-            <h3>{product.name}</h3>
-            <p>Price: ₹{product.new_price}</p>
-            <p className="original-price">Original Price: ₹{product.old_price}</p>
+             {/* Product Details */}
+             <div className="anklets-name">{product.name}</div>
+              <div className="anklets-price">
+                <span className="new-price">₹{product.new_price}</span>{" "}
+                <span className="old-price">₹{product.old_price}</span>
+              </div>
 
             {/* Add to Cart Button */}
             <button

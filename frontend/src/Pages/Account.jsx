@@ -39,6 +39,7 @@ function Account() {
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
+    localStorage.removeItem("user_name");
     navigate("/");
   };
 
@@ -53,7 +54,7 @@ function Account() {
       <div className="account-header">
         <h1>Account</h1>
         <p>Name: {userData.name}</p>
-        <p>Country: {userData.country}</p>
+        <p>Address: {userData.address}</p>
         <p>
           <a href="/addresses">View addresses ({userData.addresses.length})</a>
         </p>

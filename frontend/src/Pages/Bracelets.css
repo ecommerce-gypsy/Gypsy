@@ -28,6 +28,10 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     width: 220px;
+    min-height: 400px; /* Ensuring the card has consistent height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .bracelets-card:hover {
@@ -79,10 +83,12 @@ h1 {
     font-size: 16px;
     font-weight: bold;
     margin: 10px 0;
+    text-align: center;
 }
 
 .bracelets-price {
     margin: 10px 0;
+    text-align: center;
 }
 
 .new-price {
@@ -138,10 +144,10 @@ h1 {
     padding: 0; /* Removed extra padding for consistency */
     margin: 0 auto;
     max-width: 1200px;
-  }
-  
-  /* Product Card */
-  .product-card {
+}
+
+/* Product Card */
+.product-card {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -150,43 +156,55 @@ h1 {
     padding: 20px;
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced hover shadow */
-  }
-  
-  /* Product Image */
-  .product-image {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
-  
-  /* Product Details */
-  .product-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #333;
-    cursor: pointer;
-    transition: color 0.3s; /* Added hover effect */
-  }
-  
-  .product-card h3:hover {
-    color: #007bff; /* Matches the design-option color */
-  }
-  
-  .product-card p {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 400px; /* Allow the card to grow if content needs more space */
+}
+
+/* Ensure text content doesn't overflow and allows multiple lines */
+.product-card h3, .product-card p {
+    overflow: visible; /* Allow text to wrap */
+    text-overflow: unset;
+    white-space: normal; /* Allow multiple lines of text */
+}
+
+/* If you want to allow multiline text but still want even height */
+.product-card .product-details {
+    flex-grow: 1; /* Allow the details section to take up available space */
+}
+
+.product-card p {
     margin: 5px 0;
     font-size: 1rem;
     color: #555;
-  }
-  
-  .original-price {
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+    background-color: #ff69b4; /* Rose color */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #FF3385; /* Slightly darker rose for hover */
+}
+
+.add-to-cart-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+
+/* Original Price */
+.original-price {
     text-decoration: line-through;
     color: #999;
     font-size: 0.9rem;
-  }
-  
+}

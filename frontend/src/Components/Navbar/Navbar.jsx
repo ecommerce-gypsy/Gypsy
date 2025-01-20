@@ -33,15 +33,15 @@ export const Navbar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/neckpieces" activeClassName="active">
+        <NavLink to="/neckpieces" activeClassName="active">
             NECKPIECES
           </NavLink>
         </li>
-        <li>
+         <li>
           <NavLink to="/bracelets" activeClassName="active">
             BRACELETS
           </NavLink>
-        </li>
+         </li>
       </ul>
 
       {/* Icons and Login Section */}

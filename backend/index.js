@@ -177,14 +177,53 @@ app.post('/signup', async (req, res) => {
   
       await user.save();
   
-      const token = jwt.sign({ user: { id: user.userid, role: user.role } }, 'secret-ecom');
+      const token = jwt.sign({ user: { id: user.id, role: user.role } }, 'secret-ecom', { expiresIn: '1h' });
+      await sendSignupMail(req.body.name, req.body.email);
       res.json({ success: true, token });
     } catch (error) {
       console.error("Signup error:", error);
       res.status(500).json({ success: false, message: "Server error", error: error.message });
     }
   });
+  const nodemailer = require('nodemailer');
+
   
+// Function to send welcome email
+const sendSignupMail = async (name, email) => {
+    try {
+        // Create a transporter
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "sornapriyamvathapentagon@gmail.com", // Your email
+                pass: "eouh aape mzwd gdcx"    // Your app password (not your email password)
+            }
+        });
+
+        // Load the HTML template
+        const emailTemplate = fs.readFileSync(
+            path.join(__dirname, "emailTemplate.html"),
+            "utf-8"
+        );
+
+        // Replace placeholders in the template
+        const customizedTemplate = emailTemplate.replace("{{name}}", name);
+
+        // Set email options
+        const mailOptions = {
+            from: '"RP" <sornapriyamvathapentagon@gmail.com>',
+            to: email,
+            subject: "Welcome to Your Store!",
+            html: customizedTemplate
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions);
+        console.log("Signup email sent to:", email);
+    } catch (error) {
+        console.error("Error sending email:", error);
+    }
+};
 
 // Login
 app.post('/login', async (req, res) => {
@@ -535,8 +574,14 @@ const authenticateToken = (req, res, next) => {
 
 app.get('/api/account', authenticateToken, async (req, res) => {
     try {
-        // Get user details from the database using the user ID from the decoded token
-        const user = await Users.findById(req.user.id).populate('cartData.productid').populate('wishlistData.productid').exec();
+        // Convert the user id from the token into an ObjectId before querying
+        const userId = new mongoose.Types.ObjectId(req.user.id); // Convert to ObjectId
+        
+        // Get user details from the database using the user ID
+        const user = await Users.findById(userId)
+            .populate('cartData.productid')
+            .populate('wishlistData.productid')
+            .exec();
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
