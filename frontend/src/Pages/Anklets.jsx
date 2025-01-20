@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Footer from "../Components/Footer/Footer";
+import AnkletBanner from "../Components/AnkletBanner/AnkletBanner"; // Import AnkletBanner
 import { WishlistContext } from "../Context/WishlistContext";
 import { CartContext } from "../Context/CartContext";
 import "./Anklets.css";
@@ -12,11 +13,11 @@ const Anklets = () => {
   const { cart, addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  // State for neckpieces and error handling
+  // State for anklets and error handling
   const [anklets, setAnklets] = useState([]);
   const [error, setError] = useState("");
 
-  // Fetch neckpieces data
+  // Fetch anklets data
   useEffect(() => {
     fetch("http://localhost:4000/anklets") // Replace with your API endpoint
       .then((response) => {
@@ -46,8 +47,8 @@ const Anklets = () => {
   return (
     <div className="anklets-container">
       <Header />
-
-      <h1>Welcome to the anklets Collection!</h1>
+      <AnkletBanner /> {/* Place the banner here */}
+      <h1>Welcome to the Anklets Collection!</h1>
 
       {error && <p className="error-message">{error}</p>}
 
@@ -71,9 +72,8 @@ const Anklets = () => {
 
             {/* Product Image */}
             <Link to={`/product/${product.productid}`}>
-            <img src={product.images[0]} alt={product.name} className="product-image" />
+              <img src={product.images[0]} alt={product.name} className="product-image" />
             </Link>
-
 
             {/* Product Details */}
             <h3>{product.name}</h3>
@@ -125,11 +125,10 @@ const Anklets = () => {
           </div>
         </div>
       </div>
-    <Footer/>
+
+      <Footer />
     </div>
-    
   );
- 
 };
 
 export default Anklets;

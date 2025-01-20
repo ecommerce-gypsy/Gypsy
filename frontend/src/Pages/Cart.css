@@ -41,6 +41,7 @@
   border-radius: 8px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
+  position: relative; /* Added relative positioning */
 }
 
 .cart-item-image {
@@ -94,8 +95,12 @@
 .remove-btn {
   padding: 8px;
   border-radius: 50%;
+  position: absolute; /* Position the remove button absolutely */
+  top: 10px; /* Adjust to keep it within the container */
+  right: 10px; /* Position it to the right edge */
 }
 
+/* Close icon inside remove button */
 .close-icon {
   width: 20px;
   height: 20px;

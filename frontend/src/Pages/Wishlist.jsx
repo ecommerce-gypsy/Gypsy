@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Wishlist.css'; // Ensure you have the custom styles imported
-import { WishlistContext } from '../Context/WishlistContext';//hi
-import closeIcon from '../Components/Assets/close.png'; // Ensure the close icon path is correct
+import { WishlistContext } from '../Context/WishlistContext';
+import closeIcon from '../Components/Assets/close.png';
 
 const Wishlist = () => {
   const { wishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -11,10 +11,13 @@ const Wishlist = () => {
     <div className="wishlist-container">
       {wishlist.length === 0 ? (
         <div className="empty-wishlist">
-          <h2>Your Wishlist is Empty</h2>
-          <p>Looks like you haven't added anything to your Wishlist yet.</p>
+          <h2>It feels so empty in here</h2>
+          <p>Make a wish!</p>
+          <div className="empty-heart">
+            <span>💔</span>
+          </div>
           <Link to="/">
-            <button className="shop-now-btn">Shop Now</button>
+            <button className="shop-now-btn">Start Shopping</button>
           </Link>
         </div>
       ) : (
@@ -31,7 +34,7 @@ const Wishlist = () => {
                     className="remove-btn"
                     onClick={() => {
                       if (window.confirm('Remove this item from your Wishlist?')) {
-                        removeFromWishlist(item); // Pass the entire object to remove it
+                        removeFromWishlist(item);
                       }
                     }}
                   >

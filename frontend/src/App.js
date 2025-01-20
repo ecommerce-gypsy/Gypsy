@@ -16,6 +16,7 @@ import ListProduct from './Components/ListProduct/ListProduct';
 import Sidebar from './Components/Sidebar/Sidebar';
 import ProductDetail from './Pages/ProductDetail';
 import Account from './Pages/Account';
+import AnkletBanner from './Components/AnkletBanner/AnkletBanner';
 
 
 
@@ -43,10 +44,13 @@ const App = () => {
         <Route path="/listproduct" element={<ListProduct />} />
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/anklets" element={<Anklets />} />
+      <Route path="/ankletbanner" elemenr={<AnkletBanner/>}/>
         <Route path="/bracelets" element={<Bracelets />} />
         <Route path="/neckpieces" element={<Neckpieces />} />
+       
         <Route path="/custproduct" element={<CustProduct />} />
         <Route path="/account" element={<Account />} />
+        
       </Routes>
     </BrowserRouter>
     
