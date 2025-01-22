@@ -1,73 +1,110 @@
-import React, { useContext } from 'react';
-import { CartContext } from '../Context/CartContext';
-import './Cart.css';
-import closeIcon from '../Components/Assets/close.png';
+import React, { useContext } from "react";
+import { CartContext } from "../Context/CartContext";
+import "./Cart.css";
 
 const Cart = () => {
-  const { cart, cartCount, removeItem } = useContext(CartContext);
+  const { cart, setCart, removeItem } = useContext(CartContext);
 
-  const addToCart = async (item) => {
-    try {
-      // Get the token from localStorage
-      const authToken = localStorage.getItem('auth_token');
-
-      if (!authToken) {
-        console.error('No auth token found. Please log in.');
-        return;
-      }
-
-      const response = await fetch('http://localhost:4000/addtocart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'auth-token': authToken,
-        },
-        body: JSON.stringify({ item }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        console.log('Item added to cart:', data);
-        // Optionally update cart state/context here
-      } else {
-        console.error('Failed to add item:', data.errors || data.error);
-      }
-    } catch (error) {
-      console.error('Error adding item:', error);
-    }
+  // Function to increment item quantity
+  const incrementQuantity = (item) => {
+    setCart((prevCart) =>
+      prevCart.map((cartItem) =>
+        cartItem.productid === item.productid
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      )
+    );
   };
+
+  // Function to decrement item quantity
+  const decrementQuantity = (item) => {
+    setCart((prevCart) =>
+      prevCart.map((cartItem) =>
+        cartItem.productid === item.productid && cartItem.quantity > 1
+          ? { ...cartItem, quantity: cartItem.quantity - 1 }
+          : cartItem
+      )
+    );
+  };
+
+  // Calculate total
+  const calculateTotal = () =>
+    cart.reduce((total, item) => total + item.new_price * item.quantity, 0);
 
   return (
     <div className="cart-container">
-      <h1>Shopping Cart</h1>
-      <h2>Total Items: {cartCount}</h2>
+      <h1 className="cart-heading">Your Cart</h1>
+      <a href="/shop" className="continue-shopping">
+        Continue shopping
+      </a>
 
-      <div className="cart-items">
+      <div className="cart-table">
+        <div className="cart-header">
+          <p className="cart-column">Product</p>
+          <p className="cart-column">Quantity</p>
+          <p className="cart-column">Total</p>
+        </div>
+
         {cart.length > 0 ? (
           cart.map((item) => (
-            <div key={item.productid} className="cart-item">
-              <img
-                src={item.images[0]}
-                alt={item.name}
-                className="cart-item-image"
-              />
-              <div className="cart-item-details">
-                <p className="cart-item-name">{item.name}</p>
-                <p className="cart-item-price">Price: ₹{item.new_price}</p>
+            <div className="cart-row" key={item.productid}>
+              <div className="cart-product">
+                <img
+                  src={item.images[0]}
+                  alt={item.name}
+                  className="cart-product-image"
+                />
+                <div>
+                  <p className="cart-product-name">{item.name}</p>
+                  <p className="cart-product-count">Price: ₹{item.new_price}</p>
+                </div>
               </div>
-            
-              <button
-                className="remove-btn"
-                onClick={() => removeItem(item.id)}
-              >
-                <img src={closeIcon} alt="Remove" className="close-icon" />
-              </button>
+
+              <div className="cart-quantity">
+                <button
+                  className="quantity-btn decrement-btn"
+                  onClick={() => decrementQuantity(item)}
+                >
+                  -
+                </button>
+                <span className="quantity-value">{item.quantity}</span>
+                <button
+                  className="quantity-btn increment-btn"
+                  onClick={() => incrementQuantity(item)}
+                >
+                  +
+                </button>
+              </div>
+
+              <div className="cart-total">
+                <p>₹{(item.new_price * item.quantity).toFixed(2)}</p>
+                <button
+                  className="remove-btn"
+                  onClick={() => removeItem(item.productid)}
+                >
+                  🗑️
+                </button>
+              </div>
             </div>
           ))
         ) : (
-          <p>Your cart is empty.</p>
+          <p className="empty-cart">Your cart is empty.</p>
         )}
       </div>
+
+      {cart.length > 0 && (
+        <div className="cart-summary">
+          <textarea
+            className="special-instructions"
+            placeholder="Order special instructions"
+          ></textarea>
+          <div className="summary-details">
+            <p className="summary-label">Estimated total:</p>
+            <p className="summary-total">₹{calculateTotal().toFixed(2)}</p>
+          </div>
+          <button className="checkout-btn">Check out</button>
+        </div>
+      )}
     </div>
   );
 };

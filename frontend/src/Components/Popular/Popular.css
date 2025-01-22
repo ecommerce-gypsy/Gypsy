@@ -1,42 +1,152 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+/* Team Section (Product Categories) */
+.team-section {
+  text-align: center;
+  margin: 50px 20px;
+  background: linear-gradient(to bottom, #ffffff, #f4f4f4);
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-section h2 {
+  font-size: 2.5rem;
+  color: #171717;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+.team-members {
+  display: flex;
+  justify-content: center; /* Center content */
+  gap: 20px; /* Spacing between cards */
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+.team-member {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 20px;
+  width: 220px; /* Fixed width for consistency */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.team-member img {
+  max-width: 100%;
+  height: 120px; /* Uniform image height */
+  object-fit: contain; /* Prevent distortion */
+  margin-bottom: 15px;
+  border-radius: 50%; /* Circular images for a professional look */
+  background-color: #f9f9f9;
+  padding: 10px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.team-member button {
+  background-color: #ff6347; /* Highlight color */
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-transform: uppercase;
+}
+
+.team-member button:hover {
+  background-color: #e5533b; /* Slightly darker shade on hover */
+}
+
+/* Popular Collection Section */
 .popular {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 50px 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popular h1 {
+  font-size: 2.5rem;
+  color: #171717;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.popular hr {
+  width: 100px;
+  height: 5px;
+  border: none;
+  background: #ff6347; /* Accent color */
+  border-radius: 5px;
+}
+
+.popular-item {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px; /* Limit container width */
+  justify-items: center;
+}
+
+/* Individual Product Item */
+.popular-item img {
+  max-width: 100%;
+  height: 200px; /* Uniform height */
+  object-fit: cover; /* Crop images neatly */
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow for images */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.popular-item img:hover {
+  transform: scale(1.05); /* Interactive zoom */
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.popular-item .item-details {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .popular {
+    padding: 20px 10px;
   }
-  
-  .popular h1 {
-    color: #171717;
-    font-size: 50px;
-    font-weight: 600;
+
+  .team-member {
+    width: 100%;
+    max-width: 300px; /* Adjust for smaller screens */
   }
-  
-  .popular hr {
-    width: 200px;
-    height: 6px;
-    border-radius: 10px;
-    background: #252525;
-  }
-  
-  .popular-item {
-    margin-top: 50px;
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap; /* Ensures responsiveness for smaller screens */
-    justify-content: center;
-  }
-  
+
   .popular-item img {
-    max-width: 200px; /* Limits the maximum width */
-    max-height: 200px; /* Limits the maximum height */
-    object-fit: cover; /* Ensures images are cropped neatly without distortion */
-    border-radius: 10px; /* Adds smooth rounded edges */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Adds a soft shadow for better aesthetics */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 180px; /* Adjust image size for smaller screens */
   }
-  
-  .popular-item img:hover {
-    transform: scale(1.05); /* Slight zoom on hover for interactivity */
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Adds a stronger shadow when hovering */
-  }
+}

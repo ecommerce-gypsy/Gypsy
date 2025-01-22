@@ -4,6 +4,7 @@ import "./Bracelets.css"; // Styles for Bracelets
 import { WishlistContext } from "../Context/WishlistContext";
 import { CartContext } from "../Context/CartContext";
 import Header from "../Components/Header/Header"; // Header component
+import Footer from "../Components/Footer/Footer";
 
 const Bracelets = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -86,6 +87,7 @@ const Bracelets = () => {
       <button className="customize-btn" onClick={() => navigate("/customize")}>
         Customize
       </button>
+      <Footer/>
     </div>
   );
 };

@@ -1,0 +1,146 @@
+  /* Header Styles */
+  .about-header {
+    background: #0073e6;
+    color: white;
+    padding: 2em 1em;
+  }
+  
+  .about-header h1 {
+    font-size: 2.5em;
+  }
+  
+  .about-header p {
+    font-size: 1.2em;
+  }
+/* General Styles */
+.gallery {
+  background-color: #f8f9fa;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+.gallery h1 {
+  font-size: 2.5rem;
+  color: #1e2a47;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.gallery p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+/* Section Styling */
+.gallery-section {
+  margin-bottom: 40px;
+}
+
+.gallery-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+/* Add a subtle border and padding to sections */
+.gallery-section p {
+  padding-left: 20px;
+  padding-right: 20px;
+  border-left: 4px solid #3498db;
+  margin-left: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for small text content for a professional feel */
+.gallery-section p {
+  font-size: 1.125rem;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* Image Styling */
+.gallery-image {
+  width: 70%; /* Reduced the width of images to 70% */
+  height: 20%;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gallery-image:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .gallery {
+    padding: 30px 15px;
+  }
+
+  .gallery h1 {
+    font-size: 2rem;
+  }
+
+  .gallery-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .gallery-section p {
+    font-size: 1rem;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  /* Adjust image size for smaller screens */
+  .gallery-image {
+    width: 80%; /* Make images even smaller on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery {
+    padding: 20px;
+  }
+
+  .gallery h1 {
+    font-size: 1.6rem;
+  }
+
+  .gallery-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .gallery-section p {
+    font-size: 0.95rem;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* Further adjustment for very small screens */
+  .gallery-image {
+    width: 85%; /* Even smaller on the smallest screens */
+  }
+}
+
+/* Optional: Add a light background to the page for a better contrast */
+body {
+  background-color: #f1f1f1;
+}
+

@@ -1,4 +1,4 @@
-import React, { useContext,useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./ProductDetail.css";
 import { CartContext } from "../Context/CartContext";
@@ -26,21 +26,17 @@ const ProductDetail = () => {
         }
         const data = await response.json();
 
-        // Check if no subimages are available and set mainImage accordingly
         const images = data.images || [];
         if (images.length === 0) {
           setMainImage(""); // Set to empty if no subimages available
-        } else if (images.length === 1) {
-          setMainImage(images[0]); // If one image, set it as mainImage
         } else {
           setMainImage(images[0]); // Set the first image as the default mainImage
         }
 
         setProduct({
           ...data,
-          images, // Ensure images are properly set
+          images,
         });
-
       } catch (err) {
         setError(err.message);
       } finally {
@@ -59,6 +55,9 @@ const ProductDetail = () => {
     return (basePrice * categoryMultiplier * setMultiplier * quantity).toFixed(2);
   };
 
+  const handleIncrement = () => setQuantity((prev) => prev + 1);
+  const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -70,7 +69,9 @@ const ProductDetail = () => {
   if (!product) {
     return <div>Product not found!</div>;
   }
+
   const isInCart = (product) => cart.some((item) => item.productid === product.productid);
+
   return (
     <div className="product-detail">
       {/* Left Section - Image Gallery */}
@@ -130,12 +131,15 @@ const ProductDetail = () => {
         {/* Quantity Selector */}
         <div className="quantity">
           <label>Quantity:</label>
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
-            min="1"
-          />
+          <div className="quantity-controls">
+            <button className="decrement-btn" onClick={handleDecrement}>
+              −
+            </button>
+            <span className="quantity-value">{quantity}</span>
+            <button className="increment-btn" onClick={handleIncrement}>
+              +
+            </button>
+          </div>
         </div>
 
         {/* Total Price */}
@@ -144,17 +148,18 @@ const ProductDetail = () => {
           <span>₹ {calculateTotalPrice()}</span>
         </div>
 
-         {/* Add to Cart Button */}
-            <button
-              className="add-to-cart"
-              onClick={() => {
-                if (!isInCart(product)) {
-                  addToCart(product);
-                }
-              }}
-            >
-              {isInCart(product) ? "In Cart" : "Add to Cart"}
-            </button>
+        {/* Add to Cart Button */}
+        <button
+          className="add-to-cart"
+          onClick={() => {
+            if (!isInCart(product)) {
+              addToCart(product);
+            }
+          }}
+        >
+          {isInCart(product) ? "In Cart" : "Add to Cart"}
+        </button>
+
         {/* Offers Section */}
         <div className="offers">
           <p>Save extra with below offers:</p>

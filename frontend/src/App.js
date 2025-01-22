@@ -17,6 +17,8 @@ import Sidebar from './Components/Sidebar/Sidebar';
 import ProductDetail from './Pages/ProductDetail';
 import Account from './Pages/Account';
 import AnkletBanner from './Components/AnkletBanner/AnkletBanner';
+import FAQ from './Components/FAQ/FAQ';
+import { Gallery } from './Components/Gallery';
 
 
 
@@ -44,13 +46,14 @@ const App = () => {
         <Route path="/listproduct" element={<ListProduct />} />
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/anklets" element={<Anklets />} />
-      <Route path="/ankletbanner" elemenr={<AnkletBanner/>}/>
+      <Route path="/ankletbanner" element={<AnkletBanner/>}/>
+    
         <Route path="/bracelets" element={<Bracelets />} />
         <Route path="/neckpieces" element={<Neckpieces />} />
-       
+       <Route path="/gallery" element={<Gallery/>}/>
         <Route path="/custproduct" element={<CustProduct />} />
         <Route path="/account" element={<Account />} />
-        
+        <Route path="/faq" element={<FAQ/>}/>
       </Routes>
     </BrowserRouter>
     
