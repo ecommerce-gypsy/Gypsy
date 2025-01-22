@@ -34,7 +34,7 @@ const Cart = () => {
   return (
     <div className="cart-container">
       <h1 className="cart-heading">Your Cart</h1>
-      <a href="/shop" className="continue-shopping">
+      <a href="/" className="continue-shopping">
         Continue shopping
       </a>
 

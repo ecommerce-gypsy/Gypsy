@@ -137,42 +137,15 @@ body {
   color: #495057;
 }
 
-.category select, .set select {
+.category select, .set select, .quantity input {
   flex: 2;
   padding: 10px;
   border: 1px solid #ced4da;
   border-radius: 5px;
 }
 
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.decrement-btn,
-.increment-btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  background: #f8f9fa;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.decrement-btn:hover,
-.increment-btn:hover {
-  background-color: #e9ecef;
-}
-
-.quantity-value {
-  width: 50px;
-  text-align: center;
-  font-size: 16px;
-  padding: 5px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
+.quantity input {
+  width: 80px;
 }
 
 /* Total Price Section */
@@ -182,32 +155,37 @@ body {
   font-weight: bold;
   color: #212529;
 }
-
 /* Add to Cart Button */
 .add-to-cart {
   display: block;
   width: 100%;
   padding: 15px;
-  background: linear-gradient(to right, #ff69b4, #ff3385);
-  color: #ffffff;
+  background: linear-gradient(to right, #ff69b4, #ff3385); /* Rose gradient */
+  color: #ffffff; /* White text */
   border: none;
   border-radius: 5px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition: background 0.3s, transform 0.2s; /* Smooth transitions */
+  margin-bottom: 10px;
 }
 
+/* Hover Effect */
 .add-to-cart:hover {
-  background: linear-gradient(to right, #ff3385, #ff69b4);
-  transform: scale(1.05);
+  background: linear-gradient(to right, #ff3385, #ff69b4); /* Reverse rose gradient */
+  transform: scale(1.05); /* Slight zoom effect */
+  color: #ffffff; /* Ensure text color remains white */
 }
 
+/* Disabled State */
 .add-to-cart:disabled {
-  background: linear-gradient(to right, #aaa, #bbb);
-  color: #666;
+  background: linear-gradient(to right, #aaa, #bbb); /* Neutral gradient for disabled state */
+  color: #666; /* Muted text color */
   cursor: not-allowed;
+  transform: none; /* No hover effect for disabled state */
 }
+
 
 /* Offers Section */
 .offers {
@@ -239,4 +217,24 @@ body {
   .image-gallery, .product-info {
     width: 100%;
   }
+}
+.buy-now{
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(to right, #ff69b4, #ff3385); /* Rose gradient */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+/* Hover Effect */
+.buy-now:hover {
+  background: linear-gradient(to right, #ff3385, #ff69b4); /* Reverse rose gradient */
+  transform: scale(1.05); /* Slight zoom effect */
+  color: #ffffff; /* Ensure text color remains white */
 }

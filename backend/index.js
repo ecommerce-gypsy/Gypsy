@@ -8,6 +8,9 @@ const path = require("path");
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
+const UserCartWishlist = require('./models/UserCartWishlist');
+const ProductS = require('./models/ProductS');
+
 
 // Middleware
 app.use(express.json());
@@ -98,7 +101,6 @@ const Users = mongoose.model("Users", {
         default: Date.now,
     },
 });
-
 // User Schema
 const  Product = mongoose.model("Product", {
     productid: {  // Custom unique identifier for the product (if not using MongoDB _id)
@@ -148,7 +150,6 @@ const  Product = mongoose.model("Product", {
         default: Date.now,
     },
 });
-
 // Routes
 // Signup Route
 app.post('/signup', async (req, res) => {
@@ -186,6 +187,7 @@ app.post('/signup', async (req, res) => {
     }
   });
   const nodemailer = require('nodemailer');
+const { console } = require("inspector");
 
   
 // Function to send welcome email
@@ -361,23 +363,23 @@ app.post('/removeproducts', async (req, res) => {
         res.status(500).json({ success: false, message: "Error removing product", error: error.message });
     }
 });
-/*
+
 // Get All Products
-app.get('/allproducts', async (req, res) => {
+app.get('/allproductsd', async (req, res) => {
     try {
-        let products = await Product.find({});
+        let products = await ProductS.find({});
         console.log("All Products fetched");
         res.json({ success: true, products: products });
     } catch (error) {
         console.error("Error fetching products:", error);
         res.status(500).json({ success: false, message: "Error fetching products", error: error.message });
     }
-});*/
+});
 // Get All Product
         // Map over the products to include the first image in the response
-        app.get('/allproducts', async (req, res) => {
+app.get('/allproducts', async (req, res) => {
             try {
-                let products = await Product.find({});
+                let products = await ProductS.find({});
                 
                 // Add firstImage dynamically for each product
                 products = products.map(product => ({
@@ -416,20 +418,6 @@ app.get('/:category', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching products', error: error.message });
     }
 });
-/*
-// Fetch Product by ID
-app.get("/product/:id", async (req, res) => {
-    const { id } = req.params;
-    try {
-        const product = await Product.findOne({ id: parseInt(id) });
-        if (!product) {
-            return res.status(404).json({ success: false, message: "Product not found." });
-        }
-        res.status(200).json(product);
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Server error: " + error.message });
-    }
-});*/
 
 
 //creating endpoint for popular in bracelet
@@ -609,45 +597,7 @@ app.get('/api/account', authenticateToken, async (req, res) => {
         console.error("Error fetching account details:", error);
         res.status(500).json({ message: 'Error fetching account details' });
     }
-});/*
-const Tok = (req, res, next) => {
-    try {
-        // Get the token from the Authorization header
-        const authHeader = req.header('Authorization');
-        if (!authHeader) {
-            return res.status(401).json({ message: 'Access Denied, No Token Provided' });
-        }
-
-        const token = authHeader.split(' ')[1]; // Extract the token after "Bearer"
-        if (!token) {
-            return res.status(401).json({ message: 'Access Denied, Token Missing' });
-        }
-
-        // Verify the token
-        const decoded = jwt.verify(token, 'secret-ecom');
-        console.log('Decoded Token:', decoded); // Debugging: Log decoded token data
-
-        // Check if user data exists in the token
-        if (!decoded.user || Object.keys(decoded.user).length === 0) {
-            return res.status(403).json({ message: 'Invalid Token: User data missing' });
-        }
-
-        // Attach user data to the request object
-        req.user = decoded.user;
-        next(); // Proceed to the next middleware or route handler
-    } catch (error) {
-        console.error('Token verification error:', error.message || error); // Log the error for debugging
-
-        // Handle token expiration specifically
-        if (error.name === 'TokenExpiredError') {
-            return res.status(403).json({ message: 'Token Expired' });
-        }
-
-        return res.status(403).json({ message: 'Invalid Token' });
-    }
-};const jwt = require('jsonwebtoken');  // Make sure to require jsonwebtoken
-*/
-
+});
 
 const Tok = (req, res, next) => {
     try {
@@ -689,107 +639,301 @@ const Tok = (req, res, next) => {
         // Handle other errors (Invalid Token)
         return res.status(403).json({ message: 'Invalid Token' });
     }
-};app.post('/addwishlist', Tok, async (req, res) => {
-    const { productId } = req.body; // Use productId from request body
-    const userId = req.user.id;    // Numeric userid from the decoded token
+};
 
+  app.post('/wishlist/add', async (req, res) => {
     try {
-        // Log incoming request data for debugging
-        console.log('Received request:', req.body);
-
-        // Validate productId
-        if (!productId) {
-            return res.status(400).json({ message: 'Product ID is required' });
-        }
-
-        const productIdNumber = Number(productId); // Ensure productId is a number
-        if (isNaN(productIdNumber)) {
-            return res.status(400).json({ message: 'Invalid Product ID' });
-        }
-
-        console.log('Searching for product with productid:', productIdNumber);
-
-        // Find the product in the Product collection
-        const product = await Product.findOne({ productid: productIdNumber });
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-
-        console.log('Found product:', product);
-
-        // Find the user in the Users collection using numeric userid
-        const user = await Users.findOne({ userid: userId });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        console.log('Found user:', user);
-
-        // Check if the product is already in the user's wishlist
-        const existingWishlistItem = user.wishlistData.find(
-            (wishlistItem) => wishlistItem.productid === productIdNumber
-        );
-
-        if (existingWishlistItem) {
-            return res.status(400).json({ message: 'Product is already in the wishlist' });
-        }
-
-        // Add the product to the user's wishlist
-        user.wishlistData.push({ productid: productIdNumber });
-        await user.save();
-
-        console.log('Updated wishlist:', user.wishlistData);
-
-        // Respond with success message and updated wishlist
-        res.status(200).json({
-            message: 'Product added to wishlist',
-            wishlistData: user.wishlistData
-        });
+      const { userid, productid } = req.body;
+  
+      const result = await UserCartWishlist.updateOne(
+        { userid },
+        {
+          $push: {
+            items: {
+              productid,
+              quantity: 0,
+              isInCart: false,
+            },
+          },
+        },
+        { upsert: true }
+      );
+  
+      res.status(200).json({ success: true, message: 'Product added to wishlist', result });
     } catch (error) {
-        console.error('Error occurred:', error.message || error);
-
-        res.status(500).json({
-            message: 'Server error',
-            error: error.message || error,
-        });
+      console.error('Error adding product to wishlist:', error);
+      res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
     }
-});
-
-  // Route to add item to the cart
-  app.post('/addtocart', authenticateToken, async (req, res) => {
-    const { item } = req.body;
-    const userId = req.user.id;  // Use the user ID from the decoded JWT token
-  
+  });
+  app.post('/cart/add', async (req, res) => {
     try {
-      // Find the product by its ID
-      const product = await Product.findOne({ id: item.id });
-      if (!product) {
-        return res.status(404).json({ message: 'Product not found' });
-      }
+      const { userid, productid, quantity } = req.body;
   
-      // Find the user by userId
-      const user = await Users.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
+      const result = await UserCartWishlist.updateOne(
+        { userid, 'items.productid': productid },
+        {
+          $set: {
+            'items.$.isInCart': true,
+            'items.$.quantity': quantity,
+          },
+        },
+        { upsert: true }
+      );
   
-      // Check if the item is already in the user's cart
-      const existingCartItem = user.cartData.find(cartItem => cartItem.productId.toString() === product._id.toString());
-      if (existingCartItem) {
-        // Item already exists, update its quantity
-        existingCartItem.quantity += item.quantity || 1;
-        await user.save();
-        return res.status(200).json({ message: 'Item quantity updated', cartData: user.cartData });
-      }
-  
-      // Item is not in the cart, add it
-      user.cartData.push({ productId: product._id, quantity: item.quantity || 1 });
-      await user.save();
-  
-      res.status(200).json({ message: 'Item added to cart', cartData: user.cartData });
+      res.status(200).json({ success: true, message: 'Product added to cart', result });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
+      console.error('Error adding product to cart:', error);
+      res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
     }
   });
   
+  // POST Search API endpoint
+app.post('/search', async (req, res) => {
+    const { query } = req.body;
+  
+    if (!query || query.trim() === '') {
+      return res.status(400).json({ message: 'Search query is required' });
+    }
+  
+    try {
+      // Perform a case-insensitive search for products by name
+      const products = await Product.find({
+        $or: [
+          { name: { $regex: query, $options: 'i' } },     // Search in 'name' field
+          { description: { $regex: query, $options: 'i' } }, // Search in 'description' field
+          { category: { $regex: query, $options: 'i' } }    // Search in 'category' field
+        ]
+      });
+      
+  
+      // Return the products as JSON
+      res.json(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  app.post('/addproductss', async (req, res) => {
+    const products = await ProductS.find({}).sort({ productid: -1 }).limit(1);
+    const productid = products.length > 0 ? parseInt(products[products.length - 1].productid, 10) + 1 : 1;
+  
+    const {
+      specifications,
+      new_price,
+      old_price,
+      stock,
+      category,
+      subcategory,
+      length,
+      productName,
+      description,
+      customization,
+      colorOptions,
+      ratings,
+      isActive,
+      images
+    } = req.body;
+  
+    // Convert old_price, new_price, and stock to Numbers
+    const newPrice = Number(new_price);
+    const oldPrice = Number(old_price);
+    const stockQuantity = Number(stock);
+  
+    console.log(req.body);  // Check the incoming request body
+  
+    try {
+      // Create and save the product document
+      const product = new ProductS({
+        productid,
+        productName,
+        description,
+        category,
+        subcategory,
+        specifications,
+        customization,
+        colorOptions,
+        length,
+        old_price: oldPrice,
+        new_price: newPrice,
+        stock: stockQuantity,
+        ratings,
+        isActive,
+        images
+      });
+  console.log(product);
+      // Save the product to the database
+      await product.save();
+      res.json({ success: true, product });
+      //res.status(201).json({ message: 'Product added successfully', product });
+    } catch (err) {
+      console.log('Error details:', err);  // Log detailed error for debugging
+      res.status(500).json({ error: err.message });
+    }
+  });
+  //filter
+/*
+// Filter endpoint using query parameters
+app.get('/api/products/filter', async (req, res) => {
+    const { subcategory, material, price } = req.query;
+  
+    // Build the filter query based on the parameters
+    const filter = {};
+  
+    if (subcategory) {
+      filter.subcategory = subcategory;
+    }
+  
+    if (material) {
+      filter.material = material;
+    }
+  
+    if (price) {
+      switch (price) {
+        case 'under-99':
+          filter.new_price = { $lt: 99 };
+          break;
+        case 'under-299':
+          filter.new_price = { $lt: 299 };
+          break;
+        case 'over-399':
+          filter.new_price = { $gt: 399 };
+          break;
+        default:
+          break;
+      }
+    }
+  
+    try {
+      const filteredProducts = await Product.find(filter);
+      res.json(filteredProducts);
+    } catch (error) {
+      console.error('Error fetching filtered products:', error);
+      res.status(500).json({ message: 'Failed to fetch filtered products' });
+    }
+  });
+ */
+  app.get('/api/filter', async (req, res) => {
+    const { subcategory, material, price } = req.query;
+console.log(req.query);
+    // Build the filter query based on the parameters
+    const filter = {};
+
+    if (subcategory) {
+        filter.subcategory = subcategory;
+    }
+
+    if (material
+
+    ) {
+        filter['specifications.material'] = material;
+    }
+
+    if (price) {
+        switch (price) {
+            case 'under-99':
+                filter.new_price = { $lt: 99 };
+                break;
+            case 'under-299':
+                filter.new_price = { $lt: 299 };
+                break;
+            case 'over-399':
+                filter.new_price = { $gt: 399 };
+                break;
+            default:
+                break;
+        }
+    }
+
+    console.log('Filter:', filter);  
+
+    try {
+        const filteredProducts = await Product.find(filter);
+        res.json(filteredProducts);
+        console.log("SUccess");
+    } catch (error) {
+        console.error('Error fetching filtered products:', error);
+        res.status(500).json({ message: 'Failed to fetch filtered products' });
+    }
+});
+ 
+app.post('/cartss/add', authenticateToken, async (req, res) => {
+    try {
+      const { productid, quantity } = req.body;
+      const userid = req.user.id; 
+      console.log(userid);
+      
+      const product = await ProductS.findOne({ productid: productid });
+  
+      if (!product) {
+        return res.status(404).json({ success: false, message: 'Product not found' });
+      }
+  
+      // Now you have the ObjectId of the product
+      const productObjectId = product._id;
+  console.log(productObjectId);
+      // Proceed to add the product to the cart using the product's ObjectId
+      const result = await UserCartWishlist.updateOne(
+        { userid },
+        {
+          $addToSet: { // This ensures that the product is added only once
+            items: {
+              productid: productObjectId,
+              quantity: quantity,
+              isInCart: true,
+            },
+          },
+        },
+        { upsert: true }
+      );
+      
+  
+      res.status(200).json({ success: true, message: 'Product added to cart', result });
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    }
+  });
+  app.delete('/cartss/remove', authenticateToken, async (req, res) => {
+    try {
+        const { productid } = req.body;  // Get the productid from the request parameters
+        const userid = req.user.id;  // The logged-in user's id
+        
+        console.log(userid, productid);  // Log the user and productid for debugging
+
+        // Find the cart of the user
+        const userCart = await UserCartWishlist.findOne({ userid });
+
+        if (!userCart) {
+            return res.status(404).json({ success: false, message: 'Cart not found' });
+        }
+        const product = await ProductS.findOne({ productid: productid });
+  
+        if (!product) {
+          return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+    
+        // Now you have the ObjectId of the product
+        const productObjectId = product._id;
+    console.log(productObjectId);
+        // Find the product in the user's cart and remove it
+        const result = await UserCartWishlist.updateOne(
+            { userid, "items.productid": productObjectId },  // Match the cart and productid
+            {
+                $pull: {  // This operation removes the product from the cart
+                    items: { productObjectId }
+                }
+            }
+        );
+
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ success: false, message: 'Product not found in cart' });
+        }
+
+        res.status(200).json({ success: true, message: 'Product removed from cart' });
+
+    } catch (error) {
+        console.error('Error removing product from cart:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    }
+});

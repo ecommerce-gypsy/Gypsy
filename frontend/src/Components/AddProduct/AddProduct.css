@@ -1,154 +1,194 @@
-/* Base Styling */
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #fef7f7; /* Soft off-white background */
-}
-
-/* Add Product Container */
+/* Add Product Form Styling */
 .add-product {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  border: 1px solid #eee;
+  width: 60%;
+  margin: 50px auto;
+  font-family: Arial, sans-serif;
 }
 
-/* Title */
 .add-product h1 {
   text-align: center;
-  color: #e4a1b9; /* Glistlishly Rose */
-  font-size: 28px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  font-size: 32px;
+  color: #333;
 }
 
-/* Form Fields */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
 .addproduct-itemfield {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .addproduct-itemfield p {
-  font-size: 14px;
-  color: #6f6f6f;
-  margin-bottom: 8px;
-}
-
-.addproduct-itemfield input,
-.addproduct-itemfield select,
-.addproduct-itemfield textarea {
-  width: 100%;
-  padding: 12px;
   font-size: 16px;
   color: #333;
-  border: 1px solid #d0b5c1; /* Subtle pink border */
-  border-radius: 6px;
-  transition: border-color 0.3s;
+  font-weight: bold;
+  margin: 0;
 }
 
-.addproduct-itemfield input:focus,
-.addproduct-itemfield select:focus,
-.addproduct-itemfield textarea:focus {
-  border-color: #e4a1b9; /* Focus border with Glistlishly Rose */
-  outline: none;
-}
-
-/* Price Section */
-.addproduct-price {
-  display: flex;
-  justify-content: space-between;
-}
-
-.addproduct-itemfield {
-  width: 30%;
-}
-
-.addproduct-price input {
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* Upload Thumbnail */
-.addproduct-itemfield label {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 200px;
-  background-color: #f9e6f2; /* Soft light pink */
-  border: 2px dashed #e4a1b9;
-  border-radius: 8px;
-  overflow: hidden;
-  text-align: center;
-  line-height: 200px;
-  cursor: pointer;
-  transition: background-color 0.3s, border 0.3s;
+textarea {
+  height: 80px;
 }
 
-.addproduct-itemfield label:hover {
-  background-color: #f6d3e3; /* Lighter pink when hovered */
-  border-color: #d08b99;
+input[type="file"] {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.addproduct-thumnail-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-#file-input {
-  display: none;
-}
-
-/* Button */
-.addproduct-btn {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  color: #fff;
-  background-color: #e4a1b9; /* Glistlishly Rose */
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
+  font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.addproduct-btn:hover {
-  background-color: #d08b99; /* Slightly darker pink on hover */
+button:hover {
+  background-color: #0056b3;
 }
 
-.addproduct-btn:disabled {
-  background-color: #e9d1d8;
-  cursor: not-allowed;
+button:active {
+  background-color: #003f7f;
 }
 
-/* Select Dropdown */
-.add-product-selector {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #d0b5c1;
-  border-radius: 6px;
-  background-color: #fff;
+label {
+  font-size: 14px;
   color: #333;
-  transition: border-color 0.3s;
+  cursor: pointer;
 }
 
-.add-product-selector:focus {
-  border-color: #e4a1b9;
-  outline: none;
+/* Checkbox Styling */
+input[type="checkbox"] {
+  margin-right: 5px;
 }
 
-.addproduct-price input:focus {
-  border-color: #e4a1b9;
+.addproduct-itemfield .addproduct-itemfield input[type="checkbox"] {
+  display: inline-block;
 }
 
-.addproduct-itemfield textarea {
-  resize: vertical;
-  height: 100px;
+.addproduct-itemfield .addproduct-itemfield label {
+  display: inline-block;
+  margin-left: 5px;
 }
 
-.addproduct-itemfield textarea:focus {
-  border-color: #e4a1b9;
+/* Styling for Color Input */
+.addproduct-itemfield input[type="text"] {
+  width: auto;
+  max-width: 100px;
 }
+
+.addproduct-itemfield button {
+  width: 40px;
+  margin-top: 5px;
+}
+
+.addproduct-itemfield div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.addproduct-itemfield select {
+  width: auto;
+  max-width: 150px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .add-product {
+    width: 90%;
+  }
+
+  form {
+    padding: 20px;
+  }
+}/* Add these styles in your global CSS or in AddProduct.css */
+
+/* This will make the container for Sidebar and Form use flex layout */
+.add-product-container {
+  display: flex;
+  flex-direction: row; /* Make Sidebar and Form sit side by side */
+  justify-content: flex-start;
+}
+
+
+  /* Sidebar container */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #f8f9fa; /* Light background color */
+    width: 250px; /* Sidebar width */
+    height: 100vh; /* Full height */
+    padding: 20px;
+    border-right: 1px solid #ddd; /* Optional border for separation */
+  }
+  
+  /* Sidebar item */
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Spacing between icon and text */
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .sidebar-item:hover {
+    background-color: #e2e6ea; /* Highlight on hover */
+  }
+  
+  /* Sidebar item text */
+  .sidebar-item p {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+    color: #333;
+  }
+  
+  /* Icon styling */
+  .sidebar-item img {
+    height: 35px; /* Icon size */
+    width: 35px;
+  }
+
+/* Main content (Add Product) area styles */
+.add-product {
+  margin-left: 250px; /* Push content to the right to make room for Sidebar */
+  padding: 20px;
+  width: calc(100% - 250px); /* Use remaining space */
+  overflow: auto; /* Ensure content inside scrolls if it's too long */
+}
+
+/* Add styling to the form fields */
+.addproduct-itemfield {
+  margin-bottom: 15px;
+}
+
+/* Add some margin to the submit button */
+.addproduct-submit {
+  margin-top: 20px;
+}
+

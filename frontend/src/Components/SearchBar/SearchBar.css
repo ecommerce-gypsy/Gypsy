@@ -1,0 +1,158 @@
+/* Search bar container */
+.search {
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Search input field */
+  .search-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .search-bar-container input {
+    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .search-bar-container input:focus {
+    border-color: #4e8ef7;
+  }
+  
+  /* Search results section */
+  .results {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  /* Loading and no results messages */
+  .no-results {
+    color: #999;
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  p {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+  }
+  
+  /* Product list styling */
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  /* Product card styling */
+  .product-item {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Product image styling */
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  
+  /* Product name and price container */
+  .product-card {
+    padding: 15px;
+  }
+  
+  /* Product name styling */
+  .bracelets-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  /* Product price styling */
+  .bracelets-price {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .new-price {
+    font-size: 1.2rem;
+    color: #e93e3e;
+    font-weight: bold;
+  }
+  
+  .old-price {
+    font-size: 1rem;
+    text-decoration: line-through;
+    color: #999;
+  }
+  
+  /* Hover effects for price */
+  .bracelets-price .new-price:hover {
+    color: #ff7043;
+  }
+  
+  .bracelets-price .old-price:hover {
+    color: #555;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .search {
+      padding: 15px;
+    }
+  
+    .search-bar-container input {
+      padding: 8px;
+    }
+  
+    .product-list {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  
+    .bracelets-name {
+      font-size: 1rem;
+    }
+  
+    .bracelets-price .new-price {
+      font-size: 1.1rem;
+    }
+  
+    .bracelets-price .old-price {
+      font-size: 0.9rem;
+    }
+  }
+  

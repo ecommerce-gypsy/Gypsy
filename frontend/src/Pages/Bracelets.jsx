@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Bracelets.css"; // Styles for Bracelets
+import "./Bracelets.css"; 
 import { WishlistContext } from "../Context/WishlistContext";
 import { CartContext } from "../Context/CartContext";
-import Header from "../Components/Header/Header"; // Header component
-import Footer from "../Components/Footer/Footer";
+import Header from "../Components/Header/Header"; 
 
 const Bracelets = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -87,7 +86,6 @@ const Bracelets = () => {
       <button className="customize-btn" onClick={() => navigate("/customize")}>
         Customize
       </button>
-      <Footer/>
     </div>
   );
 };

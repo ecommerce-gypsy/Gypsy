@@ -65,7 +65,7 @@ const ListProduct = () => {
                                 alt={product.name}
                                 className="listproduct-product-icon"
                             />
-                            <p>{product.name}</p>
+                            <p>{product.productName || product.name}</p>
                             <p>₹{product.old_price}</p>
                             <p>₹{product.new_price}</p>
                             <p>{product.category}</p>

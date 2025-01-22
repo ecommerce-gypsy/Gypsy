@@ -206,3 +206,21 @@ button.add-to-cart-btn:disabled {
     padding: 6px 10px;
   }
 }
+.view-more-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.view-more-btn {
+  background-color: #f39c12;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.view-more-btn:hover {
+  background-color: #e67e22;
+}

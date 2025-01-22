@@ -19,7 +19,7 @@ import Account from './Pages/Account';
 import AnkletBanner from './Components/AnkletBanner/AnkletBanner';
 import FAQ from './Components/FAQ/FAQ';
 import { Gallery } from './Components/Gallery';
-
+import Filter from './Components/Filter/Filter';
 
 
 
@@ -54,6 +54,7 @@ const App = () => {
         <Route path="/custproduct" element={<CustProduct />} />
         <Route path="/account" element={<Account />} />
         <Route path="/faq" element={<FAQ/>}/>
+        <Route path="/:category" component={Filter} />
       </Routes>
     </BrowserRouter>
     
