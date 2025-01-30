@@ -1,5 +1,3 @@
-/* Header.css */
-
 /* General Header Styles */
 .header {
   display: flex;
@@ -26,7 +24,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
-  width: 200px;
+  width: 200px; /* Default width */
   transition: width 0.3s ease; /* Smooth expand effect */
 }
 
@@ -52,6 +50,82 @@
   margin-left: auto; /* Push to the right */
 }
 
+/* Results container */
+.search-results {
+  position: absolute;
+  top: 100%; /* Position below the search input */
+  left: 0;
+  width: 200px; /* Same width as the search input */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-height: 300px; /* Increased height */
+  overflow-y: auto; /* Enable scroll if results overflow */
+  z-index: 10;
+  padding: 10px; /* Padding for consistent spacing */
+  box-sizing: border-box;
+}
+
+/* Result list container */
+.results-list {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for multiple items */
+  gap: 10px; /* Reduced gap for compactness */
+  padding: 10px;
+}
+
+/* Result item styling */
+.result-item {
+  display: flex;
+  flex-direction: column; /* Stack image and text */
+  align-items: center;
+  justify-content: flex-start;
+  width: calc(50% - 10px); /* Two items per row */
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Image styling */
+.product-image {
+  width: 100px; /* Adjusted width for smaller layout */
+  height: 100px; /* Adjusted height for smaller layout */
+  object-fit: cover; /* Ensure the image covers the area */
+  border-radius: 4px; /* Reduced radius */
+  margin-bottom: 8px; /* Reduced space between image and text */
+}
+
+/* Info container */
+.result-info {
+  display: flex;
+  flex-direction: row; /* Align text horizontally */
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  gap: 10px;
+}
+
+/* Product name */
+.product-name {
+  font-weight: bold;
+  font-size: 14px; /* Adjusted font size */
+  color: #333;
+  flex: 2; /* Allow more space for name */
+}
+
+/* Product price */
+.product-price {
+  color: #007bff;
+  font-size: 14px; /* Reduced font size */
+  font-weight: bold;
+  flex: 1; /* Less space for price */
+  text-align: right;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .search-input {
@@ -65,5 +139,32 @@
   .header-icon {
     width: 20px;
     height: 20px;
+  }
+
+  .search-results {
+    max-height: 150px;
+    width: 150px; /* Same width as the input for mobile */
+  }
+
+  .results-list {
+    gap: 8px; /* Smaller gap for mobile */
+  }
+
+  .result-item {
+    width: calc(50% - 8px); /* Two items per row for mobile */
+    padding: 6px; /* Reduced padding */
+  }
+
+  .product-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .product-name {
+    font-size: 12px; /* Adjusted font size for mobile */
+  }
+
+  .product-price {
+    font-size: 12px; /* Adjusted font size for mobile */
   }
 }

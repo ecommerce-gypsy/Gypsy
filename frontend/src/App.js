@@ -17,60 +17,42 @@ import Sidebar from './Components/Sidebar/Sidebar';
 import ProductDetail from './Pages/ProductDetail';
 import Account from './Pages/Account';
 import AnkletBanner from './Components/AnkletBanner/AnkletBanner';
-
 import { Gallery } from './Components/Gallery';
 import Header from './Components/Header/Header';
 import FAQ from './Components/Faq';
 import ReviewSection from './Components/ReviewSection';
+import Checkout from './Pages/Checkout';
 import AddressForm from './Components/AddressForm/AddressForm';
 
-
-
-
-
-
-
-
-
-
-
-
- 
-
 const App = () => {
-  
   return (
-    
     <BrowserRouter>
       <Navbar /> {/* Cart count is handled in Navbar via CartContext */}
-      <Header/>
-
+      <Header />
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<LoginSignup />} />
-        <Route path="/account" element={<Account/>}/>
-        <Route path="/product/:id" element={<ProductDetail/>}/>
+        <Route path="/account" element={<Account />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/addproduct" element={<AddProduct />} />
-      <Route path="/productdetail" element={<ProductDetail/>}/>
         <Route path="/listproduct" element={<ListProduct />} />
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/anklets" element={<Anklets />} />
-      <Route path="/ankletbanner" element={<AnkletBanner/>}/>
-<Route path="/AddressForm" element={<AddressForm/>}/>
+        <Route path="/ankletbanner" element={<AnkletBanner />} />
+        <Route path="/AddressForm" element={<AddressForm />} />
         <Route path="/bracelets" element={<Bracelets />} />
         <Route path="/neckpieces" element={<Neckpieces />} />
-       <Route path="/gallery" element={<Gallery/>}/>
+        <Route path="/gallery" element={<Gallery />} />
         <Route path="/custproduct" element={<CustProduct />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/faq" element={<FAQ/>}/>
-        <Route path="/reviewsection" element={<ReviewSection/>}/>
-        
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/reviewsection" element={<ReviewSection />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </BrowserRouter>
-    
   );
 };
 

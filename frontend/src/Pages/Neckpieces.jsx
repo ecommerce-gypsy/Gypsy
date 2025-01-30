@@ -72,13 +72,13 @@ const Neckpieces = () => {
             <Link to={`/product/${product.productid}`}>
               <img
                 src={product.images[0]}
-                alt={product.name}
+                alt={product.productName}
                 className="product-image"
               />
             </Link>
 
             {/* Product Details */}
-            <div className="neckpiece-name">{product.name}</div>
+            <div className="neckpiece-name">{product.productName}</div>
             <div className="neckpiece-price">
               <span className="new-price">₹{product.new_price}</span>{" "}
               <span className="old-price">₹{product.old_price}</span>

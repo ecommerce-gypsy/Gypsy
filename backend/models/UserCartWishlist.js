@@ -7,13 +7,15 @@ const userCartWishlistSchema = new mongoose.Schema({
     ref: 'Users', 
     required: true,
   },
+  
   items: [
     {
       productid: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Products', 
+       
+        type:Number,
         required: true,
       },
+    
       quantity: {
         type: Number,
         default: 0, 
@@ -23,7 +25,13 @@ const userCartWishlistSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false, 
-      },
+      },productName:{ 
+        type: String, 
+        required: true },
+      images: [{
+        type: String,  // URL or file path for product images
+      }],
+     new_price: { type: Number, required: true },
       addedAt: {
         type: Date,
         default: Date.now, 

@@ -65,9 +65,9 @@ const Bracelets = () => {
                 ♥
               </div>
               <Link to={`/product/${product.productid}`}>
-                <img src={product.images[0]} alt={product.name} className="product-image" />
+                <img src={product.images[0]} alt={product.productName} className="product-image" />
               </Link>
-              <div className="bracelets-name">{product.name}</div>
+              <div className="bracelets-name">{product.productName}</div>
               <div className="bracelets-price">
                 <span className="new-price">₹{product.new_price}</span>{" "}
                 <span className="old-price">₹{product.old_price}</span>

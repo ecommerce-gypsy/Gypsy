@@ -73,25 +73,25 @@ export const Popular = () => {
           </div>
         </div>
       </section>
-
-      {/* Popular Collection Section */}
       <div className="popular">
-        <h1>LATEST COLLECTION</h1>
-        <hr />
-        <div className="popular-item">
-          {(newCollection.length > 0 ? newCollection : data_product).map((item, i) => (
-            <Item
-              key={i}
-              id={item.id}
-              name={item.name}
-              image={item.images[0]}
-              new_price={item.new_price}
-              old_price={item.old_price}
-            />
-          ))}
-          
-        </div>
-      </div>
+  <h1>LATEST COLLECTION</h1>
+  <hr />
+  <div className="popular-item">
+    {(newCollection.length > 0 ? newCollection : data_product)
+      .filter(item => item && item.images && item.images[0]) // Ensure items have images[0] defined
+      .map((item, i) => (
+        <Item
+          key={i}
+          id={item.id}
+          name={item.name}
+          image={item.images && item.images[0]}  // Safe access for image
+          new_price={item.new_price}
+          old_price={item.old_price}
+        />
+      ))}
+  </div>
+</div>
+
     </div>
   );
 };

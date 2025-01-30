@@ -47,7 +47,8 @@ export const LoginSignup = () => {
 
       // Store the token and username in localStorage
       localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('user_name', data.username); // Assuming the backend returns the username
+      localStorage.setItem('user_name', data.username); 
+      localStorage.setItem('user_email', data.email);// Assuming the backend returns the username
 
       console.log('Login successful:', data);
 
@@ -75,7 +76,9 @@ export const LoginSignup = () => {
 
       // Store the token and username in localStorage
       localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('user_name', data.username); // Assuming the backend returns the username
+      localStorage.setItem('user_name', data.username);
+      localStorage.setItem('user_email', data.email);
+       // Assuming the backend returns the username
 
       console.log('Signup successful:', data);
 

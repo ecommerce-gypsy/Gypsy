@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ProductS = new mongoose.Schema({
-  productid: {  // Custom unique identifier for the product (if not using MongoDB _id)
+  productid: {  
     type: Number,
     required: true,
   },
@@ -28,12 +28,12 @@ const ProductS = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['anklets', 'neckpieces', 'bracelets', 'rings'],  // Categories for filtering
+    enum: ['anklets', 'neckpieces', 'bracelets', 'rings'],  
     required: true,
   },
   subcategory: {
     type: String,
-    enum: ['single-stranded', 'multistranded', 'minimalistic'], // Subcategories for filtering
+    enum: ['single-stranded', 'multistranded', 'minimalistic'], 
     required: true,
   },
   specifications: {
@@ -67,15 +67,15 @@ const ProductS = new mongoose.Schema({
   },
   customization: {
     type: Boolean,
-    default: false,  // Whether the product supports customization
+    default: false,  
   },
   colorOptions: {
-    type: [String], // Array to store color options for customization
+    type: [String], 
     default: [],
   },
   length: {
     type: String,
-    enum: ['16', '18', '20'],  // Length options like Chocker 16", Princess 18", Matine 20"
+    enum: ['16', '18', '20'],  // Length options  Chocker 16", Princess 18", Matine 20"
   },
   images: [{
     type: String,  // URL or file path for product images

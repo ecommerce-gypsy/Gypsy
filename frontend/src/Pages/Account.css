@@ -87,3 +87,145 @@ ul li:last-child {
     grid-column: span 1; /* Make account header fit in single column */
   }
 }
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.wishlist-item-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.wishlist-item-card:hover {
+  transform: scale(1.02);
+}
+
+.wishlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.wishlist-item-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.wishlist-header-details {
+  flex: 1;
+}
+
+.wishlist-header-details h3 {
+  font-size: 1rem;
+  color: #6a1b9a; /* Purple color for text */
+  margin: 0;
+}
+
+.wishlist-heart {
+  font-size: 1.5rem;
+  color: #e91e63; /* Pink color for the heart */
+  cursor: pointer;
+}
+
+.wishlist-footer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.wishlist-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #4caf50; /* Green color for the new price */
+}
+
+.new-price {
+  font-size: 1.5rem;
+}
+
+.old-price {
+  font-size: 1rem;
+  color: #9e9e9e; /* Grey color for the old price */
+  text-decoration: line-through;
+  margin-left: 5px;
+}
+.cart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.cart-item-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.cart-item-card:hover {
+  transform: scale(1.02);
+}
+
+.cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.cart-item-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.cart-header-details {
+  flex: 1;
+}
+
+.cart-header-details h3 {
+  font-size: 1rem;
+  color: #6a1b9a; /* Purple color for text */
+  margin: 0;
+}
+
+.cart-quantity {
+  font-size: 1rem;
+  color: #3f51b5; /* Blue for quantity */
+  font-weight: bold;
+}
+
+.cart-footer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.cart-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #4caf50; /* Green color for the new price */
+}
+
+.new-price {
+  font-size: 1.5rem;
+}
+
+.old-price {
+  font-size: 1rem;
+  color: #9e9e9e; /* Grey color for the old price */
+  text-decoration: line-through;
+  margin-left: 5px;
+}
