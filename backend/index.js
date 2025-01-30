@@ -10,6 +10,7 @@ const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const UserCartWishlist = require('./models/UserCartWishlist');
 const ProductS = require('./models/ProductS');
+const Order = require('./models/Order');
 
 
 // Middleware
@@ -187,7 +188,6 @@ app.post('/signup', async (req, res) => {
     }
   });
   const nodemailer = require('nodemailer');
-const { console } = require("inspector");
 
   
 // Function to send welcome email
@@ -559,45 +559,38 @@ const authenticateToken = (req, res, next) => {
         return res.status(403).json({ message: 'Invalid Token' });
     }
 };
-
 app.get('/api/account', authenticateToken, async (req, res) => {
     try {
-        // Convert the user id from the token into an ObjectId before querying
-        const userId = new mongoose.Types.ObjectId(req.user.id); // Convert to ObjectId
-        
-        // Get user details from the database using the user ID
-        const user = await Users.findById(userId)
-            .populate('cartData.productid')
-            .populate('wishlistData.productid')
-            .exec();
-
+        const userId = new mongoose.Types.ObjectId(req.user.id);
+  
+        // Fetch user details from Users collection
+        const user = await Users.findById(userId).exec();
+  
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        // Prepare the user data to be sent to the frontend
+  
+        // Fetch cart and wishlist data from UserCartWishlist collection
+        const userCartWishlist = await UserCartWishlist.findOne({ userid: userId }).exec();
+        const orders = await Order.find({ userid: userId }).exec();
+        // Prepare response
         const userData = {
             name: user.name,
             email: user.email,
-            country: user.country || '',  // Ensure fallback value for country
-            addresses: user.addresses || [],  // Fallback to empty array if no addresses
-            orders: user.orders || [],  // Include orders if present
-            cartData: user.cartData.map(item => ({
-                productId: item.productId,  // Full product details can be included
-                quantity: item.quantity,
-            })) || [],  // Fallback to empty array if no cart items
-            wishlistData: user.wishlistData.map(item => ({
-                productId: item.productId,  // Full product details can be included
-            })) || [],  // Fallback to empty array if no wishlist items
+            country: user.country || '',
+            addresses: user.addresses || [],
+            orders: orders || [],
+            cartData: userCartWishlist ? userCartWishlist.items.filter(item => item.isInCart) : [],
+            wishlistData: userCartWishlist ? userCartWishlist.items.filter(item => !item.isInCart) : [],
         };
-
-        res.json(userData);  // Respond with the user data
-
+  
+        res.json(userData);
+  
     } catch (error) {
         console.error("Error fetching account details:", error);
         res.status(500).json({ message: 'Error fetching account details' });
     }
-});
+  });
 
 const Tok = (req, res, next) => {
     try {

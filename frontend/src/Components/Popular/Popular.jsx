@@ -89,7 +89,7 @@ export const Popular = () => {
               old_price={item.old_price}
             />
           ))}
-      
+          
         </div>
       </div>
     </div>

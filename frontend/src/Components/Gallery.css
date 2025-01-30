@@ -1,17 +1,18 @@
-  /* Header Styles */
-  .about-header {
-    background: #0073e6;
-    color: white;
-    padding: 2em 1em;
-  }
-  
-  .about-header h1 {
-    font-size: 2.5em;
-  }
-  
-  .about-header p {
-    font-size: 1.2em;
-  }
+/* Header Styles */
+.about-header {
+  background: #0073e6;
+  color: white;
+  padding: 2em 1em;
+}
+
+.about-header h1 {
+  font-size: 2.5em;
+}
+
+.about-header p {
+  font-size: 1.2em;
+}
+
 /* General Styles */
 .gallery {
   background-color: #f8f9fa;
@@ -72,8 +73,8 @@
 
 /* Image Styling */
 .gallery-image {
-  width: 70%; /* Reduced the width of images to 70% */
-  height: 20%;
+  width: 60%; /* Reduced the width of images to 60% */
+  height: auto; /* Maintain aspect ratio */
   margin-top: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -110,7 +111,7 @@
 
   /* Adjust image size for smaller screens */
   .gallery-image {
-    width: 80%; /* Make images even smaller on smaller screens */
+    width: 30%; /* Make images smaller on medium screens */
   }
 }
 
@@ -135,7 +136,7 @@
 
   /* Further adjustment for very small screens */
   .gallery-image {
-    width: 85%; /* Even smaller on the smallest screens */
+    width: 50%; /* Even smaller on the smallest screens */
   }
 }
 
@@ -143,4 +144,3 @@
 body {
   background-color: #f1f1f1;
 }
-

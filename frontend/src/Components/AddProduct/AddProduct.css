@@ -1,194 +1,184 @@
-/* Add Product Form Styling */
-.add-product {
-  width: 60%;
-  margin: 50px auto;
-  font-family: Arial, sans-serif;
+/* Adjusted Styles for Proper Alignment */
+.add-product-container {
+  display: flex;
+  height: 100vh;
+  background-color: #ffe8e0; /* Light peach background */
 }
 
-.add-product h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 32px;
-  color: #333;
+.add-product {
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  border-left: 1px solid #f3b5a9; /* Soft peach border */
+  overflow-y: auto;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .addproduct-itemfield {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Change to column layout for better stacking */
+  align-items: flex-start;
+  margin-bottom: 20px;
 }
 
 .addproduct-itemfield p {
   font-size: 16px;
-  color: #333;
-  font-weight: bold;
-  margin: 0;
+  font-weight: 500;
+  margin: 0 0 5px 0; /* Add spacing below label */
+  color: #8a4b41; /* Warm brown text */
+  width: 200px; /* Fixed width for uniform alignment */
 }
 
-input[type="text"],
-input[type="number"],
-select,
-textarea {
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-textarea {
-  height: 80px;
-}
-
-input[type="file"] {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  background-color: #007bff;
-  color: white;
+.addproduct-itemfield input,
+.addproduct-itemfield textarea,
+.addproduct-itemfield select {
+  flex: 1;
   padding: 10px;
+  font-size: 14px;
+  border: 1px solid #f3b5a9; /* Peach border */
+  border-radius: 5px;
+  transition: border-color 0.2s ease;
+  outline: none;
+}
+
+.addproduct-itemfield input:focus,
+.addproduct-itemfield textarea:focus,
+.addproduct-itemfield select:focus {
+  border-color: #e87d66; /* Brighter peach for focus */
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.addproduct-itemfield label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #8a4b41; /* Warm brown */
+  margin-bottom: 10px; /* Space below checkbox label */
+}
+
+.addproduct-itemfield label input {
+  margin-right: 10px;
+}
+
+/* Color Options */
+.addproduct-itemfield .color-options-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between elements */
+}
+
+.addproduct-itemfield .color-options-container input {
+  flex: 1; /* Ensure text input expands to available space */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #f3b5a9; /* Peach border */
+  border-radius: 5px;
+}
+
+.addproduct-itemfield .color-options-container button {
+  padding: 5px 10px;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #e87d66; /* Peach button */
   border: none;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+.addproduct-itemfield .color-options-container button:hover {
+  background-color: #d96c59; /* Slightly darker peach on hover */
 }
 
-button:active {
-  background-color: #003f7f;
-}
-
-label {
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-}
-
-/* Checkbox Styling */
-input[type="checkbox"] {
-  margin-right: 5px;
-}
-
-.addproduct-itemfield .addproduct-itemfield input[type="checkbox"] {
-  display: inline-block;
-}
-
-.addproduct-itemfield .addproduct-itemfield label {
-  display: inline-block;
-  margin-left: 5px;
-}
-
-/* Styling for Color Input */
-.addproduct-itemfield input[type="text"] {
-  width: auto;
-  max-width: 100px;
-}
-
-.addproduct-itemfield button {
-  width: 40px;
-  margin-top: 5px;
-}
-
-.addproduct-itemfield div {
+/* Image Previews */
+.image-previews {
   display: flex;
   gap: 10px;
-  align-items: center;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
-.addproduct-itemfield select {
-  width: auto;
-  max-width: 150px;
+.image-previews img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #f3b5a9; /* Peach border */
+}
+
+/* Submit Button */
+.addproduct-submit {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #e87d66; /* Main peach button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.addproduct-submit:hover {
+  background-color: #d96c59; /* Slightly darker peach */
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  background-color: #f4a698; /* Light peach sidebar */
+  color: #ffffff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h1, .sidebar p {
+  color: #ffffff; /* Keep text white for readability */
 }
 
 /* Responsive Design */
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
+  .add-product-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    text-align: center;
+  }
+
   .add-product {
-    width: 90%;
+    padding: 15px;
   }
 
   form {
     padding: 20px;
   }
-}/* Add these styles in your global CSS or in AddProduct.css */
 
-/* This will make the container for Sidebar and Form use flex layout */
-.add-product-container {
-  display: flex;
-  flex-direction: row; /* Make Sidebar and Form sit side by side */
-  justify-content: flex-start;
-}
-
-
-  /* Sidebar container */
-  .sidebar {
-    display: flex;
+  .addproduct-itemfield {
     flex-direction: column;
     align-items: flex-start;
-    background-color: #f8f9fa; /* Light background color */
-    width: 250px; /* Sidebar width */
-    height: 100vh; /* Full height */
-    padding: 20px;
-    border-right: 1px solid #ddd; /* Optional border for separation */
-  }
-  
-  /* Sidebar item */
-  .sidebar-item {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Spacing between icon and text */
-    padding: 10px 15px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .sidebar-item:hover {
-    background-color: #e2e6ea; /* Highlight on hover */
-  }
-  
-  /* Sidebar item text */
-  .sidebar-item p {
-    font-size: 16px;
-    font-weight: 500;
-    margin: 0;
-    color: #333;
-  }
-  
-  /* Icon styling */
-  .sidebar-item img {
-    height: 35px; /* Icon size */
-    width: 35px;
   }
 
-/* Main content (Add Product) area styles */
-.add-product {
-  margin-left: 250px; /* Push content to the right to make room for Sidebar */
-  padding: 20px;
-  width: calc(100% - 250px); /* Use remaining space */
-  overflow: auto; /* Ensure content inside scrolls if it's too long */
+  .addproduct-itemfield p {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .addproduct-itemfield .color-options-container {
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    gap: 5px;
+  }
 }
-
-/* Add styling to the form fields */
-.addproduct-itemfield {
-  margin-bottom: 15px;
-}
-
-/* Add some margin to the submit button */
-.addproduct-submit {
-  margin-top: 20px;
-}
-

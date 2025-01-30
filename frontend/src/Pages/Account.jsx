@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Account.css'; // Import the CSS file for 
-
+import {Link} from "react-router-dom";
 function Account() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -56,8 +56,11 @@ function Account() {
         <p>Name: {userData.name}</p>
         <p>Address: {userData.address}</p>
         <p>
-          <a href="/addresses">View addresses ({userData.addresses.length})</a>
-        </p>
+  <Link to="/AddressForm">
+    View addresses ({userData ? userData.addresses.length : 0})
+  </Link>
+</p>
+
         <button className="logout-button" onClick={handleLogout}>Log out</button>
       </div>
 

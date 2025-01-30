@@ -17,9 +17,21 @@ import Sidebar from './Components/Sidebar/Sidebar';
 import ProductDetail from './Pages/ProductDetail';
 import Account from './Pages/Account';
 import AnkletBanner from './Components/AnkletBanner/AnkletBanner';
-import FAQ from './Components/FAQ/FAQ';
+
 import { Gallery } from './Components/Gallery';
-import Filter from './Components/Filter/Filter';
+import Header from './Components/Header/Header';
+import FAQ from './Components/Faq';
+import ReviewSection from './Components/ReviewSection';
+import AddressForm from './Components/AddressForm/AddressForm';
+
+
+
+
+
+
+
+
+
 
 
 
@@ -31,7 +43,7 @@ const App = () => {
     
     <BrowserRouter>
       <Navbar /> {/* Cart count is handled in Navbar via CartContext */}
-      
+      <Header/>
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -47,14 +59,15 @@ const App = () => {
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/anklets" element={<Anklets />} />
       <Route path="/ankletbanner" element={<AnkletBanner/>}/>
-    
+<Route path="/AddressForm" element={<AddressForm/>}/>
         <Route path="/bracelets" element={<Bracelets />} />
         <Route path="/neckpieces" element={<Neckpieces />} />
        <Route path="/gallery" element={<Gallery/>}/>
         <Route path="/custproduct" element={<CustProduct />} />
         <Route path="/account" element={<Account />} />
         <Route path="/faq" element={<FAQ/>}/>
-        <Route path="/:category" component={Filter} />
+        <Route path="/reviewsection" element={<ReviewSection/>}/>
+        
       </Routes>
     </BrowserRouter>
     

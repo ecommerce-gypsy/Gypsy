@@ -10,7 +10,7 @@ export const Hero = () => {
   return (
     <div className="hero">
       <div className="hero-left">
-        <h2><b>ABOUT US</b></h2>
+        
         <div className="hero-text">
           <div className="hero-user">
             <p>Preserving</p>

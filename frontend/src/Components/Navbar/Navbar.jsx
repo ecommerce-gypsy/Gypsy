@@ -1,12 +1,11 @@
 import React, { useContext } from 'react'; // Removed unused useState
-import { NavLink } from 'react-router-dom'; // Use NavLink instead of Link
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../Assets/logo.png'; // Path to your logo
 import cart from '../Assets/cart.png'; // Path to your cart icon
 import heart from '../Assets/heart-logo.png'; // Path to your heart icon
 import user from '../Assets/user.png'; // Path to your user icon
-import { CartContext } from '../../Context/CartContext';
-// Import CartContext
+import { CartContext } from '../../Context/CartContext'; // Import CartContext
 
 export const Navbar = () => {
   // Access cartCount from CartContext
@@ -17,54 +16,51 @@ export const Navbar = () => {
       {/* Logo Section */}
       <div className="nav-logo">
         <img src={logo} alt="Logo" />
-        <p>Narikurava Jewelery</p>
+        <p>Shop</p>
       </div>
 
       {/* Navigation Menu */}
       <ul className="nav-menu">
         <li>
-          <NavLink to="/"  activeClassName="active">
+          <Link to="/" activeclassName="active" exact>
             HOME
-          </NavLink>
+          </Link>
         </li>
         <li>
-          <NavLink to="/anklets" activeClassName="active">
-            ANKLETS
-          </NavLink>
+          <Link to="/anklets" activeclassName="active">ANKLETS</Link>
         </li>
         <li>
-        <NavLink to="/neckpieces" activeClassName="active">
-            NECKPIECES
-          </NavLink>
+          <Link to="/neckpieces" activeclassName="active">NECKPIECES</Link>
         </li>
-         <li>
-          <NavLink to="/bracelets" activeClassName="active">
-            BRACELETS
-          </NavLink>
-         </li>
+        <li>
+          <Link to="/bracelets" activeclassName="active">BRACELETS</Link>
+        </li>
+        <li>
+          <Link to="/custom" activeclassName="active">CUSTOMIZATION</Link>
+        </li>
       </ul>
 
       {/* Icons and Login Section */}
       <div className="nav-icons">
         {/* Wishlist */}
-        <NavLink to="/wishlist">
+        <Link to="/wishlist">
           <div className="nav-icon">
             <img src={heart} alt="Heart" className="nav-heart-logo" />
           </div>
-        </NavLink>
+        </Link>
 
         {/* Cart */}
         <div className="nav-cart">
-          <NavLink to="/cart" className="nav-cart-link">
+          <Link to="/cart" className="nav-cart-link">
             <img src={cart} alt="Cart" className="nav-cart-icon" />
             <div className="nav-cart-count">{cartCount}</div> {/* Dynamic count */}
-          </NavLink>
+          </Link>
         </div>
-
+        <Link to="/account"></Link>
         {/* Login Button */}
-        <NavLink to="/login">
+        <Link to="/login">
           <img src={user} alt="User" className="nav-user-icon" />
-        </NavLink>
+        </Link>
       </div>
     </div>
   );

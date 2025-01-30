@@ -1,0 +1,36 @@
+.custom-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+  }
+  
+  .custom-btn {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .custom-btn:hover {
+    background-color: #005f6a;
+    transform: scale(1.1);
+  }
+  
+  .welcome-message {
+    margin-top: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  h1 {
+    margin: 0;
+  }
+  

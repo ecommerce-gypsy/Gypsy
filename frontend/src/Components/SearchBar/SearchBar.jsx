@@ -2,6 +2,7 @@
 import React, {useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import './SearchBar.css'; // Import the CSS for styling
 
 export const SearchBar = () => {
     const [query, setQuery] = useState('');

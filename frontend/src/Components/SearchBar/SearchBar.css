@@ -1,158 +1,188 @@
-/* Search bar container */
+/* Search Container */
 .search {
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Search Bar */
+.search-bar-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Take full width of the container */
+  align-items: center;
+  gap: 20px;
+}
+
+.search-bar-container input {
+  padding: 14px 20px;
+  width: 500%; /* Take full width of the container */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  color: #555;
+  outline: none;
+  background-color: #f7f8fa;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-bar-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* Results Section */
+.results {
+  margin-top: 25px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Loading and No Results Text */
+.no-results,
+p {
+  font-size: 16px;
+  color: #888;
+  text-align: center;
+}
+
+/* Product Grid */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin-top: 25px;
+}
+
+/* Product Card */
+.product-item {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.product-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Product Image */
+.product-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
+}
+
+/* Product Details */
+.product-card {
+  padding: 20px;
+  text-align: center;
+}
+
+.bracelets-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.bracelets-price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.new-price {
+  font-size: 1.3rem;
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.old-price {
+  font-size: 1rem;
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.bracelets-price .new-price:hover {
+  color: #c9302c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search {
+    padding: 25px;
   }
-  
-  /* Search input field */
-  .search-bar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-  }
-  
+
   .search-bar-container input {
-    padding: 10px;
-    width: 100%;
-    max-width: 500px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s ease;
+    padding: 12px;
+    font-size: 15px;
   }
-  
-  .search-bar-container input:focus {
-    border-color: #4e8ef7;
-  }
-  
-  /* Search results section */
-  .results {
-    margin-top: 20px;
-    width: 100%;
-  }
-  
-  /* Loading and no results messages */
-  .no-results {
-    color: #999;
-    text-align: center;
-    font-size: 16px;
-  }
-  
-  p {
-    font-size: 18px;
-    color: #666;
-    text-align: center;
-  }
-  
-  /* Product list styling */
+
   .product-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    list-style-type: none;
-    padding: 0;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
-  
-  /* Product card styling */
-  .product-item {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .product-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Product image styling */
-  .product-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-bottom: 2px solid #f0f0f0;
-  }
-  
-  /* Product name and price container */
-  .product-card {
-    padding: 15px;
-  }
-  
-  /* Product name styling */
+
   .bracelets-name {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-    text-align: center;
+    font-size: 1rem;
   }
-  
-  /* Product price styling */
-  .bracelets-price {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-  
+
   .new-price {
     font-size: 1.2rem;
-    color: #e93e3e;
-    font-weight: bold;
   }
-  
+
   .old-price {
-    font-size: 1rem;
-    text-decoration: line-through;
-    color: #999;
+    font-size: 0.95rem;
   }
-  
-  /* Hover effects for price */
-  .bracelets-price .new-price:hover {
-    color: #ff7043;
+
+  .product-image {
+    height: 200px;
   }
-  
-  .bracelets-price .old-price:hover {
-    color: #555;
+}
+
+@media (max-width: 480px) {
+  .search {
+    padding: 20px;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .search {
-      padding: 15px;
-    }
-  
-    .search-bar-container input {
-      padding: 8px;
-    }
-  
-    .product-list {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-  
-    .bracelets-name {
-      font-size: 1rem;
-    }
-  
-    .bracelets-price .new-price {
-      font-size: 1.1rem;
-    }
-  
-    .bracelets-price .old-price {
-      font-size: 0.9rem;
-    }
+
+  .search-bar-container input {
+    font-size: 14px;
   }
-  
+
+  .bracelets-name {
+    font-size: 0.95rem;
+  }
+
+  .new-price {
+    font-size: 1.1rem;
+  }
+
+  .old-price {
+    font-size: 0.85rem;
+  }
+
+  .product-image {
+    height: 180px;
+  }
+}
