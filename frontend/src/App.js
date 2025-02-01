@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './Components/Navbar/Navbar';
+import { SalesReport } from './Components/SalesReport/SalesReport';
 import { LoginSignup } from './Pages/LoginSignup';
 import Cart from './Pages/Cart';
 import Wishlist from './Pages/Wishlist';
@@ -23,6 +24,9 @@ import FAQ from './Components/Faq';
 import ReviewSection from './Components/ReviewSection';
 import Checkout from './Pages/Checkout';
 import AddressForm from './Components/AddressForm/AddressForm';
+import AdminUser from './Pages/AdminUser';
+import AdminPayment from './Pages/AdminPayment';
+import AdminOrder from './Pages/AdminOrder';
 
 const App = () => {
   return (
@@ -32,6 +36,7 @@ const App = () => {
       
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/salesreport" element={<SalesReport />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<LoginSignup />} />
@@ -51,6 +56,10 @@ const App = () => {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/reviewsection" element={<ReviewSection />} />
         <Route path="/checkout" element={<Checkout />} />
+        {/* Admin Routes */}
+<Route path="/adminuser" element={<AdminUser />} />
+<Route path="/adminorder" element={<AdminOrder />} />
+<Route path="/adminpayment" element={<AdminPayment />} />
       </Routes>
     </BrowserRouter>
   );

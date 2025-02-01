@@ -39,7 +39,7 @@ const Wishlist = () => {
                     className="remove-btn"
                     onClick={() => {
                       if (window.confirm('Remove this item from your Wishlist?')) {
-                        removeFromWishlist(item.productid);
+                        removeFromWishlist(item);
                       }
                     }}
                   >

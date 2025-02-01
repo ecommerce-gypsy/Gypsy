@@ -7,17 +7,22 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
-
+//const userRoutes = require('../routes/userRoutes');
 const bcrypt = require("bcryptjs");
 const UserCartWishlist = require('./models/UserCartWishlist');
 const ProductS = require('./models/ProductS');
 const Category = require('./models/Category');
 const Order = require('./models/Order');
-
+const Users = require('./models/Users');
 app.use(express.json());
 app.use(cors());
+// In your backend (Express setup)
+const adminOrderRoutes = require('./routes/admin/ordersa'); // Assuming your route is in this file
+app.use('/admin/orders', adminOrderRoutes);
+const salesReportRouter = require('./routes/admin/report'); 
+app.use('/report', salesReportRouter);
 
-// Root Endpoint
+
 app.get("/", (req, res) => {
     res.send("Express App is Running");
 });
@@ -46,54 +51,7 @@ mongoose.connect("mongodb+srv://sornapriyamvatha:priya@cluster0.7fk6l.mongodb.ne
   
 
 // Product Schema
-const Users = mongoose.model("Users", {
-    userid: { 
-        type: Number,
-        required: true,
-        unique: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        match: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, // Email format validation
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    address: {
-        type: String,
-        default: "", 
-    },
-    phone_number: {
-        type: String,
-        default: "",  
-    },
-    orders: [{
-        orderId: { type: String, required: true },
-        products: [{
-            productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },  
-            quantity: { type: Number, default: 1 }
-        }],
-        totalAmount: { type: Number, required: true },
-        orderDate: { type: Date, default: Date.now },
-        status: { type: String, enum: ['pending', 'shipped', 'delivered', 'canceled'], default: 'pending' }
-    }],
-    role: {
-        type: String,
-        enum: ['user', 'admin','vendor'],
-        default: 'user',  // Default role is 'user'
-    },
-    date: {
-        type: Date,
-        default: Date.now,
-    },
-});
+
 // User Schema
 const  Product = mongoose.model("Product", {
     productid: {  
@@ -1198,3 +1156,46 @@ app.get('/cart/get', authenticateToken, async (req, res) => {
       res.status(500).json({ message: "Something went wrong. Please try again." });
     }
   });
+  
+  // Get all users for admin
+  app.get('/admin/users', async (req, res) => {
+    try {
+      const users = await Users.find(); // Use the `find()` method on the Users model
+      res.status(200).json(users);
+    } catch (err) {
+      res.status(500).json({ message: "Error fetching users", error: err.message });
+    }
+  });
+  
+  // Update user role for admin
+  app.put('/admin/user/:id', async (req, res) => {
+    const { id } = req.params;
+    const { role } = req.body; // New role to update
+  
+    if (!['user', 'admin', 'vendor'].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+  
+    try {
+      const user = await Users.findByIdAndUpdate(id, { role }, { new: true }); // Update user role
+      if (!user) return res.status(404).json({ message: "User not found" });
+      res.status(200).json(user);
+    } catch (err) {
+      res.status(500).json({ message: "Error updating role", error: err.message });
+    }
+  });
+  
+  // Delete user for admin
+  app.delete('/admin/user/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const user = await Users.findByIdAndDelete(id); // Delete user by ID
+      if (!user) return res.status(404).json({ message: "User not found" });
+      res.status(200).json({ message: "User deleted successfully" });
+    } catch (err) {
+      res.status(500).json({ message: "Error deleting user", error: err.message });
+    }
+  });
+
+  
