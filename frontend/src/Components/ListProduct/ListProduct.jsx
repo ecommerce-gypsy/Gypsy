@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./ListProduct.css";
 import cross_icon from "../Assets/cross_icon.png";
 
+
 const ListProduct = () => {
     const [allProducts, setAllProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -61,6 +62,7 @@ const ListProduct = () => {
     }, []);
 
     return (
+        
         <div className="list-product">
             <h1>All Product List</h1>
 
@@ -97,6 +99,7 @@ const ListProduct = () => {
             </div>
 
             <div className="listproduct-all-product">
+        
                 <hr />
                 {filteredProducts.length === 0 ? (
                     <p>No products available</p>

@@ -1,0 +1,286 @@
+/* General Page Styling */
+.admin-user-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Sidebar */
+.sidebar-container {
+    width: 250px;
+    background: #2c3e50;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Main Content */
+.admin-user-content {
+    flex: 1;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 20px;
+}
+
+/* Heading */
+.admin-user-content h1 {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Table Styling */
+.admin-user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-user-table th,
+.admin-user-table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.admin-user-table th {
+    background: #34495e;
+    color: white;
+    text-transform: uppercase;
+}
+
+.admin-user-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.admin-user-table tr:hover {
+    background: #ecf0f1;
+}
+
+/* Dropdown Styling */
+.admin-user-table select {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+/* Buttons Container (for Edit & Delete) */
+.action-buttons {
+    display: flex;
+    gap: 10px; /* Adds space between Edit and Delete buttons */
+}
+
+/* Buttons */
+
+.delete-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Edit Button Styling */
+.edit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fffffe; /* Orange background */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Makes it circular */
+    width: 40px; /* Adjust size */
+    height: 40px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    padding: 8px;
+}
+
+/* Edit Button Hover Effect */
+.edit-btn:hover {
+    background: #d68910;
+    transform: scale(1.1); /* Slightly enlarges the button on hover */
+}
+
+/* Edit Icon Inside Button */
+.edit-icon {
+    width: 20px; /* Adjust size */
+    height: 20px;
+    filter: invert(1); /* Makes the icon white */
+}
+.trash-btn:hover {
+    background: #d68910;
+    transform: scale(1.1); /* Slightly enlarges the button on hover */
+}
+
+.trash-icon {
+    width: 20px; /* Adjust size */
+    height: 20px;
+    filter: invert(1); /* Makes the icon white */
+}
+
+.trash-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fffffe; /* Orange background */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Makes it circular */
+    width: 40px; /* Adjust size */
+    height: 40px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    padding: 8px;
+}
+
+
+.delete-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Container */
+.modal-container {
+    background: white;
+    padding: 20px;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* Modal Heading */
+.modal-container h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    
+}
+
+/* Form Styling */
+.modal-container label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.modal-container input, 
+.modal-container select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Add Space Below Role Dropdown */
+.modal-container select {
+    margin-bottom: 15px; /* Creates gap between Role and Save Changes */
+}
+
+/* Button Container for Save & Cancel */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Adds space between buttons */
+    margin-top: 15px; /* Creates space between Role dropdown and buttons */
+}
+
+/* Ensure buttons have uniform size */
+.save-btn, 
+.close-btn {
+    flex: 1; /* Allows buttons to take equal space */
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+/* Save Button */
+.save-btn {
+    background: #27ae60;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #219150;
+}
+
+/* Close Button */
+.close-btn {
+    background: #fa0000;
+    color: white;
+}
+
+.close-btn:hover {
+    background: #c0392b;
+}
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-user-container {
+        flex-direction: column;
+    }
+
+    .sidebar-container {
+        width: 100%;
+        min-height: auto;
+        text-align: center;
+    }
+
+    .admin-user-content {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .admin-user-table th,
+    .admin-user-table td {
+        padding: 8px;
+    }
+
+    .admin-user-table button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    .close-btn svg {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+    }
+    
+    
+}

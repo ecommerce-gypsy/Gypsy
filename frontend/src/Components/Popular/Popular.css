@@ -6,116 +6,114 @@ body {
   background-color: #f9f9f9;
   color: #333;
 }
-/* Style for the team section */
-.team-section {
+
+/* ====== PRODUCT CATEGORY SECTION ====== */
+.product-category-section {
   text-align: center;
-  margin: 50px 0;
+  margin: 50px auto;
+  padding: 40px 20px;
+  background: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 90%;
+  max-width: 1100px;
 }
 
-.team-section h2 {
+.product-category-section h2 {
   font-size: 2em;
-  margin-bottom: 20px;
+  font-weight: bold;
+  color: #171717;
+  margin-bottom: 30px;
 }
 
-/* Style for the team members container */
-.team-members {
+/* Product category container */
+.product-category-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
   flex-wrap: wrap;
 }
 
-.team-member {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 20px;
-  text-align: center;
-  overflow: hidden;
-}
-
-.team-member img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease-in-out;
-}
-
-/* Hover effect on the team member image */
-.team-member:hover img {
-  transform: scale(1.1); /* Slight zoom-in effect */
-}
-
-/* The button container, initially hidden */
-.team-member button {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  background-color: transparent;
-  border: 2px solid #fff;
-  color: #fff;
-  font-size: 1em;
-  font-weight: bold;
-  text-transform: uppercase;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-}
-
-/* Hover effect to show the button */
-.team-member:hover button {
-  opacity: 1;
-  visibility: visible;
-  background-color: #ff9900; /* Change the color to something attractive */
-  color: white; /* Change the text color */
-}
-
-/* Style for the popular section */
-.popular {
-  text-align: center;
-  margin-top: 50px;
-}
-
-.popular {
+/* Category box (circular image with text below) */
+.product-category {
+  width: 250px;
+  height: 250px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  height: 90vh;
+  justify-content: center;
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
 }
 
-.popular h1 {
-  color: #171717;
-  font-size: 50px;
-  font-weight: 600;
+.product-category:hover {
+  transform: scale(1.05);
 }
 
-.popular hr {
-  width: 200px;
-  height: 6px;
-  border-radius: 10px;
-  background: #252525;
+/* Circular Image */
+.product-category img {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  background: white;
+  padding: 10px;
+}
+
+/* Button */
+.product-category button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #ff6600;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.product-category button:hover {
+  background-color: #e65c00;
+}
+
+/* Latest Collection Section */
+.popular {
+  text-align: center;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  height: auto;
 }
 
 .popular-item {
-  margin-top: 50px;
   display: flex;
-  gap: 30px;
-  flex-wrap: wrap; /* Ensures responsiveness for smaller screens */
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 20px;  /* Space between items */
+  margin-top: 30px;
+  padding-bottom: 50px; /* Prevents overlapping with the footer */
 }
 
+/* Image Styling */
 .popular-item img {
-  max-width: 200px; /* Limits the maximum width */
-  max-height: 200px; /* Limits the maximum height */
-  object-fit: cover; /* Ensures images are cropped neatly without distortion */
-  border-radius: 10px; /* Adds smooth rounded edges */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Adds a soft shadow for better aesthetics */
+  width: 250px;  /* Increased size */
+  height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .popular-item img:hover {
-  transform: scale(1.05); /* Slight zoom on hover for interactivity */
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Adds a stronger shadow when hovering */
+  transform: scale(1.1);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
 }

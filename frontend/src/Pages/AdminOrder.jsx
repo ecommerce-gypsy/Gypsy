@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import './AdminOrder.css';
+import trashIcon from '../Components/Assets/trash.png';
+import Sidebar from '../Components/Sidebar/Sidebar';
 
 const AdminOrder = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Fetch orders when the component mounts
   useEffect(() => {
     const fetchOrders = async () => {
-      const token = localStorage.getItem('auth_token'); // Get token from localStorage
+      const token = localStorage.getItem('auth_token');
 
       if (!token) {
         setErrorMessage('No token found. Please log in.');
@@ -17,12 +19,11 @@ const AdminOrder = () => {
       }
 
       try {
-        console.log("Fetching orders...");
         const response = await fetch('http://localhost:4000/admin/orders', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Attach token in the Authorization header
+            'Authorization': `Bearer ${token}`,
           },
         });
 
@@ -31,7 +32,6 @@ const AdminOrder = () => {
         }
 
         const data = await response.json();
-        console.log("Data: ", data);
         setOrders(data);
       } catch (err) {
         setErrorMessage('Error fetching orders: ' + err.message);
@@ -43,9 +43,8 @@ const AdminOrder = () => {
     fetchOrders();
   }, []);
 
-  // Handle order status change
   const handleStatusChange = async (orderId, newStatus) => {
-    const token = localStorage.getItem('auth_token'); // Get token from localStorage
+    const token = localStorage.getItem('auth_token');
 
     if (!token) {
       setErrorMessage('No token found. Please log in.');
@@ -57,7 +56,7 @@ const AdminOrder = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Attach token in the Authorization header
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ orderStatus: newStatus }),
       });
@@ -73,9 +72,8 @@ const AdminOrder = () => {
     }
   };
 
-  // Handle order deletion
   const handleDelete = async (orderId) => {
-    const token = localStorage.getItem('auth_token'); // Get token from localStorage
+    const token = localStorage.getItem('auth_token');
 
     if (!token) {
       setErrorMessage('No token found. Please log in.');
@@ -83,13 +81,12 @@ const AdminOrder = () => {
     }
 
     try {
-      // Optimistic UI update: Remove order immediately
       setOrders(orders.filter((order) => order._id !== orderId));
 
       const response = await fetch(`http://localhost:4000/admin/orders/${orderId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`, // Attach token in the Authorization header
+          'Authorization': `Bearer ${token}`,
         },
       });
 
@@ -98,59 +95,57 @@ const AdminOrder = () => {
       }
     } catch (err) {
       setErrorMessage('Error deleting order: ' + err.message);
-      // Revert optimistic update if delete fails
-      setOrders([...orders]);
     }
   };
 
   return (
-    <div>
-      <h1>Admin - Order Management</h1>
-      {loading && <p>Loading...</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {!loading && (
-        <table>
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>User</th>
-              <th>Total Price</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                {/* Ensure order.userid is not null or undefined before accessing 'name' */}
-                <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
-                <td>{order.totalPrice}</td>
-                <td>
-                  <select
-                    value={order.orderStatus}
-                    onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleDelete(order._id)}
-                    aria-label={`Delete order ${order._id}`}
-                  >
-                    Delete
-                  </button>
-                </td>
+    <div className="admin-page-container">
+      <Sidebar />
+      <div className="admin-order-container">
+        <h1>Admin - Order Management</h1>
+        {loading && <p className="loading-message">Loading...</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {!loading && (
+          <table className="admin-order-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order._id}</td>
+                  <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
+                  <td>${order.totalPrice}</td>
+                  <td>
+                    <select
+                      value={order.orderStatus}
+                      onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </td>
+                  <td className="action-cell">
+                    <button className="trash-btn" onClick={() => handleDelete(order._id)}>
+                      <img src={trashIcon} alt="trash" className="trash-icon" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };

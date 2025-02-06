@@ -37,6 +37,7 @@ const Bracelets = () => {
     wishlist.some((item) => item.productid === product.productid);
 
   const handleAddToCart = (product) => {
+    if (product.stock === 0) return; 
     addToCart(product);
     navigate("/cart");
   };
@@ -52,6 +53,8 @@ const Bracelets = () => {
         <div className="product-grid">
           {bracelets.map((product) => (
             <div className="product-card" key={product.productid}>
+              
+              {/* Wishlist Icon */}
               <div
                 className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
                 onClick={() => {
@@ -64,20 +67,30 @@ const Bracelets = () => {
               >
                 ♥
               </div>
-              <Link to={`/product/${product.productid}`}>
-                <img src={product.images[0]} alt={product.productName} className="product-image" />
-              </Link>
+
+              {/* Product Image & Out of Stock Label */}
+              <div className="product-image-container">
+                <Link to={`/product/${product.productid}`}>
+                  <img src={product.images[0]} alt={product.productName} className="product-image" />
+                </Link>
+                {product.stock === 0 && <span className="out-of-stock-badge">Out of Stock</span>}
+              </div>
+
+              {/* Product Name */}
               <div className="bracelets-name">{product.productName}</div>
+
+              {/* Pricing */}
               <div className="bracelets-price">
                 <span className="new-price">₹{product.new_price}</span>{" "}
                 <span className="old-price">₹{product.old_price}</span>
               </div>
-              <button
-                className="add-to-cart-btn"
-                onClick={() => handleAddToCart(product)}
-              >
-                Add to Cart
-              </button>
+
+              {/* Add to Cart Button */}
+              {product.stock > 0 && (
+                <button className="add-to-cart-btn" onClick={() => handleAddToCart(product)}>
+                  Add to Cart
+                </button>
+              )}
             </div>
           ))}
         </div>

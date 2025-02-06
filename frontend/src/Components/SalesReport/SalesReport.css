@@ -1,0 +1,131 @@
+/* Sales Report Container */
+.sales-report-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.sales-report-header {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Filters Container */
+.filters-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filters-container label {
+    font-weight: bold;
+    color: #444;
+}
+
+.filters-container input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filters-container button {
+    padding: 10px 15px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.filters-container button:hover {
+    background: #218838;
+}
+
+/* Summary Container - Side by Side */
+.summary-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Summary Boxes */
+.revenue-box,
+.orders-summary-box {
+    flex: 1;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Summary Titles */
+.revenue-box h2,
+.orders-summary-box h2 {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+/* Summary Values */
+.summary-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+}
+
+/* Comparison Text */
+.summary-comparison {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Orders Box */
+.orders-box {
+    margin-top: 20px;
+}
+
+/* Table */
+.orders-box table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders-box th,
+.orders-box td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.orders-box th {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.orders-box tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.orders-box tbody tr:hover {
+    background-color: #ddd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .summary-container {
+        flex-direction: column;
+    }
+}

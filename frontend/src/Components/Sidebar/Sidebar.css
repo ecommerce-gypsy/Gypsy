@@ -4,7 +4,12 @@ body, html, .sidebar {
   padding: 0;
   box-sizing: border-box;
 }
-
+.sidebar-container {
+  width: 250px;
+  background: #2c3e50;
+  padding: 20px;
+  min-height: 100vh;
+}
 /* Sidebar container */
 .sidebar {
   display: flex;
@@ -76,4 +81,10 @@ a {
     font-size: 12px; /* Smaller text for narrow screens */
     text-align: center;
   }
+  .sidebar-container {
+    width: 250px;
+    background: #2c3e50;
+    padding: 20px;
+    min-height: 100vh;
+}
 }

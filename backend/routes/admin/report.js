@@ -11,16 +11,16 @@ router.get('/sales-report', auth, isAdmin, async (req, res) => {
   try {
     let { startDate, endDate } = req.query;
 
-    // Set 'endDate' as today's date if not provided
-    const end = new Date(endDate || new Date());  // Defaults to today if endDate is not provided
-    end.setHours(23, 59, 59, 999); // Set to the last millisecond of the current day
+    // Handle the end date, default to current date if not provided
+    const end = new Date(endDate || new Date());  
+    end.setHours(23, 59, 59, 999);  // Set to the last millisecond of the end date
 
-    // Set 'startDate' as 30 days before 'endDate' if not provided
-    const start = new Date(startDate || end); // Defaults to endDate if startDate is not provided
+    // Handle the start date, default to 30 days before end date if not provided
+    const start = new Date(startDate || end); 
     if (!startDate) {
-      start.setDate(end.getDate() - 30); // Subtract 30 days for default start date
+      start.setDate(end.getDate() - 30);  // Subtract 30 days for default start date
     }
-    start.setHours(0, 0, 0, 0); // Set to the first millisecond of the start day
+    start.setHours(0, 0, 0, 0);  // Set to the first millisecond of the start date
 
     // Log start and end dates for debugging
     console.log('Start date:', start);
@@ -28,8 +28,8 @@ router.get('/sales-report', auth, isAdmin, async (req, res) => {
 
     // Fetch orders from the database that fall within the date range
     const orders = await Order.find({
-      createdAt: { $gte: start, $lte: end }, // Query for orders created within the date range
-    }).populate('userid', 'name email'); // Populate user details if needed
+      createdAt: { $gte: start, $lte: end }, 
+    }).populate('userid', 'email');  // Populate user details if needed
 
     // Calculate the total sales and revenue
     const totalSales = orders.length;

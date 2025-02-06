@@ -1,9 +1,11 @@
 import React from 'react'
 import'./Sidebar.css'
 import{Link} from 'react-router-dom'
-import cart from '../Assets/cart.png'; // Path to your cart icon
-import List from '../Assets/list.png'; // Path to your cart icon
-
+import cart from '../Assets/Cartt.png'; // Path to your cart icon
+import List from '../Assets/Listt.png'; // Path to your cart icon
+import admin from '../Assets/Admin.png';
+import sales from '../Assets/Sales.png';
+import Order from '../Assets/order.png';
 const Sidebar = () => {
   return (
     <div className="sidebar">
@@ -13,6 +15,7 @@ const Sidebar = () => {
             <p>ADD PRODUCT</p>
         </div>
         </Link>
+
         <Link to={'/listproduct'} style={{textDecoration:"none"}}>
         <div className="sidebar-item">
             <img src={List} alt="Cart" className="nav-List-icon" />
@@ -20,6 +23,29 @@ const Sidebar = () => {
         </div>
         </Link>
 
+        <Link to={'/admin'} style={{textDecoration:"none"}}>
+        <div className="sidebar-item">
+            <img src={sales} alt="Sales" className="nav-Admin-icon" />
+            <p>ADMIN </p>
+        </div>
+        </Link>
+
+
+        <Link to={'/adminuser'} style={{textDecoration:"none"}}>
+        <div className="sidebar-item">
+        <img src={admin} alt="Admin" className="nav-Admin-icon" />
+            <p>ADMIN USER </p>
+        </div>
+        </Link>
+
+
+        <Link to={'/adminorder'} style={{textDecoration:"none"}}>
+        <div className="sidebar-item">
+             <img src={Order} alt="order" className="nav-order-icon" />
+            <p>ADMIN ORDER </p>
+        </div>
+        </Link>
+      
     </div>
   )
 }

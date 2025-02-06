@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './Popular.css';
-
-import data_product from '../Assets/data_product'; // Correct path
-import Item from './Item'; // Adjust the path to where your Item component is located
-import { useNavigate } from 'react-router-dom'; // Import useNavigate if using React Router
-import ankletlogo from '../Assets/ankletlogo.png'; // Update with the correct logo paths
+import { useNavigate } from 'react-router-dom';
+import ankletlogo from '../Assets/ankletlogo.png';
 import braceletlogo from '../Assets/braceletlogo.png';
 import necklacelogo from '../Assets/necklacelogo.png';
+import data_product from '../Assets/data_product';
+import Item from './Item';
 
 export const Popular = () => {
   const [newCollection, setNewCollection] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Initialize navigate for navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost:4000/newcollections')
@@ -52,39 +51,38 @@ export const Popular = () => {
 
   return (
     <div>
-      {/* Team Section */}
-      <section className="team-section">
+      {/* Product Category Section */}
+      <section className="product-category-section">
         <h2>PRODUCT CATEGORY</h2>
-        <div className="team-members">
-          <div className="team-member">
-            <img src={ankletlogo} alt="Team Member 1" />
-            
+        <div className="product-category-container">
+          <div className="product-category">
+            <img src={ankletlogo} alt="Anklets" />
             <button onClick={() => navigate('/anklets')}>More</button>
           </div>
-          <div className="team-member">
-            <img src={necklacelogo} alt="Team Member 2" />
-         
+          <div className="product-category">
+            <img src={necklacelogo} alt="Neckpieces" />
             <button onClick={() => navigate('/neckpieces')}>More</button>
           </div>
-          <div className="team-member">
-            <img src={braceletlogo} alt="Team Member 3" />
-           
+          <div className="product-category">
+            <img src={braceletlogo} alt="Bracelets" />
             <button onClick={() => navigate('/bracelets')}>More</button>
           </div>
         </div>
       </section>
+
+      {/* Latest Collection Section */}
       <div className="popular">
   <h1>LATEST COLLECTION</h1>
   <hr />
   <div className="popular-item">
     {(newCollection.length > 0 ? newCollection : data_product)
-      .filter(item => item && item.images && item.images[0]) // Ensure items have images[0] defined
+      .filter(item => item && item.images && item.images[0])
       .map((item, i) => (
         <Item
           key={i}
           id={item.id}
           name={item.name}
-          image={item.images && item.images[0]}  // Safe access for image
+          image={item.images && item.images[0]}
           new_price={item.new_price}
           old_price={item.old_price}
         />

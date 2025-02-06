@@ -5,9 +5,9 @@
   padding: 20px;
   background-color: #fff;
   font-family: "Arial", sans-serif;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  /* Add shadow for better contrast */
-  border-radius: 8px;  /* Slightly rounded corners */
-  overflow: hidden;  /* Prevent content from overflowing */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px;  
+  overflow: hidden;  
 }
 
 /* Heading and Link Styles */
@@ -38,28 +38,29 @@
 }
 
 .cart-header {
-  display: grid;
-  grid-template-columns: 3fr 2fr 2fr 1fr; /* Adjust grid column ratios */
-  border-bottom: 2px solid #ddd;
+  display: flex;
+  justify-content: space-between;
   padding: 10px 0;
   font-weight: bold;
   text-align: left;
   font-size: 16px;
-  background-color: #f9f9f9;  /* Light gray background */
+  background-color: #f9f9f9;
+  border-bottom: 2px solid #ddd;
 }
 
 .cart-row {
-  display: grid;
-  grid-template-columns: 3fr 2fr 2fr 1fr;
+  display: flex;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
-  position: relative; /* This allows positioning elements relative to the row */
+  position: relative;
+  justify-content: space-between;
 }
 
 .cart-product {
   display: flex;
   align-items: center;
+  flex: 3;
 }
 
 .cart-product-image {
@@ -74,56 +75,54 @@
   font-size: 16px;
   font-weight: bold;
   color: #333;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.cart-product-price {
-  font-size: 14px;
-  color: #555;
-}
-
-/* Quantity Buttons */
 .cart-quantity {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  flex: 2; 
   gap: 10px; /* Increase space between buttons */
 }
 
 .quantity-btn {
-  background-color: #4caf50;  /* Green background for + and - buttons */
+  background-color: #4caf50;  
   border: none;
-  padding: 10px 15px;  /* Increase padding for better clickability */
-  font-size: 20px;  /* Larger font size for better visibility */
+  padding: 10px 15px;  
+  font-size: 20px;  
   color: white;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s, transform 0.2s;  /* Smooth transition for hover and active effects */
+  transition: background-color 0.3s, transform 0.2s;  
 }
 
 .quantity-btn:hover {
-  background-color: #45a049;  /* Darker green on hover */
-  transform: scale(1.05);  /* Slight scale effect on hover */
+  background-color: #45a049;  
+  transform: scale(1.05);  
 }
 
 .quantity-btn:active {
-  transform: scale(0.95);  /* Slightly shrink when clicked */
+  transform: scale(0.95);  
 }
 
 /* Decrement button specific color */
 .quantity-btn.decrement-btn {
-  background-color: #f44336;  /* Red color for - button */
+  background-color: #f44336;  
 }
 
 .quantity-btn.decrement-btn:hover {
-  background-color: #e53935;  /* Darker red on hover */
+  background-color: #e53935;  
 }
 
 .quantity-btn.increment-btn {
-  background-color: #4caf50;  /* Green color for + button */
+  background-color: #4caf50;  
 }
 
 .quantity-btn.increment-btn:hover {
-  background-color: #45a049;  /* Darker green on hover */
+  background-color: #45a049;  
 }
 
 .quantity-value {
@@ -133,15 +132,15 @@
   line-height: 40px;
   border: 1px solid #ddd;
   font-size: 16px;
-  font-weight: bold;  /* Make the number stand out */
+  font-weight: bold;  
   border-radius: 5px;
   background-color: #fff;
-  color: #333;  /* Dark color for the quantity value */
-  transition: background-color 0.3s ease;  /* Smooth transition for background */
+  color: #333;  
+  transition: background-color 0.3s ease;  
 }
 
 .quantity-value:hover {
-  background-color: #f0f0f0;  /* Light background color on hover */
+  background-color: #f0f0f0;  
 }
 
 /* Total Column */
@@ -150,24 +149,29 @@
   font-weight: bold;
   color: #007bff;
   text-align: center;
+  flex: 2; 
 }
 
-/* Delete Button (Trash Icon) */
+.cart-remove {
+  justify-self: flex-end;
+  flex: 1; 
+}
+
 .remove-btn {
-  position: absolute; /* Position the button inside the cart-row */
-  top: 50%; /* Vertically center the button */
-  right: 10px; /* Adjust the distance from the right */
-  transform: translateY(-50%); /* Perfect vertical centering */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
   font-size: 20px;
-  color: #ff4d4d; /* Red color for trash icon */
+  color: #ff4d4d;
   transition: color 0.3s ease;
 }
 
 .remove-btn:hover {
-  color: #ff0000; /* Darker red color on hover */
+  color: #ff0000;
 }
 
 /* Special Instructions and Checkout */
@@ -179,8 +183,8 @@
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  background-color: #f9f9f9; /* Light background for the text area */
-  resize: vertical; /* Allow resizing of the text area */
+  background-color: #f9f9f9;
+  resize: vertical;
 }
 
 .summary-details {
@@ -278,12 +282,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1000; /* Ensure it's on top of all content */
+  z-index: 1000;
 }
 
 .order-placed-gif img {
   width: 200px;
   height: auto;
-  border-radius: 8px;  /* Round the edges for aesthetic */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);  /* Soft shadow for the GIF */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import './SalesReport.css';
 
 export const SalesReport = () => {
   const [reportData, setReportData] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Fetch the sales report data
   const fetchSalesReport = async () => {
-    const token = localStorage.getItem('auth_token');  // Get the token from localStorage
-
+    const token = localStorage.getItem('auth_token');
     if (!token) {
       setErrorMessage('No token found. Please log in.');
       setLoading(false);
@@ -24,16 +24,10 @@ export const SalesReport = () => {
     try {
       const response = await fetch(`http://localhost:4000/report/sales-report?${query.toString()}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  // Attach token in the Authorization header
-        },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch sales report');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch sales report');
       const data = await response.json();
       setReportData(data);
     } catch (err) {
@@ -43,88 +37,95 @@ export const SalesReport = () => {
     }
   };
 
+  const fetchOrders = async () => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      setErrorMessage('No token found. Please log in.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:4000/admin/orders', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch orders');
+      const data = await response.json();
+      setOrders(data);
+    } catch (err) {
+      setErrorMessage('Error fetching orders: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchSalesReport();  // Fetch the report when the component mounts
-  }, [startDate, endDate]);  // Refetch whenever the date range changes
+    fetchSalesReport();
+    fetchOrders();
+  }, [startDate, endDate]);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center' }}>Sales and Revenue Report</h1>
+    <div className="sales-report-container">
+      <h1 className="sales-report-header">Sales and Revenue Report</h1>
 
       {/* Date Filters */}
-      <div style={{ marginBottom: '20px' }}>
-        <label style={{ marginRight: '10px' }}>
+      <div className="filters-container">
+        <label>
           Start Date:
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            style={{ marginLeft: '10px' }}
-          />
+          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
         </label>
-
-        <label style={{ marginLeft: '20px' }}>
+        <label>
           End Date:
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            style={{ marginLeft: '10px' }}
-          />
+          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </label>
-
-        <button
-          onClick={fetchSalesReport}
-          style={{ marginLeft: '20px', padding: '5px 10px', backgroundColor: '#4CAF50', color: 'white' }}
-        >
-          Generate Report
-        </button>
+        <button onClick={fetchSalesReport}>Generate Report</button>
       </div>
 
-      {/* Loading and Error Message */}
-      {loading && <p>Loading...</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-
-      {/* Report Data Display */}
-      {reportData && (
-        <div>
-          <h2>Summary</h2>
-          <p>Total Revenue: ${reportData.totalRevenue}</p>
-          <p>Total Orders: {reportData.totalOrders}</p>
-
-          {/* Orders Table */}
-          <h2>Orders</h2>
-          <table
-            style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              marginTop: '20px',
-              border: '1px solid #ddd',
-            }}
-          >
-            <thead>
-              <tr>
-                <th style={{ padding: '8px', border: '1px solid #ddd' }}>Order ID</th>
-                <th style={{ padding: '8px', border: '1px solid #ddd' }}>User</th>
-                <th style={{ padding: '8px', border: '1px solid #ddd' }}>Total Price</th>
-                <th style={{ padding: '8px', border: '1px solid #ddd' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reportData.orders.map((order) => (
-                <tr key={order._id}>
-                  <td style={{ padding: '8px', border: '1px solid #ddd' }}>{order._id}</td>
-                  <td style={{ padding: '8px', border: '1px solid #ddd' }}>
-                    {order.userid ? order.userid.name : 'Unknown User'}
-                  </td>
-                  <td style={{ padding: '8px', border: '1px solid #ddd' }}>${order.totalPrice}</td>
-                  <td style={{ padding: '8px', border: '1px solid #ddd' }}>{order.orderStatus}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Summary Section - Side by Side Layout */}
+      <div className="summary-container">
+        <div className="report-box revenue-box">
+          <h2>Total Revenue</h2>
+          <p className="summary-value">${reportData?.totalRevenue}</p>
+          <p className="summary-comparison">Compared to last month</p>
         </div>
-      )}
+
+        <div className="report-box orders-summary-box">
+          <h2>Total Orders</h2>
+          <p className="summary-value">{reportData?.totalOrders}</p>
+          <p className="summary-comparison">Compared to last month</p>
+        </div>
+      </div>
+
+      {/* Recent Orders Section */}
+      <div className="report-box orders-box">
+        <h2>Recent Orders</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>User</th>
+              <th>Total Price</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.slice(0, 7).map((order) => (
+              <tr key={order._id}>
+                <td>{order._id}</td>
+                <td>{order.userid ? order.userid.email : 'Unknown User'}</td>
+                <td>${order.totalPrice}</td>
+                <td>{order.orderStatus}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Loading & Error Messages */}
+      {loading && <p className="loading-message">Loading...</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 };

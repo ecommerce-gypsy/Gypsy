@@ -181,4 +181,10 @@ textarea {
     flex-wrap: wrap; /* Allow wrapping for smaller screens */
     gap: 5px;
   }
+  .sidebar-container {
+    width: 250px;
+    background: #2c3e50;
+    padding: 20px;
+    min-height: 100vh;
+}
 }
