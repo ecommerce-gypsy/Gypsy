@@ -10,19 +10,15 @@ import Filter from "../Components/Filter/Filter";
 import "./Anklets.css";
 import Breadcrumb from "../Components/Breadcrumb/Breadcrumb";
 
-
 const Anklets = () => {
-  // Context values
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
   const { cart, addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  // State management
   const [anklets, setAnklets] = useState([]);
   const [error, setError] = useState("");
   const [visibleCount, setVisibleCount] = useState(12); // Number of visible items
 
-  // Fetch anklets data
   useEffect(() => {
     fetch("http://localhost:4000/anklets")
       .then((response) => {
@@ -36,11 +32,9 @@ const Anklets = () => {
       .catch((error) => setError("Error fetching anklets: " + error.message));
   }, []);
 
-  // Utility functions
   const isInWishlist = (product) => wishlist.some((item) => item.productid === product.productid);
   const isInCart = (product) => cart.some((item) => item.productid === product.productid);
 
-  // Render anklet card
   const renderAnkletCard = (product) => (
     <div className="product-card" key={product.productid}>
       {/* Wishlist Icon */}
@@ -63,19 +57,22 @@ const Anklets = () => {
         <span className="old-price">₹{product.old_price}</span>
       </div>
 
+      {/* Out of Stock Badge */}
+      {product.stock === 0 && <span className="out-of-stock-badge">Out of Stock</span>}
+
       {/* Add to Cart Button */}
       <button
         className="add-to-cart-btn"
         onClick={() => {
-          if (!isInCart(product)) addToCart(product);
+          if (!isInCart(product) && product.stock > 0) addToCart(product);
         }}
+        disabled={product.stock === 0}
       >
-        {isInCart(product) ? "In Cart" : "Add to Cart"}
+        {isInCart(product) ? "In Cart" : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
       </button>
     </div>
   );
 
-  // Render design steps
   const renderDesignSteps = () => (
     <div className="design-steps">
       <h3>Next Step for Design</h3>
@@ -108,7 +105,6 @@ const Anklets = () => {
     </div>
   );
 
-  // Handle "View More" click
   const handleViewMore = () => {
     setVisibleCount((prevCount) => prevCount + 12);
   };
@@ -116,22 +112,19 @@ const Anklets = () => {
   return (
     <div className="anklets-container">
       <Header />
-      <Breadcrumb/>
+      <Breadcrumb />
       <AnkletBanner />
 
       <h1>Welcome to the Anklets Collection!</h1>
       {error && <p className="error-message">{error}</p>}
 
-      {/* Search and Filter */}
-      <SearchBar />
+     
       <Filter />
 
-      {/* Product Grid */}
       <div className="product-grid">
         {anklets.slice(0, visibleCount).map(renderAnkletCard)}
       </div>
 
-      {/* View More Button */}
       {visibleCount < anklets.length && (
         <div className="view-more-container">
           <button className="view-more-btn" onClick={handleViewMore}>
@@ -140,7 +133,6 @@ const Anklets = () => {
         </div>
       )}
 
-      {/* Design Steps */}
       {renderDesignSteps()}
 
       <Footer />

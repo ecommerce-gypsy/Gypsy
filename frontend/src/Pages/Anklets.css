@@ -1,56 +1,9 @@
-/* General Styles */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Container for the Anklets page */
-.anklets-container {
-  padding: 40px 20px; /* Increased top padding for better spacing */
-  background-color: #f9f9f9;
-  color: #333;
-}
-
-/* Page Title */
-.anklets-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 2rem;
-  color: #444;
-}
-
-/* Error Message */
-.error-message {
-  color: red;
-  text-align: center;
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  background-color: #ffe6e6; /* Light red background */
-  border: 1px solid #ff4d4d; /* Red border */
-  padding: 10px;
-  border-radius: 5px;
-}
-
-
-/* Product Grid */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 0; /* Removed extra padding for consistency */
-  margin: 0 auto;
-  max-width: 1200px;
-}
-
-/* Product Card */
 /* Product Card */
 .product-card {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Improved shadow depth */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   padding: 20px;
   text-align: center;
@@ -58,77 +11,75 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 400px; /* Allow the card to grow if content needs more space */
+  min-height: 400px;
+  position: relative;
 }
-
-/* Ensure text content doesn't overflow and allows multiple lines */
-.product-card h3, .product-card p {
-  overflow: visible; /* Allow text to wrap */
-  text-overflow: unset;
-  white-space: normal; /* Allow multiple lines of text */
-}
-
-/* If you want to allow multiline text but still want even height */
-.product-card .product-details {
-  flex-grow: 1; /* Allow the details section to take up available space */
-}
-
-.product-card p {
-  margin: 5px 0;
-  font-size: 1rem;
-  color: #555;
-}
-
-/* Add to Cart Button */
-/* Add to Cart Button */
-button.add-to-cart-btn {
-  background: linear-gradient(to right, #ff69b4, #ff3385); /* Vibrant pink gradient */
-  color: black !important; /* Ensure text color is black */
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s; /* Smooth transitions */
-}
-
-/* Hover State */
-button.add-to-cart-btn:hover {
-  background: linear-gradient(to right, #ff3385, #ff69b4); /* Reverse gradient on hover */
-  color: black !important; /* Ensure hover text color remains black */
-  transform: scale(1.05); /* Slight zoom effect on hover */
-}
-
-/* Disabled State */
-button.add-to-cart-btn:disabled {
-  background: linear-gradient(to right, #aaa, #bbb); /* Neutral gradient when disabled */
-  color: #666; /* Grey text for disabled state */
-  cursor: not-allowed;
-}
-
-
 
 /* Wishlist Icon */
-.wishlist-icon-container {
+.wishlist-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: gray;
+  transition: color 0.3s;
+  z-index: 3;
+}
+
+.wishlist-icon.active {
+  color: red;
+}
+
+/* Product Image & Out of Stock Label */
+.product-image-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.wishlist-icon {
-  font-size: 1.5rem;
-  color: #bbb;
+.product-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* Out of Stock Badge */
+.out-of-stock-badge {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  background: linear-gradient(to right, #0d1b3f, #9caac7);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 15px;
+  text-transform: uppercase;
+  clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+  z-index: 3;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin-top: 10px;
   cursor: pointer;
-  margin-bottom: 15px;
-  transition: color 0.3s;
+  font-size: 14px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-.wishlist-icon.active {
-  color: #ff69b4;
+.add-to-cart-btn:hover {
+  background-color: #ff3385;
 }
 
-.wishlist-icon:hover {
-  color: #ff3385;
+/* Disabled State for Add to Cart Button */
+.add-to-cart-btn:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
 }
 
 /* Design Steps Section */
@@ -137,7 +88,7 @@ button.add-to-cart-btn:disabled {
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Improved shadow depth */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
@@ -147,6 +98,7 @@ button.add-to-cart-btn:disabled {
   color: #444;
 }
 
+/* Design Options */
 .design-options {
   display: flex;
   justify-content: space-around;
@@ -169,43 +121,6 @@ button.add-to-cart-btn:disabled {
   transform: translateY(-3px);
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-  .product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .add-to-cart-btn {
-    font-size: 0.9rem;
-    padding: 8px 15px;
-  }
-
-  .design-option {
-    font-size: 0.9rem;
-    padding: 8px 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-
-  .product-card {
-    padding: 15px;
-    font-size: 0.9rem;
-  }
-
-  .product-image {
-    max-height: 200px; /* Prevent oversized images */
-    object-fit: cover; /* Maintain aspect ratio */
-  }
-
-  .design-option {
-    font-size: 0.8rem;
-    padding: 6px 10px;
-  }
-}
 .view-more-container {
   text-align: center;
   margin: 20px 0;

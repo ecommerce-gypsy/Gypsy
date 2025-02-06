@@ -5,7 +5,7 @@ import { CartContext } from "../Context/CartContext";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const productId = Number(id);
+  const productId = Number(id);  // Convert product id to a number
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,7 +41,7 @@ const ProductDetail = () => {
 
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/reviews/${productId}`);
+        const response = await fetch(`http://localhost:4000/api/reviews/${productId}`);
         if (!response.ok) throw new Error("Failed to fetch reviews");
         const data = await response.json();
         setReviews(data);
@@ -66,14 +66,14 @@ const ProductDetail = () => {
     if (!reviewInput.name || !reviewInput.comment) return alert("Please fill all fields");
 
     const newReview = {
-      productId,
+      productid: productId,
       name: reviewInput.name,
       rating: reviewInput.rating,
       comment: reviewInput.comment,
     };
 
     try {
-      const response = await fetch(`http://localhost:4000/reviews`, {
+      const response = await fetch(`http://localhost:4000/api/reviews/${productId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newReview),
@@ -86,6 +86,26 @@ const ProductDetail = () => {
     } catch (err) {
       console.error(err.message);
     }
+  };
+
+  // Calculate the average rating from reviews
+  const getAverageRating = () => {
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1);
+  };
+
+  // Function to render star rating
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    const stars = [];
+
+    for (let i = 0; i < fullStars; i++) stars.push("★");
+    if (halfStar) stars.push("☆");
+    for (let i = 0; i < emptyStars; i++) stars.push("☆");
+
+    return stars.join(" ");
   };
 
   if (loading) return <div>Loading...</div>;
@@ -156,10 +176,18 @@ const ProductDetail = () => {
         {/* Review Section */}
         <div className="reviews">
           <h2>Customer Reviews</h2>
+          <div className="average-rating">
+            <span>{renderStars(getAverageRating())}</span>
+            <span>({reviews.length} reviews)</span>
+          </div>
+
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
               <div key={index} className="review">
-                <h4>{review.name} - ⭐ {review.rating}</h4>
+                <div className="review-header">
+                  {review.userid?.image && <img src={review.userid.image} alt={review.userid.name} className="reviewer-image" />}
+                  <h4>{review.userid?.name || "Anonymous"} - {renderStars(review.rating)}</h4>
+                </div>
                 <p>{review.comment}</p>
               </div>
             ))
@@ -169,11 +197,29 @@ const ProductDetail = () => {
 
           <form className="review-form" onSubmit={handleReviewSubmit}>
             <h3>Write a Review</h3>
-            <input type="text" placeholder="Your Name" value={reviewInput.name} onChange={(e) => setReviewInput({ ...reviewInput, name: e.target.value })} required />
-            <select value={reviewInput.rating} onChange={(e) => setReviewInput({ ...reviewInput, rating: parseInt(e.target.value) })}>
-              {[5, 4, 3, 2, 1].map((num) => <option key={num} value={num}>{num} Stars</option>)}
+            <input
+              type="text"
+              placeholder="Your Name"
+              value={reviewInput.name}
+              onChange={(e) => setReviewInput({ ...reviewInput, name: e.target.value })}
+              required
+            />
+            <select
+              value={reviewInput.rating}
+              onChange={(e) => setReviewInput({ ...reviewInput, rating: parseInt(e.target.value) })}
+            >
+              {[5, 4, 3, 2, 1].map((num) => (
+                <option key={num} value={num}>
+                  {num} Stars
+                </option>
+              ))}
             </select>
-            <textarea placeholder="Your Review" value={reviewInput.comment} onChange={(e) => setReviewInput({ ...reviewInput, comment: e.target.value })} required />
+            <textarea
+              placeholder="Your Review"
+              value={reviewInput.comment}
+              onChange={(e) => setReviewInput({ ...reviewInput, comment: e.target.value })}
+              required
+            />
             <button type="submit">Submit Review</button>
           </form>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./ListProduct.css";
 import cross_icon from "../Assets/cross_icon.png";
-
+import Sidebar from "../Sidebar/Sidebar";
 
 const ListProduct = () => {
     const [allProducts, setAllProducts] = useState([]);
@@ -62,73 +62,73 @@ const ListProduct = () => {
     }, []);
 
     return (
+        <div className="main-container">
         
-        <div className="list-product">
-            <h1>All Product List</h1>
 
-            {/* Dropdown for Category Filter */}
-            <div className="category-filter">
-                <label htmlFor="category-select">Filter by Category: </label>
-                <select
-                    id="category-select"
-                    value={selectedCategory}
-                    onChange={(e) => filterByCategory(e.target.value)}
-                >
-                    <option value="All">All</option>
-                    {categories.length > 0 ? (
-                        categories.map((category) => (
-                            <option key={category} value={category}>
-                                {category}
-                            </option>
-                        ))
+            <div className="list-product-content">
+                <h1>All Product List</h1>
+
+                {/* Dropdown for Category Filter */}
+                <div className="category-filter">
+                    <label htmlFor="category-select">Filter by Category: </label>
+                    <select
+                        id="category-select"
+                        value={selectedCategory}
+                        onChange={(e) => filterByCategory(e.target.value)}
+                    >
+                        <option value="All">All</option>
+                        {categories.length > 0 ? (
+                            categories.map((category) => (
+                                <option key={category} value={category}>
+                                    {category}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">Loading categories...</option>
+                        )}
+                    </select>
+                </div>
+
+                <div className="listproduct-format-main">
+                    <p>Product</p>
+                    <p>Title</p>
+                    <p>Old Price</p>
+                    <p>New Price</p>
+                    <p>Category</p>
+                    <p>Stock</p>
+                    <p>Remove</p>
+                </div>
+
+                <div className="listproduct-all-product">
+                    <hr />
+                    {filteredProducts.length === 0 ? (
+                        <p>No products available</p>
                     ) : (
-                        <option value="">Loading categories...</option>
+                        filteredProducts.map((product) => (
+                            <div
+                                key={product.id}
+                                className="listproduct-format-main listproduct-format"
+                            >
+                                <img
+                                    src={product.firstImage || "placeholder-image-url"}
+                                    alt={product.productName || product.name}
+                                    className="listproduct-product-icon"
+                                />
+                                <p>{product.productName || product.name}</p>
+                                <p>₹{product.old_price}</p>
+                                <p>₹{product.new_price}</p>
+                                <p>{product.category}</p>
+                                <p>{product.stock || "Out of stock"}</p>
+                                <img
+                                    onClick={() => removeProduct(product.id)}
+                                    className="listproduct-remove-icon"
+                                    src={cross_icon}
+                                    alt="Remove"
+                                />
+                            </div>
+                        ))
                     )}
-                </select>
-            </div>
-
-            <div className="listproduct-format-main">
-                <p>Product</p>
-                <p>Title</p>
-                <p>Old Price</p>
-                <p>New Price</p>
-                <p>Category</p>
-                <p>Description</p>
-                <p>Stock</p>
-                <p>Remove</p>
-            </div>
-
-            <div className="listproduct-all-product">
-        
-                <hr />
-                {filteredProducts.length === 0 ? (
-                    <p>No products available</p>
-                ) : (
-                    filteredProducts.map((product) => (
-                        <div
-                            key={product.id}
-                            className="listproduct-format-main listproduct-format"
-                        >
-                            <img
-                                src={product.firstImage || "placeholder-image-url"}
-                                alt={product.productName || product.name}
-                                className="listproduct-product-icon"
-                            />
-                            <p>{product.productName || product.name}</p>
-                            <p>₹{product.old_price}</p>
-                            <p>₹{product.new_price}</p>
-                            <p>{product.category}</p>
-                            <p>{product.description || "No description available"}</p>
-                            <p>{product.stock || "Out of stock"}</p>
-                            <img
-                                onClick={() => removeProduct(product.id)}
-                                className="listproduct-remove-icon"
-                                src={cross_icon}
-                                alt="Remove"
-                            />
-                        </div>
-                    ))
-                )}
+                </div>
             </div>
         </div>
     );

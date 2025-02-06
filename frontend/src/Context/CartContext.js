@@ -120,7 +120,9 @@ export const CartProvider = ({ children }) => {
   };
 
   // Remove item from cart
-  const removeItem = async (productid) => {
+  const removeItem = async (item) => {
+    const productid = item.productid;
+    console.log("P ",productid);
     if (!hasToken) {
       alert("No token found. Please log in.");
       return;

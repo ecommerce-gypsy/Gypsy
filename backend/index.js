@@ -10,7 +10,7 @@ const cors = require("cors");
 //const userRoutes = require('../routes/userRoutes');
 const bcrypt = require("bcryptjs");
 const UserCartWishlist = require('./models/UserCartWishlist');
-const ProductS = require('./models/ProductS');
+const Product = require('./models/ProductS');
 const Category = require('./models/Category');
 const Order = require('./models/Order');
 const Users = require('./models/Users');
@@ -23,6 +23,8 @@ const salesReportRouter = require('./routes/admin/report');
 app.use('/report', salesReportRouter);
 
 
+const reviewRoutes = require('./routes/reviewRoutes');
+app.use('/api/reviews', reviewRoutes);  
 app.get("/", (req, res) => {
     res.send("Express App is Running");
 });
@@ -50,58 +52,6 @@ mongoose.connect("mongodb+srv://sornapriyamvatha:priya@cluster0.7fk6l.mongodb.ne
   .catch(err => console.error("MongoDB connection error:", err));
   
 
-// Product Schema
-
-// User Schema
-const  Product = mongoose.model("Product", {
-    productid: {  
-        type: Number,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    new_price: {
-        type: Number,
-        required: true,
-    },
-    old_price: {
-        type: Number,
-        required: true,
-    },
-    stock: {
-        type: Number,
-        required: true,
-        min: [0, 'Stock quantity cannot be negative'],
-    },
-    category: {
-        type: String,
-        enum: ['anklets', 'bracelets', 'neckpieces', 'rings'],  // Categories for filtering
-        required: true,
-    },
-    images: [{
-        type: String,  // URL or file path for product images
-    }],
-    ratings: [{
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        rating: { type: Number, min: 1, max: 5 },
-        review: { type: String }
-    }],
-    isActive: {
-        type: Boolean,
-        default: true,  // Product availability (active/inactive)
-    },
-    date: {
-        type: Date,
-        default: Date.now,
-    },
-});
-// Routes
 // Signup Route
 app.post('/signup', async (req, res) => {
   try {
@@ -359,7 +309,7 @@ app.post('/removeproducts', async (req, res) => {
 // Get All Products
 app.get('/allproductsd', async (req, res) => {
     try {
-        let products = await ProductS.find({});
+        let products = await Product.find({});
         console.log("All Products fetched");
         res.json({ success: true, products: products });
     } catch (error) {
@@ -371,7 +321,7 @@ app.get('/allproductsd', async (req, res) => {
         // Map over the products to include the first image in the response
 app.get('/allproducts', async (req, res) => {
             try {
-                let products = await ProductS.find({});
+                let products = await Product.find({});
                 
                 // Add firstImage dynamically for each product
                 products = products.map(product => ({
@@ -487,9 +437,19 @@ app.get('/bracelets', async (req, res) => {
         if (bracelets.length === 0) {
             return res.status(404).json({ success: false, message: 'No bracelets found' });
         }
-        res.json({ success: true, data: bracelets });
+        const updatedBracelets = bracelets.map((product) => {
+          if (product.stock === 0) {
+            product.outOfStock = true; 
+           // console.log(product.productName); 
+          } else {
+            product.outOfStock = false;
+          }
+          return product;
+        });
+       
+        res.json({ success: true, data: updatedBracelets });
         console.log("Fetching bracelets...");
-        console.log("bracelets found:", bracelets);
+        console.log("bracelets found:", updatedBracelets);
     } catch (error) {
         console.error('Error fetching bracelets:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch bracelets', error: error.message });
@@ -632,7 +592,7 @@ app.post('/search', async (req, res) => {
   });
   
   app.post('/addproductss', async (req, res) => {
-    const products = await ProductS.find({}).sort({ productid: -1 }).limit(1);
+    const products = await Product.find({}).sort({ productid: -1 }).limit(1);
     const productid = products.length > 0 ? parseInt(products[products.length - 1].productid, 10) + 1 : 1;
   
     const {
@@ -661,7 +621,7 @@ app.post('/search', async (req, res) => {
   
     try {
       // Create and save the product document
-      const product = new ProductS({
+      const product = new Product({
         productid,
         productName,
         description,
@@ -739,16 +699,12 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
       const userid = req.user.id; 
       console.log(userid);
       
-      const product = await ProductS.findOne({ productid: productid });
+      const product = await Product.findOne({ productid: productid });
   
       if (!product) {
         return res.status(404).json({ success: false, message: 'Product not found' });
       }
   
-      // Now you have the ObjectId of the product
-     // const productObjectId = product._id;
-  //console.log(productObjectId);
-      // Proceed to add the product to the cart using the product's ObjectId
       const result = await UserCartWishlist.updateOne(
         { userid },
         {
@@ -773,44 +729,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
       res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
     }
   });
-/*
-  app.post('/cartss/remove', authenticateToken, async (req, res) => {
-    try {
-      const { productid } = req.body;
-      const userid = req.user.id;
-      console.log(userid);
-      
-      const product = await ProductS.findOne({ productid: productid });
-  
-      if (!product) {
-        return res.status(404).json({ success: false, message: 'Product not found' });
-      }
-  
-      // Now you have the ObjectId of the product
-      const productObjectId = product._id;
-      console.log(productObjectId);
-  
-      // Proceed to remove the product from the cart using the product's ObjectId
-      const result = await UserCartWishlist.updateOne(
-        { userid },
-        {
-          $pull: { // This removes the product from the cart
-            items: { productid: productObjectId }
-          },
-        }
-      );
-  
-      if (result.modifiedCount === 0) {
-        return res.status(404).json({ success: false, message: 'Product not found in cart' });
-      }
-  
-      res.status(200).json({ success: true, message: 'Product removed from cart', result });
-    } catch (error) {
-      console.error('Error removing product from cart:', error);
-      res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
-    }
-  });
-  */
+
   
 app.post('/checkouts', authenticateToken, async (req, res) => {
     try {
@@ -870,7 +789,7 @@ app.post('/checkouts', authenticateToken, async (req, res) => {
       console.log(productid);
       console.log("UserID:",userid);
   
-      const product = await ProductS.findOne({ productid: productid });
+      const product = await Product.findOne({ productid: productid });
   
       if (!product) {
         return res.status(404).json({ success: false, message: 'Product not found' });
@@ -910,7 +829,7 @@ app.post('/cartss/removes', authenticateToken, async (req, res) => {
     console.log('User ID:', userid);
     console.log('Product ID:', productid);
 
-    const product = await ProductS.findOne({ productid: productid });
+    const product = await Product.findOne({ productid: productid });
 
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
@@ -994,7 +913,7 @@ app.get('/cart/get', authenticateToken, async (req, res) => {
       console.log('Product ID:', productid);  // Ensure productid is a number
   
       // Find the product by productid
-      const product = await ProductS.findOne({ productid: productid });
+      const product = await Product.findOne({ productid: productid });
   
       if (!product) {
         return res.status(404).json({ success: false, message: 'Product not found' });
@@ -1046,7 +965,7 @@ app.get('/cart/get', authenticateToken, async (req, res) => {
       console.log('Product ID:', productid);  // Ensure productid is a number
   
       // Find the product by productid
-      const product = await ProductS.findOne({ productid: productid });
+      const product = await Product.findOne({ productid: productid });
   
       if (!product) {
         return res.status(404).json({ success: false, message: 'Product not found' });
@@ -1197,5 +1116,132 @@ app.get('/cart/get', authenticateToken, async (req, res) => {
       res.status(500).json({ message: "Error deleting user", error: err.message });
     }
   });
-
   
+  const http = require('http');
+  const socketIo = require('socket.io');
+  const server = http.createServer(app);
+  const io = socketIo(server, {
+    cors: {
+      origin: "http://localhost:3000",  // Replace with your frontend URL
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Content-Type"],
+      credentials: true,
+    },
+  });
+  io.on('connection', (socket) => {
+    console.log('a user connected');
+    
+    // Optional: You can emit a welcome message to the connected client
+    socket.emit('welcome', 'Welcome to the admin dashboard!');
+    
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
+  
+  app.post('/check', authenticateToken, async (req, res) => {
+    try {
+      console.log("Checkout endpoint hit");
+  
+      const { items, shippingInfo, paymentMethod } = req.body;
+      console.log("Request body:", { items, shippingInfo, paymentMethod });
+  
+      const userId = req.user.id;
+      console.log("Authenticated user ID:", userId);
+  
+      if (!items || items.length === 0) {
+        console.error("Cart is empty");
+        return res.status(400).json({ success: false, message: 'Cart is empty.' });
+      }
+  
+      // Check stock availability
+      for (const item of items) {
+        const product = await Product.findOne({ productid: item.productid });
+  
+        if (!product) {
+          return res.status(404).json({ success: false, message: `Product with ID ${item.productid} not found.` });
+        }
+  
+        console.log("Fetched Product:", product);
+        console.log("Product Name:", product.productName);
+  
+        if (!product.productName || product.stock === undefined) {
+          console.error(`Product validation failed for product ID: ${item.productid}`);
+          return res.status(400).json({
+            success: false,
+            message: `Product with ID ${item.productid} has missing or invalid data.`,
+          });
+        }
+  
+        // Check if there is enough stock
+        if (product.stock < item.quantity) {
+          return res.status(400).json({
+            success: false,
+            message: `Insufficient stock for product ${product.productName}. Only ${product.stock} left.`,
+          });
+        }
+      }
+  
+      // Calculate total price
+      const totalPrice = items.reduce((total, item) => {
+        console.log(`Calculating item total: ${item.quantity} * ${item.price}`);
+        return total + item.quantity * item.price;
+      }, 0);
+      console.log("Total price calculated:", totalPrice);
+  
+      // Create the order object
+      const newOrder = new Order({
+        userid: userId,
+        items,
+        shippingAddress: shippingInfo,
+        paymentMethod,
+        totalPrice,
+        orderStatus: 'Pending',
+      });
+      console.log("Order object created:", newOrder);
+  
+      // Save the order to the database
+      await newOrder.save();
+      console.log("Order saved to database");
+  
+      // Deduct stock for each ordered item
+      for (const item of items) {
+        const product = await Product.findOne({ productid: item.productid });
+  
+        if (!product) {
+          return res.status(404).json({ success: false, message: `Product with ID ${item.productid} not found.` });
+        }
+  
+        console.log("Fetched Product Object:", product);
+        console.log("Product Name:", product.productName);
+  
+        if (product.stock < item.quantity) {
+          return res.status(400).json({
+            success: false,
+            message: `Insufficient stock for product ${product.productName}. Only ${product.stock} left.`,
+          });
+        }
+        product.stock -= item.quantity;
+        await product.save();
+        console.log(`Updated stock for product ${product.productName}: ${product.stock}`);
+      }
+  
+      io.emit('new-order', {
+        orderId: newOrder._id,
+        totalPrice: newOrder.totalPrice,
+        items: newOrder.items,
+        status: newOrder.orderStatus
+      });
+  
+      res.status(201).json({
+        success: true,
+        message: 'Order placed successfully!',
+        order: newOrder,
+      });
+      console.log("Response sent to client");
+  
+    } catch (error) {
+      console.error('Error creating order:', error);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+  });

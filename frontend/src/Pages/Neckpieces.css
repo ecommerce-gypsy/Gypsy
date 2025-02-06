@@ -21,50 +21,43 @@ h1 {
 }
 
 /* Product Grid */
-.container {
+.product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid layout */
   gap: 20px;
-  justify-items: center;
-  padding: 10px;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
-/* Card Styles */
-.neckpiece-card {
+/* Product Card */
+.product-card {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 15px;
-  width: 100%;
-  max-width: 300px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  padding: 20px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  min-height: 400px; /* Ensure a consistent card height */
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 400px;
 }
 
-.neckpiece-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Wishlist Icon */
-.heart-icon {
+/* Out of Stock Badge */
+.out-of-stock-badge {
   position: absolute;
   top: 10px;
-  right: 10px;
-  font-size: 1.5rem;
-  color: #bbb;
-  cursor: pointer;
-  transition: color 0.3s;
-  z-index: 2;
-}
-
-.heart-icon.active {
-  color: #ff4757;
+  left: 10px;
+  background-color: #e74c3c;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  z-index: 1;
 }
 
 /* Product Image */
@@ -86,49 +79,25 @@ h1 {
   transform: scale(1.05);
 }
 
-/* Product Name */
-.neckpiece-name {
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin: 15px 0;
-  color: #333;
-}
-
-/* Product Price */
-.neckpiece-price {
-  margin: 10px 0;
-  color: #666;
-  font-size: 1rem;
-}
-
-.new-price {
-  color: #28a745;
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-
-.old-price {
-  text-decoration: line-through;
-  color: #999;
-  margin-left: 5px;
-  font-size: 1rem;
-}
-
 /* Add to Cart Button */
 .add-to-cart-btn {
-  background-color: #28a745;
-  color: #fff;
+  background-color: #28a745; /* Green */
+  color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition: background-color 0.3s;
 }
 
 .add-to-cart-btn:hover {
   background-color: #218838;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart-btn:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
 }
 
 /* Customize Button */
@@ -162,99 +131,7 @@ h1 {
       padding: 10px;
   }
 
-  .neckpiece-card {
+  .product-card {
       max-width: 100%;
   }
-}
-
-/* Wishlist Icon */
-.heart-icon {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.5rem; /* Adjust font size if needed */
-  color: #bbb;
-  cursor: pointer;
-  transition: color 0.3s;
-  z-index: 2;
-}
-
-/* Ensure the parent container has sufficient space */
-.neckpiece-image-container {
-  position: relative;
-  overflow: visible; /* Ensure the icon isn't clipped */
-  padding: 10px; /* Add padding to prevent overlap */
-}
-
-/* Product Grid */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 0; /* Removed extra padding for consistency */
-  margin: 0 auto;
-  max-width: 1200px;
-}
-
-/* Product Card */
-.product-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Improved shadow depth */
-  overflow: hidden;
-  padding: 20px;
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 400px; /* Ensure a consistent card height */
-}
-
-/* Ensure text content doesn't overflow and allows multiple lines */
-.product-card h3, .product-card p {
-  overflow: visible; /* Allow text to wrap */
-  text-overflow: unset;
-  white-space: normal; /* Allow multiple lines of text */
-}
-
-/* If you want to allow multiline text but still want even height */
-.product-card .product-details {
-  flex-grow: 1; /* Allow the details section to take up available space */
-}
-
-.product-card p {
-  margin: 5px 0;
-  font-size: 1rem;
-  color: #555;
-}
-
-/* Add to Cart Button */
-.add-to-cart-btn {
-    background-color: #ff69b4; /* Rose color */
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.add-to-cart-btn:hover {
-    background-color: #FF3385; /* Slightly darker rose for hover */
-}
-
-.add-to-cart-btn:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-}
-
-
-/* Original Price */
-.original-price {
-  text-decoration: line-through;
-  color: #999;
-  font-size: 0.9rem;
 }

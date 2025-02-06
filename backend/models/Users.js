@@ -28,16 +28,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",  
     },
-    orders: [{
-        orderId: { type: String, required: true },
-        products: [{
-            productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },  
-            quantity: { type: Number, default: 1 }
-        }],
-        totalAmount: { type: Number, required: true },
-        orderDate: { type: Date, default: Date.now },
-        status: { type: String, enum: ['pending', 'shipped', 'delivered', 'canceled'], default: 'pending' }
-    }],
     role: {
         type: String,
         enum: ['user', 'admin','vendor'],
