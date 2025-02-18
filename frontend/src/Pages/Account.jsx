@@ -1,16 +1,24 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link,useNavigate } from "react-router-dom";
-import "./Account.css"; // Import the CSS file
+import { useNavigate } from "react-router-dom";
+import "./Account.css";
 import { CartContext } from "../Context/CartContext";
 import { WishlistContext } from "../Context/WishlistContext";
 
 function Account() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("personal");
+  const [formData, setFormData] = useState({
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+    phone: "",
+  });
+  const [addresses, setAddresses] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
 
-  // Fetch cart and wishlist from context
-  const { cart } = useContext(CartContext);
+  const navigate = useNavigate();
   const { wishlist } = useContext(WishlistContext);
 
   useEffect(() => {
@@ -30,6 +38,7 @@ function Account() {
         if (response.ok) {
           const data = await response.json();
           setUserData(data);
+          setAddresses(data.addresses || []);
         } else {
           const errorData = await response.json();
           setError(errorData.message || "Failed to fetch account details.");
@@ -45,14 +54,58 @@ function Account() {
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
-    localStorage.removeItem("user_name");
     navigate("/");
   };
 
-  if (error) {
-    return <div className="error-message">{error}</div>;
-  }
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
+  const handleSaveAddress = () => {
+    if (editIndex !== null) {
+      const updatedAddresses = [...addresses];
+      updatedAddresses[editIndex] = formData;
+      setAddresses(updatedAddresses);
+      setEditIndex(null);
+    } else {
+      setAddresses([...addresses, formData]);
+    }
+
+    // Update userData with the latest address
+    setUserData((prev) => ({
+      ...prev,
+      address: `${formData.street}, ${formData.city}, ${formData.state}, ${formData.zip}`,
+      phone: formData.phone,
+    }));
+
+    setFormData({ street: "", city: "", state: "", zip: "", phone: "" });
+  };
+
+  const handleEditAddress = (index) => {
+    setFormData(addresses[index]);
+    setEditIndex(index);
+  };
+
+  const handleDeleteAddress = (index) => {
+    const updatedAddresses = addresses.filter((_, i) => i !== index);
+    setAddresses(updatedAddresses);
+
+    if (updatedAddresses.length > 0) {
+      setUserData((prev) => ({
+        ...prev,
+        address: `${updatedAddresses[0].street}, ${updatedAddresses[0].city}, ${updatedAddresses[0].state}, ${updatedAddresses[0].zip}`,
+        phone: updatedAddresses[0].phone,
+      }));
+    } else {
+      setUserData((prev) => ({
+        ...prev,
+        address: "Not provided",
+        phone: "Not provided",
+      }));
+    }
+  };
+
+  if (error) return <div className="error-message">{error}</div>;
   if (!userData) return <div>Loading...</div>;
 
   return (
@@ -61,119 +114,65 @@ function Account() {
         <h1>Account</h1>
         <p>Name: {userData.name}</p>
         <p>Country: {userData.country || "Not provided"}</p>
-        <p>
-  <Link to="/AddressForm">
-    View addresses ({userData ? userData.addresses.length : 0})
-  </Link>
-</p>
+        <p>Address: {userData.address || "Not provided"}</p>
+        <p>Phone: {userData.phone || "Not provided"}</p>
         <button className="logout-button" onClick={handleLogout}>Log out</button>
       </div>
 
-      {/* Order History Section */}
-      <div className="section-container">
-        <h2>Order History</h2>
-        {userData.orders && userData.orders.length > 0 ? (
-          <ul>
-            {userData.orders.map((order, index) => (
-              <li key={index} className="order-item">
-                <h3>Order ID: {order._id}</h3>
-                <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                <p>Status: {order.orderStatus}</p>
-                <p>Total: ₹{order.totalPrice}</p>
-                <h4>Products:</h4>
-                <ul>
-                  {order.items.map((product, idx) => (
-                    <li key={idx}>
-                      <div className="order-product">
-                        <img
-                          src={product.productid.images?.[0] || "placeholder.jpg"}
-                          alt={product.productid.name || "Product"}
-                          className="order-product-image"
-                        />
-                        <div className="order-product-details">
-                          <p><strong>{product.productid.name}</strong> (x{product.quantity})</p>
-                          <p>Price: ₹{product.price}</p>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No orders yet.</p>
-        )}
+      <div className="tabs">
+      
+        <button className={activeTab === "orders" ? "active" : ""} onClick={() => setActiveTab("orders")}>My Orders</button>
+        <button className={activeTab === "addresses" ? "active" : ""} onClick={() => setActiveTab("addresses")}>My Addresses</button>
+        <button className={activeTab === "wishlist" ? "active" : ""} onClick={() => setActiveTab("wishlist")}>My Wishlist</button>
       </div>
 
-      {/* Cart Section */}
-      <div className="section-container">
-        <h2>Cart</h2>
-        {cart.length > 0 ? (
-          <div className="cart-grid">
-            {cart.map((item, index) => (
-              <div key={index} className="cart-item-card">
-                {/* Cart Item Header */}
-                <div className="cart-header">
-                  <img
-                    src={item.images?.[0] || "placeholder.jpg"}
-                    alt={item.productName || "Product"}
-                    className="cart-item-image"
-                  />
-                  <div className="cart-header-details">
-                    <h3>{item.productName || "Product Name"}</h3> {/* Display product name */}
-                  </div>
-                </div>
+      <div className="tab-content">
+        {activeTab === "addresses" && (
+          <div className="section-container">
+            <h2>Manage Addresses</h2>
+            <div className="address-form">
+              <input type="text" name="street" placeholder="Street" value={formData.street} onChange={handleChange} />
+              <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
+              <input type="text" name="state" placeholder="State" value={formData.state} onChange={handleChange} />
+              <input type="text" name="zip" placeholder="Zip Code" value={formData.zip} onChange={handleChange} />
+              <input type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} />
+              <button className="save-btn" onClick={handleSaveAddress}>{editIndex !== null ? "Update" : "Save"} Address</button>
+            </div>
 
-                {/* Cart Item Footer */}
-                <div className="cart-footer">
-                  <p className="cart-price">
-                    ₹<span className="new-price">{item.new_price || 0}</span>
-                    <span className="old-price"> ₹1000</span> {/* Placeholder for original price */}
-                  </p>
-                  <span className="cart-quantity">Qty: {item.quantity}</span> {/* Display quantity */}
-                </div>
-              </div>
-            ))}
+            <h3>Saved Addresses</h3>
+            {addresses.length > 0 ? (
+              <ul>
+                {addresses.map((address, index) => (
+                  <li key={index} className="address-item">
+                    <p>{address.street}, {address.city}, {address.state}, {address.zip}</p>
+                    <p>Phone: {address.phone}</p>
+                    <button className="edit-btn" onClick={() => handleEditAddress(index)}>Edit</button>
+                    <button className="delete-btn" onClick={() => handleDeleteAddress(index)}>Delete</button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No addresses saved.</p>
+            )}
           </div>
-        ) : (
-          <p>Your cart is empty.</p>
         )}
-      </div>
 
-      {/* Wishlist Section */}
-      <div className="section-container">
-        <h2>Wishlist</h2>
-        {wishlist.length > 0 ? (
-          <div className="wishlist-grid">
-            {wishlist.map((item, index) => (
-              <div key={index} className="wishlist-item-card">
-                {/* Wishlist Item Header */}
-                <div className="wishlist-header">
-                  <img
-                    src={item.images?.[0] || "placeholder.jpg"}
-                    alt={item.productName || "Product"}
-                    className="wishlist-item-image"
-                  />
-                  <div className="wishlist-header-details">
-                    <h3>{item.productName || "Product Name"}</h3> {/* Display product name */}
+        {activeTab === "wishlist" && (
+          <div className="section-container">
+            <h2>My Wishlist</h2>
+            <div className="wishlist-container">
+              {wishlist.length > 0 ? (
+                wishlist.map((item, index) => (
+                  <div key={index} className="wishlist-item">
+                    <img src={item.images?.[0] || "placeholder.jpg"} alt={item.productName || "Product"} />
+                    <p>{item.productName || "Product Name"}</p>
                   </div>
-                  {/* Heart Icon */}
-                  <span className="wishlist-heart">💖</span>
-                </div>
-
-                {/* Wishlist Item Footer */}
-                <div className="wishlist-footer">
-                  <p className="wishlist-price">
-                    ₹<span className="new-price">{item.new_price || 0}</span>
-                    <span className="old-price"> ₹1000</span> {/* Placeholder for original price */}
-                  </p>
-                </div>
-              </div>
-            ))}
+                ))
+              ) : (
+                <p>Your wishlist is empty.</p>
+              )}
+            </div>
           </div>
-        ) : (
-          <p>Your wishlist is empty.</p>
         )}
       </div>
     </div>

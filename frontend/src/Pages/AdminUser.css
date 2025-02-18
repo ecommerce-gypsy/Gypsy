@@ -80,7 +80,6 @@
 }
 
 /* Buttons */
-
 .delete-btn {
     padding: 8px 15px;
     font-size: 14px;
@@ -102,51 +101,53 @@
     width: 40px; /* Adjust size */
     height: 40px;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
     padding: 8px;
 }
 
-/* Edit Button Hover Effect */
+/* Remove Hover Effect */
 .edit-btn:hover {
-    background: #d68910;
-    transform: scale(1.1); /* Slightly enlarges the button on hover */
+    background: #fffffe;
+    transform: none;
 }
 
 /* Edit Icon Inside Button */
 .edit-icon {
-    width: 20px; /* Adjust size */
-    height: 20px;
-    filter: invert(1); /* Makes the icon white */
-}
-.trash-btn:hover {
-    background: #d68910;
-    transform: scale(1.1); /* Slightly enlarges the button on hover */
-}
-
-.trash-icon {
-    width: 20px; /* Adjust size */
+    width: 20px;
     height: 20px;
     filter: invert(1); /* Makes the icon white */
 }
 
+/* Trash Button */
 .trash-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fffffe; /* Orange background */
+    background: #fffffe;
     color: white;
     border: none;
-    border-radius: 50%; /* Makes it circular */
-    width: 40px; /* Adjust size */
+    border-radius: 50%;
+    width: 40px;
     height: 40px;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
     padding: 8px;
 }
 
+/* Remove Hover Effect */
+.trash-btn:hover {
+    background: #fffffe;
+    transform: none;
+}
 
+/* Trash Icon */
+.trash-icon {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+}
+
+/* Delete Button */
 .delete-btn {
-    background: #e74c3c;
+    background: #000000;
     color: white;
 }
 
@@ -181,7 +182,6 @@
 .modal-container h2 {
     margin-bottom: 15px;
     font-size: 22px;
-    
 }
 
 /* Form Styling */
@@ -203,21 +203,21 @@
 
 /* Add Space Below Role Dropdown */
 .modal-container select {
-    margin-bottom: 15px; /* Creates gap between Role and Save Changes */
+    margin-bottom: 15px;
 }
 
 /* Button Container for Save & Cancel */
 .modal-buttons {
     display: flex;
     justify-content: center;
-    gap: 10px; /* Adds space between buttons */
-    margin-top: 15px; /* Creates space between Role dropdown and buttons */
+    gap: 10px;
+    margin-top: 15px;
 }
 
 /* Ensure buttons have uniform size */
 .save-btn, 
 .close-btn {
-    flex: 1; /* Allows buttons to take equal space */
+    flex: 1;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
@@ -247,9 +247,6 @@
     background: #c0392b;
 }
 
-
-
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .admin-user-container {
@@ -276,11 +273,10 @@
         padding: 6px 10px;
         font-size: 12px;
     }
+
     .close-btn svg {
         width: 20px;
         height: 20px;
         vertical-align: middle;
     }
-    
-    
 }

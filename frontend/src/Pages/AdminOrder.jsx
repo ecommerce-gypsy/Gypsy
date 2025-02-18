@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './AdminOrder.css';
-import trashIcon from '../Components/Assets/trash.png';
 import Sidebar from '../Components/Sidebar/Sidebar';
 
 const AdminOrder = () => {
@@ -95,55 +94,62 @@ const AdminOrder = () => {
       }
     } catch (err) {
       setErrorMessage('Error deleting order: ' + err.message);
+      setOrders([...orders]);
     }
   };
 
   return (
-    <div className="admin-page-container">
+    <div className="admin-layout">
+      {/* Sidebar */}
       <Sidebar />
-      <div className="admin-order-container">
-        <h1>Admin - Order Management</h1>
-        {loading && <p className="loading-message">Loading...</p>}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-        {!loading && (
-          <table className="admin-order-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>User</th>
-                <th>Total Price</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
 
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
-                  <td>${order.totalPrice}</td>
-                  <td>
-                    <select
-                      value={order.orderStatus}
-                      onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Processing">Processing</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-                  </td>
-                  <td className="action-cell">
-                    <button className="trash-btn" onClick={() => handleDelete(order._id)}>
-                      <img src={trashIcon} alt="trash" className="trash-icon" />
-                    </button>
-                  </td>
+      {/* Main Order Management Section */}
+      <div className="admin-container">
+        <h1 className="admin-title">Order Management</h1>
+        {loading && <p className="loading-text">Loading...</p>}
+        {errorMessage && <p className="error-text">{errorMessage}</p>}
+        {!loading && (
+          <div className="table-container">
+            <table className="order-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>User</th>
+                  <th>Total Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order._id}>
+                    <td>{order._id}</td>
+                    <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
+                    <td>${order.totalPrice}</td>
+                    <td>
+                      <select
+                        className="status-dropdown"
+                        value={order.orderStatus}
+                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td>
+                      <button className="delete-btn" onClick={() => handleDelete(order._id)}>
+                        Delete
+                      </button>
+                      
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

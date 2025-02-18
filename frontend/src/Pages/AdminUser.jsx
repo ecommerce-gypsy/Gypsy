@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import "./AdminUser.css";
 import Sidebar from '../Components/Sidebar/Sidebar';
-import editIcon from '../Components/Assets/edit.png';
-import trashIcon from '../Components/Assets/trash.png';
-
 
 const AdminUser = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editUser, setEditUser] = useState(null); // Holds user data for editing
+  const [editUser, setEditUser] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -62,17 +59,14 @@ const AdminUser = () => {
     }
   };
 
-  // Open edit modal
   const openEditModal = (user) => {
     setEditUser(user);
   };
 
-  // Close edit modal
   const closeEditModal = () => {
     setEditUser(null);
   };
 
-  // Handle form submission
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -90,7 +84,6 @@ const AdminUser = () => {
         throw new Error("Failed to update user");
       }
 
-      // Update UI
       setUsers(users.map(user => user._id === editUser._id ? editUser : user));
       closeEditModal();
     } catch (err) {
@@ -134,21 +127,11 @@ const AdminUser = () => {
                     </select>
                   </td>
                   <td>
-  <div className="action-buttons">
-  <button className="edit-btn" onClick={() => openEditModal(user)}>
-  <img src={editIcon} alt="edit" className="edit-icon" />
-</button>
-
-
-
-    <button className="trash-btn" onClick={() => handleDelete(user._id)}>
-
-    <img src={trashIcon} alt="trash" className="trash-icon" />
-
-    </button>
-  </div>
-</td>
-
+                    <div className="action-buttons">
+                      <button className="edit-btn" onClick={() => openEditModal(user)}>EDIT</button>
+                      <button className="delete-btn" onClick={() => handleDelete(user._id)}>DELETE</button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -156,7 +139,6 @@ const AdminUser = () => {
         )}
       </div>
 
-      {/* Edit User Modal */}
       {editUser && (
         <div className="modal-overlay">
           <div className="modal-container">
@@ -185,16 +167,9 @@ const AdminUser = () => {
                 <option value="admin">Admin</option>
               </select>
               <div className="modal-buttons">
-  <button className="save-btn" type="submit">Save Changes</button>
-  <button className="close-btn" type="button" onClick={closeEditModal}>
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-  </svg>
-</button>
-
-</div>
-
-
+                <button className="save-btn" type="submit">Save Changes</button>
+                <button img onScroll={} className="close-btn" type="button" onClick={closeEditModal}>Close</button>
+              </div>
             </form>
           </div>
         </div>

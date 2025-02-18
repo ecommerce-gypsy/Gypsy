@@ -68,7 +68,7 @@ export const SalesReport = () => {
 
   return (
     <div className="sales-report-container">
-      <h1 className="sales-report-header">Sales and Revenue Report</h1>
+      <h1 className="sales-report-header">SALES AND REVENUE REPORT</h1>
 
       {/* Date Filters */}
       <div className="filters-container">

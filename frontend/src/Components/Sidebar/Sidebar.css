@@ -4,29 +4,25 @@ body, html, .sidebar {
   padding: 0;
   box-sizing: border-box;
 }
+
+/* Sidebar container with pastel peach background */
 .sidebar-container {
   width: 250px;
-  background: #2c3e50;
+  background: #FFDAB9 !important; /* Soft Peach Pastel */
   padding: 20px;
   min-height: 100vh;
 }
-/* Sidebar container */
+
 .sidebar {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background-color: #f8f9fa; /* Light background color */
-  width: 250px; /* Sidebar width */
-  height: 100vh; /* Full height */
-  padding: 20px;
-  border-right: 1px solid #ddd; /* Optional border for separation */
+  background-color: #FFE5C4 !important; /* Lighter Peach */
 }
+
 
 /* Sidebar item styles */
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 15px; /* Spacing between icon and text */
+  gap: 15px;
   padding: 10px 15px;
   margin-bottom: 15px;
   border-radius: 8px;
@@ -35,7 +31,7 @@ body, html, .sidebar {
 }
 
 .sidebar-item:hover {
-  background-color: #e2e6ea; /* Highlight on hover */
+  background-color: #FFC8A2; /* Slightly darker peach on hover */
 }
 
 /* Sidebar item text */
@@ -43,12 +39,12 @@ body, html, .sidebar {
   font-size: 16px;
   font-weight: 500;
   margin: 0;
-  color: #333;
+  color: #ee3400; /* Darker text for better contrast */
 }
 
 /* Icon styling */
 .sidebar-item img {
-  height: 35px; /* Icon size */
+  height: 35px;
   width: 35px;
 }
 
@@ -60,31 +56,26 @@ a {
 /* Responsive design for narrower screens */
 @media (max-width: 800px) {
   .sidebar {
-    width: 100px; /* Smaller sidebar for narrow screens */
-    height: auto; /* Adjust height for horizontal layout */
+    width: 100px;
+    height: auto;
     padding: 10px;
-    flex-direction: row; /* Arrange items horizontally */
-    justify-content: space-around; /* Evenly distribute items */
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #FFE5C4; /* Consistent peach tone */
   }
 
   .sidebar-item {
-    flex-direction: column; /* Stack icon and text vertically */
-    gap: 5px; /* Reduce gap */
+    flex-direction: column;
+    gap: 5px;
   }
 
   .sidebar-item img {
-    height: 30px; /* Smaller icons for narrow screens */
+    height: 30px;
     width: 30px;
   }
 
   .sidebar-item p {
-    font-size: 12px; /* Smaller text for narrow screens */
+    font-size: 12px;
     text-align: center;
   }
-  .sidebar-container {
-    width: 250px;
-    background: #2c3e50;
-    padding: 20px;
-    min-height: 100vh;
-}
 }

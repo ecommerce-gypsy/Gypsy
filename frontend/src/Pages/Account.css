@@ -1,231 +1,195 @@
-/* Account.css */
+/* General Styles */
 .account-container {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns layout */
-  gap: 20px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
 }
 
+/* Account Header */
 .account-header {
-  grid-column: span 2; /* Account header takes up the entire width of the top row */
-  background-color: #f4f4f4;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .account-header h1 {
-  margin: 0;
-}
-
-.account-header p {
-  margin: 5px 0;
-}
-
-.account-header .logout-button {
-  background-color: #ff4c4c;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.account-header .logout-button:hover {
-  background-color: #ff1a1a;
-}
-
-.section-container {
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  margin-top: 0;
+  font-size: 28px;
+  font-weight: 700;
   color: #333;
 }
 
-ul {
-  list-style-type: none;
-  padding-left: 0;
+.account-header p {
+  font-size: 16px;
+  color: #666;
 }
 
-ul li {
-  padding: 10px;
-  border-bottom: 1px solid #e2e2e2;
-}
-
-ul li:last-child {
-  border-bottom: none;
-}
-
-.order-item, .cart-item, .wishlist-item {
-  padding: 10px;
-  background-color: #f9f9f9;
-  margin: 10px 0;
+/* Logout Button */
+.logout-button {
+  padding: 10px 18px;
+  background: #e74c3c;
+  color: white;
+  border: none;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.error-message {
-  color: red;
-  font-size: 18px;
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .account-container {
-    grid-template-columns: 1fr; /* Single column layout on smaller screens */
-  }
-
-  .account-header {
-    grid-column: span 1; /* Make account header fit in single column */
-  }
-}
-.wishlist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.wishlist-item-card {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
-
-.wishlist-item-card:hover {
-  transform: scale(1.02);
-}
-
-.wishlist-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.wishlist-item-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.wishlist-header-details {
-  flex: 1;
-}
-
-.wishlist-header-details h3 {
-  font-size: 1rem;
-  color: #6a1b9a; /* Purple color for text */
-  margin: 0;
-}
-
-.wishlist-heart {
-  font-size: 1.5rem;
-  color: #e91e63; /* Pink color for the heart */
+  font-size: 15px;
   cursor: pointer;
+  transition: background 0.3s ease-in-out;
 }
 
-.wishlist-footer {
-  text-align: center;
-  margin-top: 10px;
+.logout-button:hover {
+  background: #c0392b;
 }
 
-.wishlist-price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #4caf50; /* Green color for the new price */
-}
-
-.new-price {
-  font-size: 1.5rem;
-}
-
-.old-price {
-  font-size: 1rem;
-  color: #9e9e9e; /* Grey color for the old price */
-  text-decoration: line-through;
-  margin-left: 5px;
-}
-.cart-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.cart-item-card {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
-
-.cart-item-card:hover {
-  transform: scale(1.02);
-}
-
-.cart-header {
+/* Tabs Navigation */
+.tabs {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  justify-content: center;
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.cart-item-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.cart-header-details {
+.tabs button {
   flex: 1;
-}
-
-.cart-header-details h3 {
-  font-size: 1rem;
-  color: #6a1b9a; /* Purple color for text */
-  margin: 0;
-}
-
-.cart-quantity {
-  font-size: 1rem;
-  color: #3f51b5; /* Blue for quantity */
-  font-weight: bold;
-}
-
-.cart-footer {
   text-align: center;
-  margin-top: 10px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  border-bottom: 3px solid transparent;
 }
 
-.cart-price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #4caf50; /* Green color for the new price */
+.tabs button:hover {
+  color: #007bff;
 }
 
-.new-price {
-  font-size: 1.5rem;
+.tabs .active {
+  font-weight: 700;
+  color: #007bff;
+  border-bottom: 3px solid #007bff;
 }
 
-.old-price {
-  font-size: 1rem;
-  color: #9e9e9e; /* Grey color for the old price */
-  text-decoration: line-through;
-  margin-left: 5px;
+/* Address Form - Proper Alignment */
+.address-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.address-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.address-form label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.address-form input {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f9f9f9;
+  transition: border 0.3s ease-in-out;
+}
+
+.address-form input:focus {
+  border-color: #007bff;
+  background: white;
+  outline: none;
+}
+
+.address-form .save-btn {
+  grid-column: span 2;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.address-form .save-btn:hover {
+  background: #218838;
+}
+
+/* Saved Addresses - More Professional */
+.saved-addresses {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.address-item {
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ddd;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease-in-out;
+}
+
+.address-item:hover {
+  border-color: #007bff;
+  box-shadow: 0px 3px 8px rgba(0, 123, 255, 0.1);
+}
+
+.address-details {
+  flex-grow: 1;
+}
+
+.address-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Fixed Edit Button Visibility */
+.edit-btn {
+  padding: 8px 14px;
+  background: #ffc107;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.delete-btn {
+  padding: 8px 14px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+
+
+.delete-btn:hover {
+  background: #c82333;
 }
