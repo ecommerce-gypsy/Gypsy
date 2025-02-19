@@ -6,3 +6,4 @@
 *.css text
 *.html text
 *.gitignore text
+*.pack filter=lfs diff=lfs merge=lfs -text
