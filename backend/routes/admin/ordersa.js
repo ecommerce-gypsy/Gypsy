@@ -9,11 +9,10 @@ const isAdmin = require('../../middleware/isAdmin');
 // Get all orders
 router.get('/', auth, isAdmin,async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate('userid', 'name email') // Populate user info for better display
-      .populate('customDesign', 'name email') // Optional for custom design info
-      .exec();
+    const orders = await Order.find().populate('userid', 'name email');
+    console.log(orders); // Log to check if userid is populated properly
     res.status(200).json(orders);
+    
   } catch (err) {
     res.status(500).json({ message: 'Error fetching orders', error: err.message });
   }

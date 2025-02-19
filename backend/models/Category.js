@@ -23,6 +23,7 @@ const category= new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  parentCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }, 
 });
 
 category.pre('save', function (next) {

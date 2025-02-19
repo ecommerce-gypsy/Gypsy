@@ -1,75 +1,84 @@
-/* Product Grid */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+/* Bamboo Page Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
     padding: 0;
-    margin: 0 auto;
-    max-width: 1200px;
+    box-sizing: border-box;
 }
 
-/* Product Card */
-.product-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    padding: 20px;
+h1 {
     text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.bracelets-card {
+    position: relative;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    width: 220px;
+    min-height: 400px; /* Ensuring the card has consistent height */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 400px;
-    position: relative; /* Ensures absolute elements stay inside */
 }
 
-/* Wishlist Icon */
-.wishlist-icon {
+.bracelets-card:hover {
+    transform: translateY(-5px);
+}
+
+.bracelets-image-container {
+    position: relative;
+}
+
+.bracelets-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+}
+
+.heart-icon {
     position: absolute;
     top: 10px;
     right: 10px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: gray;
-    transition: color 0.3s;
-    z-index: 3;
-}
-
-.wishlist-icon.active {
-    color: red;
-}
-
-/* Product Image & Out of Stock Label */
-.product-image-container {
-    position: relative;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 50%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, background-color 0.3s;
 }
 
-.product-image {
-    width: 100%;
-    border-radius: 8px;
+.heart-icon::before {
+    content: "\2665"; /* Unicode for heart symbol */
+    font-size: 18px;
+    color: black;
 }
 
-/* Out of Stock Ribbon */
-.out-of-stock-badge {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    background: linear-gradient(to right, #0d1b3f, #9caac7); /* Smooth gradient */
+.heart-icon:hover {
+    transform: scale(1.2);
+    background-color: red;
+}
+
+.heart-icon:hover::before {
     color: white;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 5px 15px;
-    text-transform: uppercase;
-    clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
-    z-index: 3;
 }
 
-/* Product Name */
 .bracelets-name {
     font-size: 16px;
     font-weight: bold;
@@ -77,7 +86,6 @@
     text-align: center;
 }
 
-/* Pricing */
 .bracelets-price {
     margin: 10px 0;
     text-align: center;
@@ -86,18 +94,15 @@
 .new-price {
     color: green;
     font-weight: bold;
-    font-size: 1.2rem;
 }
 
 .old-price {
     color: red;
     text-decoration: line-through;
-    font-size: 1rem;
 }
 
-/* Add to Cart Button */
 .add-to-cart-btn {
-    background-color: #ff69b4;
+    background-color: #4caf50;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -105,14 +110,13 @@
     cursor: pointer;
     font-size: 14px;
     border-radius: 5px;
-    transition: background-color 0.3s;
 }
 
 .add-to-cart-btn:hover {
-    background-color: #ff3385;
+    background-color: #45a049;
 }
 
-/* Customize Button */
+/* Customize Button Styles */
 .customize-btn {
     background-color: #008cba;
     color: white;
@@ -130,4 +134,103 @@
 
 .customize-btn:hover {
     background-color: #006f8e;
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0; /* Removed extra padding for consistency */
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Product Card */
+.product-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Improved shadow depth */
+    overflow: hidden;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 400px; /* Allow the card to grow if content needs more space */
+}
+
+/* Ensure text content doesn't overflow and allows multiple lines */
+.product-card h3, .product-card p {
+    overflow: visible; /* Allow text to wrap */
+    text-overflow: unset;
+    white-space: normal; /* Allow multiple lines of text */
+}
+
+/* If you want to allow multiline text but still want even height */
+.product-card .product-details {
+    flex-grow: 1; /* Allow the details section to take up available space */
+}
+
+.product-card p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+    background-color: #ff69b4; /* Rose color */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #FF3385; /* Slightly darker rose for hover */
+}
+
+.add-to-cart-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+
+/* Original Price */
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9rem;
+}
+.out-of-stock {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px;
+  }
+  
+  .product-card .add-to-cart-btn {
+    background-color: #f0f0f0;  /* Greyed out when out of stock */
+    cursor: not-allowed;
+  }
+  
+  .product-card .add-to-cart-btn:disabled {
+    background-color: #dcdcdc;
+  }
+  .out-of-stock {
+    color: rgb(255, 0, 204);
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  .low-stock {
+    color: #ff4500;  /* Orange-red */
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 5px;
 }

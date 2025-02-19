@@ -7,16 +7,38 @@ export default function AddressForm() {
     city: "",
     state: "",
     zip: "",
+    country: "", // Adding the country field
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Address Submitted:", formData);
-    setShowForm(false); // Hide form after submission (optional)
+
+    // Send PUT request to the backend to update the address
+    try {
+      const response = await fetch('http://localhost:4000/api/address/add-address', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`, // Send JWT token
+        },
+        body: JSON.stringify(formData), // Send the form data as JSON in the request body
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result); // Log the success response
+        setShowForm(false); // Hide form after submission (optional)
+      } else {
+        const errorData = await response.json();
+        console.error("Error updating address:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error updating address:", error);
+    }
   };
 
   return (
@@ -62,6 +84,17 @@ export default function AddressForm() {
               type="text"
               name="zip"
               value={formData.zip}
+              onChange={handleChange}
+              className="border p-2 w-full"
+            />
+          </label>
+
+          <label className="block mb-2">
+            Country:
+            <input
+              type="text"
+              name="country"
+              value={formData.country}
               onChange={handleChange}
               className="border p-2 w-full"
             />

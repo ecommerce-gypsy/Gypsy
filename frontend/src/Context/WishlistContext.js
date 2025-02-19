@@ -21,7 +21,7 @@ export const WishlistProvider = ({ children }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/wishlist/get", {
+      const response = await fetch("http://localhost:4000/api/wishlist/get", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -55,7 +55,7 @@ export const WishlistProvider = ({ children }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/wishlist/add", {
+      const response = await fetch("http://localhost:4000/api/wishlist/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export const WishlistProvider = ({ children }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/wishlist/remove", {
+      const response = await fetch("http://localhost:4000/api/wishlist/remove", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Bracelets.css"; 
+import React, { useEffect, useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { WishlistContext } from "../Context/WishlistContext";
 import { CartContext } from "../Context/CartContext";
-import Header from "../Components/Header/Header"; 
+import Header from "../Components/Header/Header";
+import './Bracelets.css';
 
 const Bracelets = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -11,7 +11,8 @@ const Bracelets = () => {
   const navigate = useNavigate();
 
   const [bracelets, setBracelets] = useState([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState("");  
+  const [loading, setLoading] = useState(true);  
 
   useEffect(() => {
     fetch("http://localhost:4000/bracelets")
@@ -22,14 +23,19 @@ const Bracelets = () => {
         return response.json();
       })
       .then((data) => {
+        console.log("Received data:", data);  
         if (data.success) {
-          setBracelets(data.data);
+          console.log("Bracelets data:", data.data);  
+          setBracelets(data.data);  
         } else {
           setError("No bracelets found.");
         }
       })
       .catch((error) => {
         setError("Error fetching bracelets: " + error.message);
+      })
+      .finally(() => {
+        setLoading(false);  
       });
   }, []);
 
@@ -37,7 +43,10 @@ const Bracelets = () => {
     wishlist.some((item) => item.productid === product.productid);
 
   const handleAddToCart = (product) => {
-    if (product.stock === 0) return; 
+    if (product.stock === 0) {
+      return;
+    }
+    console.log("Product", product);
     addToCart(product);
     navigate("/cart");
   };
@@ -47,14 +56,14 @@ const Bracelets = () => {
       <Header />
       <h1>Welcome to the BRACELETS category page!</h1>
 
-      {error ? (
-        <p className="error-message">{error}</p>
+      {loading ? (
+        <p>Loading...</p>  
+      ) : error ? (
+        <p className="error-message">{error}</p>  
       ) : (
         <div className="product-grid">
           {bracelets.map((product) => (
             <div className="product-card" key={product.productid}>
-              
-              {/* Wishlist Icon */}
               <div
                 className={`wishlist-icon ${isInWishlist(product) ? "active" : ""}`}
                 onClick={() => {
@@ -67,30 +76,38 @@ const Bracelets = () => {
               >
                 ♥
               </div>
-
-              {/* Product Image & Out of Stock Label */}
-              <div className="product-image-container">
-                <Link to={`/product/${product.productid}`}>
-                  <img src={product.images[0]} alt={product.productName} className="product-image" />
-                </Link>
-                {product.stock === 0 && <span className="out-of-stock-badge">Out of Stock</span>}
-              </div>
-
-              {/* Product Name */}
+              <Link to={`/product/${product.productid}`}>
+                <img src={product.images[0]} alt={product.productName} className="product-image" />
+              </Link>
               <div className="bracelets-name">{product.productName}</div>
-
-              {/* Pricing */}
               <div className="bracelets-price">
-                <span className="new-price">₹{product.new_price}</span>{" "}
+                <span className="new-price">₹{product.new_price}</span>
                 <span className="old-price">₹{product.old_price}</span>
               </div>
 
-              {/* Add to Cart Button */}
-              {product.stock > 0 && (
-                <button className="add-to-cart-btn" onClick={() => handleAddToCart(product)}>
-                  Add to Cart
-                </button>
-              )}
+
+              {product.stock === 0 ? (
+  <>
+    <p className="out-of-stock">Out of Stock</p>
+    {console.log(`Out of Stock: ${product.productName}`)} 
+  </>
+) : (
+  <>
+    {product.stock <5 && (
+      <>
+       <p className="low-stock">{product.stock} left! Hurry up!</p>
+        {console.log(`Low Stock: ${product.productName}`)} 
+      </>
+    )}
+    <button
+      className="add-to-cart-btn"
+      onClick={() => handleAddToCart(product)}
+    >
+      Add to Cart
+    </button>
+  </>
+)}
+
             </div>
           ))}
         </div>

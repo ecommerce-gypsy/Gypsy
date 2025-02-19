@@ -1,64 +1,30 @@
-/*import React, { createContext, useState } from "react";
-
-export const CartContext = createContext();
-
-export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-
-  // Add item to cart with default quantity of 1
-  const addToCart = (item) => {
-    if (!cart.some((cartItem) => cartItem.productid === item.productid)) {
-      setCart([...cart, { ...item, quantity: 1 }]);
-      alert(`${item.productName} added to cart!`); // Corrected string formatting
-    } else {
-      alert(`${item.productName} is already in your cart!`); // Corrected string formatting
-    }
-  };
-
-  // Remove item from cart
-  const removeItem = (productid) => {
-    setCart((prevCart) => prevCart.filter((item) => item.productid !== productid));
-  };
-
-  // Dynamic cart count (total items including quantities)
-  const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
-
-  return (
-    <CartContext.Provider value={{ cart, setCart, addToCart, removeItem, cartCount }}>
-      {children}
-    </CartContext.Provider>
-  );
-};
-*/
 import React, { createContext, useState, useEffect } from "react";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const [loading, setLoading] = useState(false); // Track loading state for API calls
-  const [error, setError] = useState(null); // Handle errors if needed
-  const [hasToken, setHasToken] = useState(false); // Track if token is available
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasToken, setHasToken] = useState(false);
 
   const token = localStorage.getItem("auth_token");
 
-  // Check if token exists on component mount
   useEffect(() => {
     if (token) {
       setHasToken(true);
-      fetchCart(); // Fetch cart data if token is available
+      fetchCart();
     } else {
       setHasToken(false);
     }
   }, [token]);
 
-  // Fetch cart items from the server
   const fetchCart = async () => {
-    if (!hasToken) return; // If no token, don't fetch
+    if (!hasToken) return;
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/cart/get", {
+      const response = await fetch("http://localhost:4000/api/cartss/get", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +34,7 @@ export const CartProvider = ({ children }) => {
 
       const data = await response.json();
       if (response.ok) {
-        setCart(data.items || []); // Set the cart with the fetched items
+        setCart(data.items || []);
       } else {
         setError(data.message || "Error fetching cart.");
       }
@@ -79,35 +45,54 @@ export const CartProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
-  // Add item to cart with default quantity of 1
   const addToCart = async (item) => {
     if (!hasToken) {
       alert("No token found. Please log in.");
       return;
     }
-
+  
+    // Check if the item is already in the cart
+    const existingItem = cart.find((cartItem) => cartItem.productid === item.productid);
+    if (existingItem) {
+      alert(`${item.productName} is already in your cart!`);
+      return;
+    }
+  
+    // Check if the item is in stock
+    if (item.stock <= 0) {
+      alert("This product is out of stock!");
+      return;
+    }
+  
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/cartss/add", {
+      const response = await fetch("http://localhost:4000/api/cartss/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
-          productid: item.productid, // Send productid directly
+          productid: item.productid,
           quantity: 1,
           images: item.images,
           productName: item.productName,
           new_price: item.new_price,
+          stock: item.stock,
         }),
       });
-
+  
       const data = await response.json();
       if (response.ok) {
         alert(`${item.productName} added to cart!`);
-        setCart((prevCart) => [...prevCart, { ...item, quantity: 1 }]); // Add to cart state
+  
+        // Add the item to the cart state only if it's not already there
+        setCart((prevCart) => {
+          if (!prevCart.find(cartItem => cartItem.productid === item.productid)) {
+            return [...prevCart, { ...item, quantity: 1 }];
+          }
+          return prevCart;
+        });
       } else {
         setError(data.message || "Error adding product to cart.");
       }
@@ -118,46 +103,59 @@ export const CartProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const emptyCart = () => {
+    setCart([]);  // Clear cart from state
+  };
+  
+// Remove item from cart
+const removeItem = async (item) => {
+  const productid = item.productid;
+  console.log("P ",productid);
+  if (!hasToken) {
+    alert("No token found. Please log in.");
+    return;
+  }
 
-  // Remove item from cart
-  const removeItem = async (item) => {
-    const productid = item.productid;
-    console.log("P ",productid);
+  setLoading(true);
+  try {
+    const response = await fetch("http://localhost:4000/api/cartss/remove", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ productid }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Item removed from cart.");
+      setCart((prevCart) => prevCart.filter((item) => item.productid !== productid)); // Update cart state
+    } else {
+      setError(data.message || "Error removing product from cart.");
+    }
+  } catch (err) {
+    console.error("Error removing from cart:", err);
+    setError("Something went wrong, please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const updateQuantity = async (productid, newQuantity) => {
     if (!hasToken) {
       alert("No token found. Please log in.");
       return;
     }
 
-    setLoading(true);
-    try {
-      const response = await fetch("http://localhost:4000/cartss/remove", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productid }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Item removed from cart.");
-        setCart((prevCart) => prevCart.filter((item) => item.productid !== productid)); // Update cart state
-      } else {
-        setError(data.message || "Error removing product from cart.");
-      }
-    } catch (err) {
-      console.error("Error removing from cart:", err);
-      setError("Something went wrong, please try again.");
-    } finally {
-      setLoading(false);
+    const product = cart.find((item) => item.productid === productid);
+    if (!product) {
+      alert("Product not found in cart.");
+      return;
     }
-  };
 
-  // Update quantity of item in cart
-  const updateQuantity = async (productid, newQuantity) => {
-    if (!hasToken) {
-      alert("No token found. Please log in.");
+    if (newQuantity > product.stock) {
+      alert(`Only ${product.stock} items are available in stock.`);
       return;
     }
 
@@ -168,7 +166,7 @@ export const CartProvider = ({ children }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/cart/update", {
+      const response = await fetch("http://localhost:4000/api/cartss/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -196,23 +194,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // Calculate total items count in cart (considering quantities)
-  const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
-
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        setCart,
-        addToCart,
-        removeItem,
-        fetchCart,
-        cartCount,
-        loading,
-        error,
-        updateQuantity,
-      }}
-    >
+    <CartContext.Provider value={{ cart, addToCart,removeItem, updateQuantity, fetchCart, setCart,emptyCart }}>
       {children}
     </CartContext.Provider>
   );

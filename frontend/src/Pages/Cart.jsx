@@ -1,11 +1,11 @@
 import React, { useEffect, useContext, useState } from "react";
 import { CartContext } from "../Context/CartContext";
-import CheckoutModal from "./CheckoutModal"; // Import the CheckoutModal component
-import orderplaced from "../Components/Assets/orderplaced.gif"; // Import the GIF
+import CheckoutModal from "./CheckoutModal"; 
+import orderplaced from "../Components/Assets/orderplaced.gif"; 
 import "./Cart.css";
 
 const Cart = () => {
-  const { cart, removeItem, fetchCart, updateQuantity } = useContext(CartContext);
+  const { cart, removeItem, fetchCart, updateQuantity, emptyCart } = useContext(CartContext); // added emptyCart from context
   const [showGif, setShowGif] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [error, setError] = useState(null);
@@ -36,7 +36,8 @@ const Cart = () => {
     setShowGif(true);
     setTimeout(() => {
       setShowGif(false);
-    }, 2000); // Hide GIF after 2 seconds
+      emptyCart(); // Clear the cart after the order is placed
+    }, 2000); // Hide GIF and clear the cart after 2 seconds
   };
 
   return (
@@ -64,7 +65,7 @@ const Cart = () => {
                   className="cart-product-image"
                 />
                 <div>
-                  <p className="cart-product-name">{item.name}</p>
+                  <p className="cart-product-name">{item.productName}</p>
                   <p className="cart-product-count">Price: ₹{item.new_price}</p>
                 </div>
               </div>

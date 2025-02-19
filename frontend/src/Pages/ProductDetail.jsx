@@ -15,7 +15,6 @@ const ProductDetail = () => {
   const [setOption, setSetOption] = useState("Single");
   const [quantity, setQuantity] = useState(1);
 
-  // State for Reviews
   const [reviews, setReviews] = useState([]);
   const [reviewInput, setReviewInput] = useState({
     name: "",
@@ -88,13 +87,11 @@ const ProductDetail = () => {
     }
   };
 
-  // Calculate the average rating from reviews
   const getAverageRating = () => {
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     return (totalRating / reviews.length).toFixed(1);
   };
 
-  // Function to render star rating
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
@@ -165,6 +162,19 @@ const ProductDetail = () => {
           Buy Now
         </button>
 
+
+        {/* Specifications Section */}
+        <div className="specifications">
+          <h2> Product Specifications</h2>
+          <ul>
+            {Object.entries(product.specifications || {}).map(([key, value]) => (
+              <li key={key} className="spec-item">
+                <strong>{key}:</strong> {value}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="offers">
           <p>Save extra with below offers:</p>
           <ul>
@@ -172,7 +182,6 @@ const ProductDetail = () => {
             <li className="offer-item">10% off on UPI payment</li>
           </ul>
         </div>
-
         {/* Review Section */}
         <div className="reviews">
           <h2>Customer Reviews</h2>

@@ -94,6 +94,7 @@ router.get('/get', authenticateToken, async (req, res) => {
 // Update cart item quantity
 router.post('/update', authenticateToken, async (req, res) => {
   const { productid, quantity } = req.body;
+  
   try {
     const userId = req.user.id;
     const userCart = await UserCartWishlist.findOne({ userid: userId });
@@ -106,6 +107,18 @@ router.post('/update', authenticateToken, async (req, res) => {
 
     if (!cartItem) {
       return res.status(404).json({ message: "Item not found in cart with isInCart set to true" });
+    }
+
+    // Fetch product to check available stock
+    const product = await Product.findOne({ productid });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Ensure requested quantity does not exceed stock
+    if (quantity > product.stock) {
+      return res.status(400).json({ message: `Only ${product.stock} items are available in stock.` });
     }
 
     cartItem.quantity = quantity;
