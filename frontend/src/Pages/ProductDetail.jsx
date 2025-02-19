@@ -59,34 +59,51 @@ const ProductDetail = () => {
     const setMultiplier = setOption === "Single" ? 1 : 2;
     return (basePrice * categoryMultiplier * setMultiplier * quantity).toFixed(2);
   };
-
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-    if (!reviewInput.name || !reviewInput.comment) return alert("Please fill all fields");
+    
+    // Validate the input fields
+    if (!reviewInput.name || !reviewInput.comment) {
+      return alert("Please fill all fields");  // Check if name or comment are empty
+    }
 
+    // Prepare the review data
     const newReview = {
-      productid: productId,
-      name: reviewInput.name,
-      rating: reviewInput.rating,
-      comment: reviewInput.comment,
+      productid: productId,           // Product ID
+      rating: reviewInput.rating,     // Rating (1-5)
+      reviewText: reviewInput.comment // Review text
     };
 
     try {
-      const response = await fetch(`http://localhost:4000/api/reviews/${productId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newReview),
+      // Make the POST request to submit the review
+      const response = await fetch(`http://localhost:4000/api/reviews`, {
+        method: "POST",  // Sending the review data as a POST request
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("authToken")}` // Ensure that you're sending the JWT token
+        },
+        body: JSON.stringify(newReview), // Review data to be sent
       });
 
-      if (!response.ok) throw new Error("Failed to submit review");
+      const data = await response.json();
 
-      setReviews([...reviews, newReview]);
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to submit review");  // Handle errors
+      }
+
+      // Add the new review to the list of reviews if submission is successful
+      setReviews([...reviews, data]);  // Add the data returned from the server
+
+      // Reset review form after submission
       setReviewInput({ name: "", rating: 5, comment: "" });
+      alert("Review submitted successfully!");  // Notify user of successful review submission
     } catch (err) {
-      console.error(err.message);
+      console.error("Error submitting review:", err);
+      alert("An error occurred while submitting your review. Please try again.");
     }
-  };
+};
 
+  
   const getAverageRating = () => {
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     return (totalRating / reviews.length).toFixed(1);

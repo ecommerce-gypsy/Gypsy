@@ -591,6 +591,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
   
     return transporter.sendMail(mailOptions);
   };
+
   app.post("/checkout", authenticateToken, async (req, res) => {
     const { items, shippingAddress, paymentMethod, totalPrice, userEmail } = req.body;
     const userId = req.user.id; // Assuming the token contains user info
@@ -619,6 +620,25 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
   
       await newOrder.save();  // Save the new order
   
+      // Decrease the stock for each item in the order
+      for (const item of items) {
+        const product = await Product.findOne({ productid: item.productid });
+        if (!product) {
+          return res.status(400).json({ message: `Product with ID ${item.productid} not found.` });
+        }
+  
+        // Check if the stock is enough
+        if (product.stock < item.quantity) {
+          return res.status(400).json({
+            message: `Not enough stock for ${item.productName}. Only ${product.stock} items available.`,
+          });
+        }
+  
+        // Decrease the stock
+        product.stock -= item.quantity;
+        await product.save();
+      }
+  
       // Clear the user's cart in the UserCartWishlist model after placing the order
       const cartWishlist = await UserCartWishlist.findOne({ userid: userId });
       if (cartWishlist) {
@@ -627,7 +647,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
         await cartWishlist.save(); // Save the empty cart back to the database
       }
   
-      // Send confirmation email
+      // Send confirmation email (implement this function as needed)
       await sendConfirmationEmail(newOrder, userEmail);
   
       // Respond with the order details
@@ -641,6 +661,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
       res.status(500).json({ message: "Something went wrong. Please try again." });
     }
   });
+  
   
   // Get all users for admin
   app.get('/admin/users', async (req, res) => {

@@ -60,6 +60,11 @@ const Anklets = () => {
       {/* Out of Stock Badge */}
       {product.stock === 0 && <span className="out-of-stock-badge">Out of Stock</span>}
 
+      {/* Low Stock Badge */}
+      {product.stock > 0 && product.stock <= 5 && (
+        <span className="low-stock">{product.stock} left! Hurry up!</span>
+      )}
+
       {/* Add to Cart Button */}
       <button
         className="add-to-cart-btn"
@@ -118,7 +123,6 @@ const Anklets = () => {
       <h1>Welcome to the Anklets Collection!</h1>
       {error && <p className="error-message">{error}</p>}
 
-     
       <Filter />
 
       <div className="product-grid">

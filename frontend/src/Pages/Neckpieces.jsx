@@ -89,14 +89,28 @@ const Neckpieces = () => {
               <span className="old-price">₹{product.old_price}</span>
             </div>
 
-            {/* Add to Cart Button */}
-            <button
-              className="add-to-cart-btn"
-              onClick={() => handleAddToCart(product)}
-              disabled={product.stock === 0}
-            >
-              {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
-            </button>
+         
+            {product.stock === 0 ? (
+  <>
+    <p className="out-of-stock">Out of Stock</p>
+    {console.log(`Out of Stock: ${product.productName}`)} 
+  </>
+) : (
+  <>
+    {product.stock <5 && (
+      <>
+       <p className="low-stock">{product.stock} left! Hurry up!</p>
+        {console.log(`Low Stock: ${product.productName}`)} 
+      </>
+    )}
+    <button
+      className="add-to-cart-btn"
+      onClick={() => handleAddToCart(product)}
+    >
+      Add to Cart
+    </button>
+  </>
+)}
           </div>
         ))}
       </div>

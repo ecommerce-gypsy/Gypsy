@@ -135,3 +135,12 @@ h1 {
       max-width: 100%;
   }
 }
+.out-of-stock {
+  color: red;
+  font-weight: bold;
+}
+
+.low-stock {
+  color: orange;
+  font-weight: bold;
+}
