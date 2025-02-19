@@ -1,4 +1,4 @@
-/* General Page Styling */
+/* ============ General Admin User Page Styling ============ */
 .admin-user-container {
     display: flex;
     min-height: 100vh;
@@ -22,18 +22,35 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     margin: 20px;
+    text-align: center; /* Ensures center alignment */
 }
 
-/* Heading */
-.admin-user-content h1 {
-    text-align: center;
-    font-size: 26px;
+/* ============ Admin Title Styling (Updated to Match Image) ============ */
+.admin-title {
+    display: inline-block; /* Ensures block-level behavior for centering */
+    background: linear-gradient(90deg, #7A8DF7, #0047FF); /* Gradient like the image */
+    color: white;
+    font-size: 20px;
     font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: 0 auto 20px; /* Centers and adds space below */
+    border: none;
 }
 
-/* Table Styling */
+/* Hover Effect */
+.admin-title:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0.9;
+}
+
+/* ============ Table Styling ============ */
 .admin-user-table {
     width: 100%;
     border-collapse: collapse;
@@ -63,7 +80,7 @@
     background: #ecf0f1;
 }
 
-/* Dropdown Styling */
+/* ============ Dropdown Styling ============ */
 .admin-user-table select {
     padding: 8px;
     border-radius: 5px;
@@ -73,56 +90,18 @@
     cursor: pointer;
 }
 
-/* Buttons Container (for Edit & Delete) */
+/* ============ Action Buttons ============ */
 .action-buttons {
     display: flex;
     gap: 10px; /* Adds space between Edit and Delete buttons */
 }
 
-/* Buttons */
-.delete-btn {
-    padding: 8px 15px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-/* Edit Button Styling */
+/* Edit Button */
 .edit-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fffffe; /* Orange background */
-    color: white;
-    border: none;
-    border-radius: 50%; /* Makes it circular */
-    width: 40px; /* Adjust size */
-    height: 40px;
-    cursor: pointer;
-    padding: 8px;
-}
-
-/* Remove Hover Effect */
-.edit-btn:hover {
-    background: #fffffe;
-    transform: none;
-}
-
-/* Edit Icon Inside Button */
-.edit-icon {
-    width: 20px;
-    height: 20px;
-    filter: invert(1); /* Makes the icon white */
-}
-
-/* Trash Button */
-.trash-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fffffe;
+    background: white; 
     color: white;
     border: none;
     border-radius: 50%;
@@ -132,10 +111,32 @@
     padding: 8px;
 }
 
-/* Remove Hover Effect */
+/* Edit Icon */
+.edit-icon {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+}
+
+/* Trash Button */
+.trash-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+/* Remove Hover Effect from Trash */
 .trash-btn:hover {
-    background: #fffffe;
-    transform: none;
+    background: white !important;
+    transform: none !important;
 }
 
 /* Trash Icon */
@@ -147,15 +148,21 @@
 
 /* Delete Button */
 .delete-btn {
-    background: #000000;
+    background: black;
     color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .delete-btn:hover {
     background: #c0392b;
 }
 
-/* Modal Overlay */
+/* ============ Modal Styling ============ */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -214,23 +221,16 @@
     margin-top: 15px;
 }
 
-/* Ensure buttons have uniform size */
-.save-btn, 
-.close-btn {
-    flex: 1;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 16px;
-    transition: background 0.3s ease;
-}
-
 /* Save Button */
 .save-btn {
     background: #27ae60;
     color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
 }
 
 .save-btn:hover {
@@ -241,13 +241,19 @@
 .close-btn {
     background: #fa0000;
     color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
 }
 
 .close-btn:hover {
     background: #c0392b;
 }
 
-/* Responsive Design */
+/* ============ Responsive Design ============ */
 @media (max-width: 768px) {
     .admin-user-container {
         flex-direction: column;
@@ -262,6 +268,8 @@
     .admin-user-content {
         margin: 10px;
         padding: 15px;
+        background: white;
+        text-align: center;
     }
 
     .admin-user-table th,

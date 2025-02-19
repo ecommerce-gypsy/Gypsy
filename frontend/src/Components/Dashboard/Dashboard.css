@@ -1,0 +1,158 @@
+/* General Page Styling */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Dashboard Container */
+  .dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    min-height: 100vh;
+    background: #f8fafc;
+  }
+  
+  /* Grid Layout for Cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  
+  /* Card Styling */
+  .card {
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-weight: 600;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card h2 {
+    font-size: 22px;
+    margin: 8px 0;
+  }
+  
+  .card p {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+  
+  /* Card Colors */
+  .card.orange {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: #fff;
+  }
+  
+  .card.green {
+    background: linear-gradient(135deg, #38ef7d, #11998e);
+    color: #fff;
+  }
+  
+  .card.red {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: #fff;
+  }
+  
+  .card.blue {
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
+    color: #fff;
+  }
+  
+  /* Sales Analytics Chart */
+  .sales-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .sales-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  /* Table Styling */
+  .table-container {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .table-container th, 
+  .table-container td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .table-container th {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .table-container td {
+    color: #555;
+  }
+  
+  /* User Activity */
+  .user-activity {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .user-activity h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .user-activity .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .user-activity .activity-item:last-child {
+    border-bottom: none;
+  }
+  
+  .user-activity .activity-item p {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .stats-grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  

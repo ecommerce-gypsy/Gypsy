@@ -29,6 +29,8 @@ import AdminPayment from './Pages/AdminPayment';
 import AdminOrder from './Pages/AdminOrder';
 
 
+
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -59,8 +61,9 @@ const App = () => {
         <Route path="/checkout" element={<Checkout />} />
         {/* Admin Routes */}
 <Route path="/adminuser" element={<AdminUser />} />
-<Route path="/adminorder" element={<AdminOrder/>}/>
+
 <Route path="/adminpayment" element={<AdminPayment />} />
+<Route path="/adminorder" element={<AdminOrder/>}/>
       </Routes>
     </BrowserRouter>
   );

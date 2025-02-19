@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './AdminOrder.css';
 import Sidebar from '../Components/Sidebar/Sidebar';
+import { FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import { ThreeDots } from 'react-loader-spinner'; // Loader
 
 const AdminOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -106,50 +108,60 @@ const AdminOrder = () => {
       {/* Main Order Management Section */}
       <div className="admin-container">
         <h1 className="admin-title">Order Management</h1>
-        {loading && <p className="loading-text">Loading...</p>}
-        {errorMessage && <p className="error-text">{errorMessage}</p>}
-        {!loading && (
-          <div className="table-container">
-            <table className="order-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>User</th>
-                  <th>Total Price</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order._id}>
-                    <td>{order._id}</td>
-                    <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
-                    <td>${order.totalPrice}</td>
-                    <td>
-                      <select
-                        className="status-dropdown"
-                        value={order.orderStatus}
-                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Delivered">Delivered</option>
-                        <option value="Cancelled">Cancelled</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button className="delete-btn" onClick={() => handleDelete(order._id)}>
-                        Delete
-                      </button>
-                      
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+        {loading ? (
+          <div className="loading-container">
+            <ThreeDots color="#0047FF" height={50} width={50} />
           </div>
+        ) : (
+          <>
+            {errorMessage && <p className="error-text">{errorMessage}</p>}
+            <div className="table-container">
+              <table className="order-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>User</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map((order) => (
+                    <tr key={order._id}>
+                      <td>{order._id}</td>
+                      <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
+                      <td>${order.totalPrice}</td>
+                      <td>
+                        <select
+                          className="status-dropdown"
+                          value={order.orderStatus}
+                          onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Processing">Processing</option>
+                          <option value="Shipped">Shipped</option>
+                          <option value="Delivered">Delivered</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
+                      </td>
+                      <td>
+                        <div className="action-buttons">
+                          <button className="icon-btn">
+                            <FaEdit className="edit-icon" />
+                          </button>
+                          <button className="icon-btn" onClick={() => handleDelete(order._id)}>
+                            <FaTrash className="trash-icon" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>
