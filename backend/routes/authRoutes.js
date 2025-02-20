@@ -5,9 +5,7 @@ const jwt = require('jsonwebtoken');
 const Users = require('../models/Users');
 const nodemailer = require('nodemailer');
 const fs = require('fs');
-
 const path = require('path');
-//const sendSignupMail = require('../utils/sendSignupMail');
 const router = express.Router();
 
 // Signup Route
@@ -37,14 +35,14 @@ router.post('/signup', async (req, res) => {
 
     const token = jwt.sign({ user: { id: user.id, role: user.role, user_email: user.email } }, 'secret-ecom', { expiresIn: '1h' });
 
-    await sendSignupMail(req.body.name, req.body.email); // Send welcome email
+    await sendSignupMail(req.body.name, req.body.email); 
 
     res.json({ 
       success: true, 
       token, 
-      username: user.name,  // Add username (name)
-      email: user.email,    // Add email
-      redirectUrl: '/' // Optional redirect URL based on user role or preference
+      username: user.name,  
+      email: user.email,    
+      redirectUrl: '/' 
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -97,8 +95,8 @@ const sendSignupMail = async (name, email) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "sornapriyamvathapentagon@gmail.com", // Your email
-        pass: "eouh aape mzwd gdcx" // Your app password
+        user: "sornapriyamvathapentagon@gmail.com", 
+        pass: "eouh aape mzwd gdcx" 
       }
     });
 
@@ -119,5 +117,82 @@ const sendSignupMail = async (name, email) => {
   }
 };
 
-// Export the router
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    const user = await Users.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Email not found" });
+    }
+
+    const resetToken = jwt.sign({ user: { id: user.id } }, 'secret-ecom', { expiresIn: '1h' });
+console.log(resetToken);
+    await sendResetPasswordMail(user.name, user.email, resetToken);
+
+    res.json({
+      success: true,
+      message: "Password reset email sent. Please check your inbox."
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+});
+
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    const decoded = jwt.verify(token, 'secret-ecom');
+
+    const user = await Users.findById(decoded.user.id);
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Password has been reset successfully."
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+});
+
+const sendResetPasswordMail = async (name, email, resetToken) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "sornapriyamvathapentagon@gmail.com", 
+        pass: "eouh aape mzwd gdcx" 
+      }
+    });
+
+    const resetUrl = `http://localhost:4000/reset-password?token=${resetToken}`;
+
+    const emailTemplate = fs.readFileSync(path.join(__dirname, "../resetEmailTemplate.html"), "utf-8");
+    const customizedTemplate = emailTemplate.replace("{{name}}", name).replace("{{resetUrl}}", resetUrl);
+
+    const mailOptions = {
+      from: '"RP" <sornapriyamvathapentagon@gmail.com>',
+      to: email,
+      subject: "Password Reset Request",
+      html: customizedTemplate
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Password reset email sent to:", email);
+  } catch (error) {
+    console.error("Error sending reset password email:", error);
+  }
+};
+
 module.exports = router;

@@ -27,6 +27,7 @@ import AddressForm from './Components/AddressForm/AddressForm';
 import AdminUser from './Pages/AdminUser';
 import AdminPayment from './Pages/AdminPayment';
 import AdminOrder from './Pages/AdminOrder';
+import AuthCard from './Pages/AuthCard';
 
 
 
@@ -64,6 +65,7 @@ const App = () => {
 
 <Route path="/adminpayment" element={<AdminPayment />} />
 <Route path="/adminorder" element={<AdminOrder/>}/>
+<Route path="/authcard" element={<AuthCard/>}/>
       </Routes>
     </BrowserRouter>
   );

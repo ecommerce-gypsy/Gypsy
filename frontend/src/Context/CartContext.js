@@ -194,9 +194,12 @@ const removeItem = async (item) => {
     }
   };
 
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0); // Calculate total quantity in cart
+
   return (
-    <CartContext.Provider value={{ cart, addToCart,removeItem, updateQuantity, fetchCart, setCart,emptyCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeItem, updateQuantity, fetchCart, setCart, emptyCart, cartCount }}>
       {children}
     </CartContext.Provider>
   );
+  
 };

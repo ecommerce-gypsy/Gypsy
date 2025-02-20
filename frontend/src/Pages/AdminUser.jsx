@@ -138,16 +138,16 @@ const AdminUser = () => {
                         <option value="admin">Admin</option>
                       </select>
                     </td>
-                                          <td>
-                                            <div className="action-buttons">
-                                              <button className="icon-btn">
-                                                <FaEdit className="edit-icon" />
-                                              </button>
-                                              <button className="icon-btn" onClick={() => handleDelete(user._id)}>
-                                                <FaTrash className="trash-icon" />
-                                              </button>
-                                            </div>
-                                          </td>
+                    <td>
+                      <div className="action-buttons">
+                        <button className="icon-btn" onClick={() => openEditModal(user)}>
+                          <FaEdit className="edit-icon" />
+                        </button>
+                        <button className="icon-btn" onClick={() => handleDelete(user._id)}>
+                          <FaTrash className="trash-icon" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -17,7 +17,7 @@ const Anklets = () => {
 
   const [anklets, setAnklets] = useState([]);
   const [error, setError] = useState("");
-  const [visibleCount, setVisibleCount] = useState(12); // Number of visible items
+  const [visibleCount, setVisibleCount] = useState(4); // Number of visible items
 
   useEffect(() => {
     fetch("http://localhost:4000/anklets")
@@ -78,40 +78,9 @@ const Anklets = () => {
     </div>
   );
 
-  const renderDesignSteps = () => (
-    <div className="design-steps">
-      <h3>Next Step for Design</h3>
-      <div className="design-options">
-        <div
-          className="design-option"
-          onClick={() => navigate("/browse-design")}
-          role="button"
-          aria-label="Browse Design"
-        >
-          Browse Design →
-        </div>
-        <div
-          className="design-option"
-          onClick={() => navigate("/CustomDesignPage")}
-          role="button"
-          aria-label="Custom Design"
-        >
-          Custom Design →
-        </div>
-        <div
-          className="design-option"
-          onClick={() => navigate("/upload-design")}
-          role="button"
-          aria-label="Upload Design and Checkout"
-        >
-          Upload Design and Checkout →
-        </div>
-      </div>
-    </div>
-  );
-
+ 
   const handleViewMore = () => {
-    setVisibleCount((prevCount) => prevCount + 12);
+    setVisibleCount((prevCount) => prevCount + 4);
   };
 
   return (
@@ -137,7 +106,7 @@ const Anklets = () => {
         </div>
       )}
 
-      {renderDesignSteps()}
+     
 
       <Footer />
     </div>

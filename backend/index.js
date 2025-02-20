@@ -7,7 +7,6 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
-// Change this line in your code
 const bcrypt = require('bcryptjs');
 
 //DATABASE
@@ -19,7 +18,7 @@ const Users = require('./models/Users');
 app.use(express.json());
 app.use(cors());
 // ROUTES
-const adminOrderRoutes = require('./routes/admin/ordersa'); // Assuming your route is in this file
+const adminOrderRoutes = require('./routes/admin/ordersa'); 
 app.use('/admin/orders', adminOrderRoutes);
 const salesReportRouter = require('./routes/admin/report'); 
 app.use('/report', salesReportRouter);
@@ -72,13 +71,12 @@ mongoose.connect("mongodb+srv://sornapriyamvatha:priya@cluster0.7fk6l.mongodb.ne
       }
   
       const updatedBracelets = bracelets.map((product) => {
-        // Set the outOfStock flag
+      
         if (product.stock === 0) {
           product.outOfStock = true;
-          product.lowStock = false; // If it's out of stock, it's not low stock
+          product.lowStock = false; 
         } else {
-          product.outOfStock = false; // It's in stock
-          // Set the lowStock flag if stock is less than or equal to 5
+          product.outOfStock = false; 
           product.lowStock = product.stock <= 5;
         }
   
@@ -88,9 +86,9 @@ mongoose.connect("mongodb+srv://sornapriyamvatha:priya@cluster0.7fk6l.mongodb.ne
         return product;
       });
   
-      res.json({ success: true, data: updatedBracelets }); // Send the updated products with flags
+      res.json({ success: true, data: updatedBracelets }); 
       console.log("Fetching bracelets...");
-      console.log("bracelets found:", updatedBracelets); // Verify the final updated product data
+      console.log("bracelets found:", updatedBracelets); 
   
     } catch (error) {
       console.error('Error fetching bracelets:', error);
@@ -140,11 +138,9 @@ app.post('/addproduct', async (req, res) => {
             return res.status(400).json({ success: false, message: "All fields are required" });
         }
 
-        console.log(productid); // Log the generated productid for debugging
-
-        // Prepare the product data
+        console.log(productid); 
         const productData = {
-            productid: productid, // Use the correct productid here
+            productid: productid, // productid int
             name: req.body.name,
             description: req.body.description,
             new_price: req.body.new_price,
@@ -154,22 +150,22 @@ app.post('/addproduct', async (req, res) => {
             images: req.body.images,
         };
 
-        // Create a new product instance
+        
         const product = new Product(productData);
 
-        // Save the product to the database
+        
         await product.save();
         res.json({ success: true, name: req.body.name });
     } catch (error) {
         if (error.code === 11000) {
-            // Handle duplicate key error
+           
             res.status(400).json({
                 success: false,
                 message: "Duplicate product ID or name exists",
                 error: error.message,
             });
         } else {
-            // Handle other errors
+            
             res.status(500).json({
                 success: false,
                 message: "Error saving product",
@@ -222,7 +218,7 @@ app.get('/allproducts', async (req, res) => {
             }
         });
         
-// Fetch New Products (Limit to 4)
+//  New Products (Limit to 4)
 app.get('/newcollections', async (req, res) => {
     try {
         let newcollection = await Product.find({}).sort({ createdAt: -1 }).limit(4);
@@ -232,7 +228,7 @@ app.get('/newcollections', async (req, res) => {
     }
 });
 
-// Fetch Products by Category
+
 app.get('/:category', async (req, res) => {
     const category = req.params.category;
     try {
@@ -259,15 +255,15 @@ app.get('/popularbracelet',async(req,res)=>{
 
 
   app.get('/products/:id', async (req, res) => {
-    const { id } = req.params;  // Access 'id' from the URL parameter
-    console.log('Received productid:', id);  // Log the received ID
+    const { id } = req.params;  
+    console.log('Received productid:', id);  
 
     try {
-        // Attempt to search for product by matching the productid (either number or string)
+       
         const product = await Product.findOne({
             $or: [
-                { productid: parseInt(id) },  // Search if productid is a number
-                { productid: id }             // Search if productid is a string
+                { productid: parseInt(id) },  
+                { productid: id }            
             ]
         });
 
@@ -297,7 +293,7 @@ app.get('/anklets', async (req, res) => {
     }
     
 });
-// Route to fetch details of a specific anklet
+
 app.get('/anklets/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -316,7 +312,6 @@ app.get('/anklets/:id', async (req, res) => {
 });
 
 
-// Route to fetch anklet products
 app.get('/neckpieces', async (req, res) => {
     try {
         const neckpieces = await Product.find({ category: 'neckpieces' });
@@ -353,47 +348,46 @@ const authenticateToken = (req, res, next) => {
 
 const Tok = (req, res, next) => {
     try {
-        // Get the token from the Authorization header
+       
         const authHeader = req.header('Authorization');
         if (!authHeader) {
             return res.status(401).json({ message: 'Access Denied, No Token Provided' });
         }
 
-        const token = authHeader.split(' ')[1];  // Extract the token after "Bearer"
+        const token = authHeader.split(' ')[1];  
         if (!token) {
             return res.status(401).json({ message: 'Access Denied, Token Missing' });
         }
 
         // Verify the token
         const decoded = jwt.verify(token, 'secret-ecom');
-        console.log('Decoded Token:', decoded);  // Debugging: Log the decoded token data
+        console.log('Decoded Token:', decoded);  
 
-        // Check if user data exists in the token and ensure the userId is available
+        
         if (!decoded.user || !decoded.user.id) {
             return res.status(403).json({ message: 'Invalid Token: User data or userId missing' });
         }
 
-        // Convert userId to a Number (if needed)
+       
         req.user = {
             ...decoded.user,
-            id: Number(decoded.user.id)  // Ensure userId is a Number
+            id: Number(decoded.user.id)  
         };
 
-        next();  // Proceed to the next middleware or route handler
+        next();  
     } catch (error) {
-        console.error('Token verification error:', error.message || error);  // Log the error for debugging
+        console.error('Token verification error:', error.message || error);  
 
-        // Handle token expiration specifically
+        
         if (error.name === 'TokenExpiredError') {
             return res.status(403).json({ message: 'Token Expired' });
         }
 
-        // Handle other errors (Invalid Token)
+        
         return res.status(403).json({ message: 'Invalid Token' });
     }
 };
-  
-  // POST Search API endpoint
+
 app.post('/search', async (req, res) => {
     const { query } = req.body;
   
@@ -402,12 +396,12 @@ app.post('/search', async (req, res) => {
     }
   
     try {
-      // Perform a case-insensitive search for products by name
+     
       const products = await Product.find({
         $or: [
-          { name: { $regex: query, $options: 'i' } },     // Search in 'name' field
-          { description: { $regex: query, $options: 'i' } }, // Search in 'description' field
-          { category: { $regex: query, $options: 'i' } }    // Search in 'category' field
+          { name: { $regex: query, $options: 'i' } },    
+          { description: { $regex: query, $options: 'i' } }, 
+          { category: { $regex: query, $options: 'i' } }    
         ]
       });
       
@@ -439,15 +433,15 @@ app.post('/search', async (req, res) => {
       images
     } = req.body;
   
-    // Convert old_price, new_price, and stock to Numbers
+   
     const newPrice = Number(new_price);
     const oldPrice = Number(old_price);
     const stockQuantity = Number(stock);
   
-    console.log(req.body);  // Check the incoming request body
+    console.log(req.body); 
   
     try {
-      // Create and save the product document
+    
       const product = new Product({
         productid,
         productName,
@@ -466,12 +460,12 @@ app.post('/search', async (req, res) => {
         images
       });
   console.log(product);
-      // Save the product to the database
+      
       await product.save();
       res.json({ success: true, product });
       //res.status(201).json({ message: 'Product added successfully', product });
     } catch (err) {
-      console.log('Error details:', err);  // Log detailed error for debugging
+      console.log('Error details:', err);  
       res.status(500).json({ error: err.message });
     }
   });
@@ -479,7 +473,6 @@ app.post('/search', async (req, res) => {
   app.get('/api/filter', async (req, res) => {
     const { subcategory, material, price } = req.query;
 console.log(req.query);
-    // Build the filter query based on the parameters
     const filter = {};
 
     if (subcategory) {
@@ -535,10 +528,10 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
       const result = await UserCartWishlist.updateOne(
         { userid },
         {
-          $addToSet: { // This ensures that the product is added only once
+          $addToSet: { 
             items: {
               productid: productid,
-              productName: productName,  // Store productName
+              productName: productName,  
               new_price: new_price,  
               quantity: quantity,
               images:images,
@@ -559,17 +552,17 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
 
   const nodemailer = require('nodemailer');
   const sendConfirmationEmail = (orderData, userEmail) => {
-    // Read the HTML template file
+  
     const templatePath = path.join(__dirname, "orderMail.html");
     let emailTemplate = fs.readFileSync(templatePath, "utf-8");
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-          user: "sornapriyamvathapentagon@gmail.com", // Your email
-          pass: "eouh aape mzwd gdcx"    // Your app password (not your email password)
+          user: "sornapriyamvathapentagon@gmail.com", 
+          pass: "eouh aape mzwd gdcx"    
       }
   });
-    // Replace placeholders in the template with order data
+   
     let orderDetails = "";
     orderData.items.forEach(item => {
       orderDetails += `<p>${item.quantity} x ${item.productid} - ₹${item.price}</p>`;
@@ -584,9 +577,9 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
   
     const mailOptions = {
       from: 'sornapriyamvathapentagon@gmail.com',
-      to: userEmail,  // The user's email address
+      to: userEmail, 
       subject: 'Order Confirmation',
-      html: emailContent,  // HTML content
+      html: emailContent,  
     };
   
     return transporter.sendMail(mailOptions);
@@ -594,7 +587,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
 
   app.post("/checkout", authenticateToken, async (req, res) => {
     const { items, shippingAddress, paymentMethod, totalPrice, userEmail } = req.body;
-    const userId = req.user.id; // Assuming the token contains user info
+    const userId = req.user.id; 
   
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "Your cart is empty." });
@@ -605,52 +598,49 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
     }
   
     try {
-      // Create a new order in the database
+     
       const newOrder = new Order({
         userid: userId,
         items,
         shippingAddress,
         paymentMethod,
         totalPrice,
-        orderStatus: "Pending", // Initially set as pending
-        paymentStatus: "Pending", // Initially set as pending
+        orderStatus: "Pending",
+        paymentStatus: "Pending", 
         createdAt: new Date(),
         updatedAt: new Date(),
       });
   
-      await newOrder.save();  // Save the new order
-  
-      // Decrease the stock for each item in the order
+      await newOrder.save();  
+
       for (const item of items) {
         const product = await Product.findOne({ productid: item.productid });
         if (!product) {
           return res.status(400).json({ message: `Product with ID ${item.productid} not found.` });
         }
   
-        // Check if the stock is enough
+        
         if (product.stock < item.quantity) {
           return res.status(400).json({
             message: `Not enough stock for ${item.productName}. Only ${product.stock} items available.`,
           });
         }
   
-        // Decrease the stock
+      
         product.stock -= item.quantity;
         await product.save();
       }
   
-      // Clear the user's cart in the UserCartWishlist model after placing the order
+      
       const cartWishlist = await UserCartWishlist.findOne({ userid: userId });
       if (cartWishlist) {
-        // Empty the cart items
-        cartWishlist.items = cartWishlist.items.filter(item => item.isInCart === false); // Filter out cart items
-        await cartWishlist.save(); // Save the empty cart back to the database
+        cartWishlist.items = cartWishlist.items.filter(item => item.isInCart === false); 
+        await cartWishlist.save(); 
       }
   
-      // Send confirmation email (implement this function as needed)
+     
       await sendConfirmationEmail(newOrder, userEmail);
   
-      // Respond with the order details
       res.status(201).json({
         message: "Order created successfully and cart cleared.",
         orderId: newOrder._id,
@@ -663,10 +653,10 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
   });
   
   
-  // Get all users for admin
+
   app.get('/admin/users', async (req, res) => {
     try {
-      const users = await Users.find(); // Use the `find()` method on the Users model
+      const users = await Users.find(); 
       res.status(200).json(users);
     } catch (err) {
       res.status(500).json({ message: "Error fetching users", error: err.message });
@@ -676,14 +666,14 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
   // Update user role for admin
   app.put('/admin/user/:id', async (req, res) => {
     const { id } = req.params;
-    const { role } = req.body; // New role to update
+    const { role } = req.body; 
   
     if (!['user', 'admin', 'vendor'].includes(role)) {
       return res.status(400).json({ message: "Invalid role" });
     }
   
     try {
-      const user = await Users.findByIdAndUpdate(id, { role }, { new: true }); // Update user role
+      const user = await Users.findByIdAndUpdate(id, { role }, { new: true }); 
       if (!user) return res.status(404).json({ message: "User not found" });
       res.status(200).json(user);
     } catch (err) {
@@ -696,7 +686,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
     const { id } = req.params;
   
     try {
-      const user = await Users.findByIdAndDelete(id); // Delete user by ID
+      const user = await Users.findByIdAndDelete(id); 
       if (!user) return res.status(404).json({ message: "User not found" });
       res.status(200).json({ message: "User deleted successfully" });
     } catch (err) {
@@ -709,7 +699,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
   const server = http.createServer(app);
   const io = socketIo(server, {
     cors: {
-      origin: "http://localhost:3000",  // Replace with your frontend URL
+      origin: "http://localhost:3000", 
       methods: ["GET", "POST"],
       allowedHeaders: ["Content-Type"],
       credentials: true,
@@ -718,7 +708,6 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
   io.on('connection', (socket) => {
     console.log('a user connected');
     
-    // Optional: You can emit a welcome message to the connected client
     socket.emit('welcome', 'Welcome to the admin dashboard!');
     
     socket.on('disconnect', () => {

@@ -5,8 +5,7 @@ const Users = require('../models/Users');
 const Order = require('../models/Order');  
 const authMiddleware = require('../middleware/auth');
 const UserCartWishlist = require('../models/UserCartWishlist');
-// Add address route
-// Add address route
+
 router.put('/add-address', authMiddleware, async (req, res) => {
   try {
     const { street, landmark, city, pincode, state, phone } = req.body;
@@ -17,12 +16,11 @@ console.log(req.body);
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Add new address to the addresses array
     user.address.push({
       street,
-      landmark,  // Ensure landmark is added
+      landmark,  
       city,
-      pincode,   // Ensure pincode is added
+      pincode, 
       state,
       phone
     });
@@ -58,9 +56,9 @@ router.put('/update-address/:addressId', authMiddleware, async (req, res) => {
     user.address[addressIndex] = {
       ...user.address[addressIndex],
       street,
-      landmark,  // Update landmark
+      landmark,  
       city,
-      pincode,   // Update pincode
+      pincode,  
       country,
       phone
     };
@@ -76,7 +74,7 @@ router.put('/update-address/:addressId', authMiddleware, async (req, res) => {
   }
 });
 
-// Fetch user account details
+
 router.get('/account', authMiddleware, async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
@@ -89,7 +87,7 @@ router.get('/account', authMiddleware, async (req, res) => {
     res.status(200).json({
       name: user.name,
       email: user.email,
-      addresses: user.address,  // This will return all addresses as an array
+      addresses: user.address, 
     });
   } catch (error) {
     console.error("Error fetching account details:", error);
@@ -107,7 +105,7 @@ router.delete('/delete-address/:addressId', authMiddleware, async (req, res) => 
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Remove the address from the array
+   
     user.address = user.address.filter(address => address._id.toString() !== addressId);
     await user.save();
 
@@ -122,19 +120,19 @@ router.delete('/delete-address/:addressId', authMiddleware, async (req, res) => 
 });
 
 
-// Fetch orders for a specific user
+
 router.get('/orders', authMiddleware, async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming user ID is decoded from the token
+    const userId = req.user.id; 
 
-    // Find orders for this user
-    const orders = await Order.find({ userid: userId }).populate('items.productid').exec(); // Populate product details (optional)
+  
+    const orders = await Order.find({ userid: userId }).populate('items.productid').exec(); 
 
     if (!orders) {
       return res.status(404).json({ message: 'No orders found for this user.' });
     }
 
-    // Respond with the orders
+  
     res.status(200).json({ orders });
   } catch (error) {
     console.error("Error fetching orders:", error);

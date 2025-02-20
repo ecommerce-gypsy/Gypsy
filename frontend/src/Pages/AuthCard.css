@@ -1,86 +1,221 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./AuthCard.css";
-import { FaFacebookF, FaGoogle, FaLinkedinIn } from "react-icons/fa";
+/* General Styling */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 75vh;
+  background-color: #f3f4f6;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-const AuthCard = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
-  const navigate = useNavigate();
+/* Auth Card */
+.auth-card {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
 
-  return (
-    <div className="auth-container">
-      <div className="auth-card">
-        {/* Left Panel */}
-        <div className={auth-left ${isSignUp ? "signup" : "signin"}}>
-          <h2>{isSignUp ? "Welcome Back!" : "Hello, Friend!"}</h2>
-          <p>
-            {isSignUp
-              ? "To keep connected with us, please login with your personal info"
-              : "Enter your details and start your journey with us"}
-          </p>
-          <button onClick={() => setIsSignUp(!isSignUp)}>
-            {isSignUp ? "SIGN IN" : "SIGN UP"}
-          </button>
-        </div>
+/* Left Panel */
+.auth-left {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: white;
+  transition: all 0.5s ease-in-out;
+  min-height: 100%;
+}
 
-        {/* Right Panel */}
-        <div className="auth-right">
-          {isSignUp ? (
-            <>
-              <h2>Create Account</h2>
-              <div className="auth-social">
-                <button><FaFacebookF /></button>
-                <button><FaGoogle /></button>
-                <button><FaLinkedinIn /></button>
-              </div>
-              <input className="auth-input" type="text" placeholder="Name" autoComplete="off" />
-              <input className="auth-input" type="email" placeholder="Email" autoComplete="off" />
-              <input className="auth-input" type="password" placeholder="Password" autoComplete="new-password" />
-              <button className="auth-btn">SIGN UP</button>
-            </>
-          ) : (
-            <>
-              <h2>Sign In</h2>
-              <div className="auth-social">
-                <button><FaFacebookF /></button>
-                <button><FaGoogle /></button>
-                <button><FaLinkedinIn /></button>
-              </div>
-              <input className="auth-input" type="email" placeholder="Email" autoComplete="off" />
-              <input className="auth-input" type="password" placeholder="Password" autoComplete="new-password" />
-              <button className="auth-btn">SIGN IN</button>
+/* Background Gradient for Left Panel */
+.auth-left.signin {
+  background: linear-gradient(to right, #f87171, #ec4899);
+}
 
-              {/* Forgot Password Link (Always Visible, Slightly Faded) */}
-              <p
-                className="forgot-password"
-                onClick={() => navigate("/ForgotPassword")}
-              >
-                Forgot Password?
-              </p>
-              <p
-                className="Super-Admin-Dashboard"
-                onClick={() => navigate("/SuperAdminLogin")}
-              >
-                Super Admin
-              </p>
-              <p
-                className="Admin-Dashboard"
-                onClick={() => navigate("/SuperAdmin")}
-              >
-                Admin
-              </p>
-              <p
-                className="Vendor-Dashboard"
-                onClick={() => navigate("/SuperAdmin")}
-              >
-               Vendor
-              </p>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+.auth-left.signup {
+  background: linear-gradient(to right, #ec4899, #f87171);
+}
 
-export default AuthCard;
+/* Left Panel Text */
+.auth-left h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.auth-left p {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Toggle Button */
+.auth-left button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: 2px solid white;
+  border-radius: 50px;
+  color: white;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.auth-left button:hover {
+  background: white;
+  color: #e11d48;
+}
+
+/* Right Panel */
+.auth-right {
+  width: 50%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+}
+
+/* Form Header */
+.auth-right h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Social Icons */
+.auth-social {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.auth-social button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: #e5e7eb;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.auth-social button:hover {
+  background-color: #d1d5db;
+}
+
+/* Input Fields */
+.auth-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+/* Submit Button */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: #e11d48;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.auth-btn:hover {
+  background-color: #be123c;
+}
+
+/* Forgot Password (Appears on Hover) */
+.forgot-password {
+  color: #007bff;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 5px;
+  text-decoration: underline;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.forgot-password:hover {
+  color: #0056b3;
+}
+
+.Super-Admin-Dashboard {
+  color: #007bff;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  margin-top: 5px;
+  text-decoration: underline;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.Super-Admin-Dashboard:hover {
+  color: #0056b3;
+}
+
+.Admin-Dashboard {
+  color: #007bff;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 5px;
+  text-decoration: underline;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.Admin-Dashboard:hover {
+  color: #0056b3;
+}
+
+.Vendor-Dashboard {
+  color: #007bff;
+  cursor: pointer;
+  text-align: right;
+  font-size: 14px;
+  margin-top: 5px;
+  text-decoration: underline;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.Vendor-Dashboard:hover {
+  color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-card {
+    flex-direction: column;
+    max-width: 90%;
+  }
+
+  .auth-left,
+  .auth-right {
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+  }
+
+  .auth-left button {
+    margin-top: 15px;
+  }
+}

@@ -22,13 +22,13 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     margin: 20px;
-    text-align: center; /* Ensures center alignment */
+    text-align: center;
 }
 
-/* ============ Admin Title Styling (Updated to Match Image) ============ */
+/* ============ Admin Title Styling ============ */
 .admin-title {
-    display: inline-block; /* Ensures block-level behavior for centering */
-    background: linear-gradient(90deg, #7A8DF7, #0047FF); /* Gradient like the image */
+    display: inline-block;
+    background: linear-gradient(90deg, #7A8DF7, #0047FF);
     color: white;
     font-size: 20px;
     font-weight: bold;
@@ -38,8 +38,7 @@
     letter-spacing: 1px;
     transition: all 0.3s ease-in-out;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    margin: 0 auto 20px; /* Centers and adds space below */
+    margin: 0 auto 20px;
     border: none;
 }
 
@@ -93,73 +92,19 @@
 /* ============ Action Buttons ============ */
 .action-buttons {
     display: flex;
-    gap: 10px; /* Adds space between Edit and Delete buttons */
-}
-
-/* Edit Button */
-.edit-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white; 
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    padding: 8px;
+    gap: 10px;
 }
 
 /* Edit Icon */
 .edit-icon {
     width: 20px;
     height: 20px;
-    filter: invert(1);
-}
-
-/* Trash Button */
-.trash-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    padding: 8px;
-}
-
-/* Remove Hover Effect from Trash */
-.trash-btn:hover {
-    background: white !important;
-    transform: none !important;
 }
 
 /* Trash Icon */
 .trash-icon {
     width: 20px;
     height: 20px;
-    filter: invert(1);
-}
-
-/* Delete Button */
-.delete-btn {
-    background: black;
-    color: white;
-    padding: 8px 15px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.delete-btn:hover {
-    background: #c0392b;
 }
 
 /* ============ Modal Styling ============ */
@@ -191,6 +136,22 @@
     font-size: 22px;
 }
 
+/* Modal Close Button */
+.close-btn {
+    background: #fa0000;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #c0392b;
+}
+
 /* Form Styling */
 .modal-container label {
     display: block;
@@ -208,12 +169,6 @@
     border-radius: 5px;
 }
 
-/* Add Space Below Role Dropdown */
-.modal-container select {
-    margin-bottom: 15px;
-}
-
-/* Button Container for Save & Cancel */
 .modal-buttons {
     display: flex;
     justify-content: center;
@@ -237,22 +192,6 @@
     background: #219150;
 }
 
-/* Close Button */
-.close-btn {
-    background: #fa0000;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s ease;
-}
-
-.close-btn:hover {
-    background: #c0392b;
-}
-
 /* ============ Responsive Design ============ */
 @media (max-width: 768px) {
     .admin-user-container {
@@ -261,15 +200,12 @@
 
     .sidebar-container {
         width: 100%;
-        min-height: auto;
         text-align: center;
     }
 
     .admin-user-content {
         margin: 10px;
         padding: 15px;
-        background: white;
-        text-align: center;
     }
 
     .admin-user-table th,
@@ -280,11 +216,5 @@
     .admin-user-table button {
         padding: 6px 10px;
         font-size: 12px;
-    }
-
-    .close-btn svg {
-        width: 20px;
-        height: 20px;
-        vertical-align: middle;
     }
 }
