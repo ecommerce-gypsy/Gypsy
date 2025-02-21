@@ -1,0 +1,91 @@
+/* General layout */
+.container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  /* Design tools section */
+  .design-tools {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .design-tools h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Container for icons (tools) */
+  .tools-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  /* Individual icon buttons */
+  .tools-icons i {
+    font-size: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    padding: 10px;
+    color: #333;
+    border-radius: 50%;
+    border: 1px solid transparent;
+  }
+  
+  .tools-icons i:hover {
+    transform: scale(1.2); /* Zoom effect on hover */
+    color: #007bff; /* Blue color when hovered */
+    border-color: #007bff; /* Blue border on hover */
+  }
+  
+  /* Canvas container */
+  .canvas-container {
+    flex: 3;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  #designCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  /* CustomDesignPage.css */
+.container {
+    display: flex;
+    padding: 20px;
+  }
+  
+  .design-tools {
+    flex: 1;
+  }
+  
+  .tools-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .tools-icons i {
+    cursor: pointer;
+  }
+  
+  .canvas-container {
+    flex: 3;
+    position: relative;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+  }

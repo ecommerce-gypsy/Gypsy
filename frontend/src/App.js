@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './Components/Navbar/Navbar';
+import  ReviewSummary  from './Components/ReviewSummary/ReviewSummary';
 import { SalesReport } from './Components/SalesReport/SalesReport';
 import { LoginSignup } from './Pages/LoginSignup';
 import Cart from './Pages/Cart';
@@ -29,15 +30,11 @@ import AdminPayment from './Pages/AdminPayment';
 import AdminOrder from './Pages/AdminOrder';
 import AuthCard from './Pages/AuthCard';
 
-
-
-
 const App = () => {
   return (
     <BrowserRouter>
-      <Navbar /> {/* Cart count is handled in Navbar via CartContext */}
+      <Navbar />
       <Header />
-      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/salesreport" element={<SalesReport />} />
@@ -54,6 +51,7 @@ const App = () => {
         <Route path="/ankletbanner" element={<AnkletBanner />} />
         <Route path="/AddressForm" element={<AddressForm />} />
         <Route path="/bracelets" element={<Bracelets />} />
+        <Route path="/review" element={<ReviewSummary />} />
         <Route path="/neckpieces" element={<Neckpieces />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/custproduct" element={<CustProduct />} />
@@ -61,11 +59,10 @@ const App = () => {
         <Route path="/reviewsection" element={<ReviewSection />} />
         <Route path="/checkout" element={<Checkout />} />
         {/* Admin Routes */}
-<Route path="/adminuser" element={<AdminUser />} />
-
-<Route path="/adminpayment" element={<AdminPayment />} />
-<Route path="/adminorder" element={<AdminOrder/>}/>
-<Route path="/authcard" element={<AuthCard/>}/>
+        <Route path="/adminuser" element={<AdminUser />} />
+        <Route path="/adminpayment" element={<AdminPayment />} />
+        <Route path="/adminorder" element={<AdminOrder />} />
+        <Route path="/authcard" element={<AuthCard />} />
       </Routes>
     </BrowserRouter>
   );

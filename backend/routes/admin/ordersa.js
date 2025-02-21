@@ -1,7 +1,7 @@
 const express = require('express');
 const Order = require('../../models/Order'); 
 const router = express.Router();
-const User = require('../../models/Users');  
+const ProductS = require('../../models/ProductS');  
 const auth = require('../../middleware/auth');  
 const isAdmin = require('../../middleware/isAdmin'); 
 
@@ -77,5 +77,20 @@ router.delete('/:id',auth, isAdmin, async (req, res) => {
     res.status(500).json({ message: 'Error deleting order', error: err.message });
   }
 });
+router.get('/:id/details', auth, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const order = await Order.findById(id)
+      .populate('userid', 'name email')
+      .populate('items.productid', 'name price images[0]'); 
 
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.status(200).json(order);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching order details', error: err.message });
+  }
+});
 module.exports = router;
