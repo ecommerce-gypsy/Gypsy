@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AdminOrder.css';
 import Sidebar from '../Components/Sidebar/Sidebar';
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash,FaEye } from "react-icons/fa";
 import { ThreeDots } from 'react-loader-spinner';
 
 const AdminOrder = () => {
@@ -9,6 +9,8 @@ const AdminOrder = () => {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [editOrder, setEditOrder] = useState(null);
+  const [viewOrder, setViewOrder] = useState(null); 
+
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -89,6 +91,7 @@ const AdminOrder = () => {
   };
 
   const openEditModal = (order) => {
+    console.log(order);
     setEditOrder(order);
   };
 
@@ -124,7 +127,33 @@ const AdminOrder = () => {
       setErrorMessage('Error updating order: ' + err.message);
     }
   };
+  
+  const handleViewDetails = async (orderId) => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      setErrorMessage('No token found. Please log in.');
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:4000/admin/orders/${orderId}/details`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch order details');
+      }
+      const orderDetails = await response.json();
+      setViewOrder(orderDetails);
+    } catch (err) {
+      setErrorMessage('Error fetching order details: ' + err.message);
+    }
+  };
 
+  const closeViewModal = () => {
+    setViewOrder(null);
+  };
   return (
     <div className="admin-layout">
       <Sidebar />
@@ -175,8 +204,13 @@ const AdminOrder = () => {
                           <button className="icon-btn" onClick={() => handleDelete(order._id)}>
                             <FaTrash className="trash-icon" />
                           </button>
+                          <button className="icon-btn" onClick={() => handleViewDetails(order._id)}>
+                            <FaEye className="view-icon" />
+                          </button>
                         </div>
+
                       </td>
+                      
                     </tr>
                   ))}
                 </tbody>
@@ -212,8 +246,39 @@ const AdminOrder = () => {
           </div>
         </div>
       )}
+      {viewOrder && (
+  <div className="modal-overlay">
+    <div className="modal-container">
+      <div className="modal-header">
+        <h2>Order Details</h2>
+        <button className="close-btn" onClick={closeViewModal}>X</button>
+      </div>
+      <div className="modal-body">
+        <p><strong>Order ID:</strong> {viewOrder._id}</p>
+        <p><strong>User:</strong> {viewOrder.userid?.name} ({viewOrder.userid?.email})</p>
+        <p><strong>Status:</strong> {viewOrder.orderStatus}</p>
+        <p><strong>Total Price:</strong> ${viewOrder.totalPrice}</p>
+        
+        <h3>Items:</h3>
+        <ul className="order-items-list">
+          {viewOrder.items.map((item, index) => (
+            <li key={index} className="order-item">
+              <img src={item.images?.[0]} alt={item.productName} className="order-item-image" />
+              <div className="order-item-details">
+                <strong>{item.productName}</strong>
+                <p>{item.quantity} x ${item.price} = <strong>${item.quantity * item.price}</strong></p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
 
 export default AdminOrder;
+  
