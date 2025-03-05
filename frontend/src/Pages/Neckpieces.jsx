@@ -15,7 +15,7 @@ const Neckpieces = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:4000/neckpieces") // Replace with your API endpoint
+    fetch("http://localhost:4000/neckpieces") // Replace with actual API endpoint
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -46,7 +46,6 @@ const Neckpieces = () => {
 
   return (
     <div className="neckpieces-container">
-      <Header />
 
       <h1>Welcome to the NECKPIECES Collection!</h1>
 
@@ -89,28 +88,20 @@ const Neckpieces = () => {
               <span className="old-price">₹{product.old_price}</span>
             </div>
 
-         
             {product.stock === 0 ? (
-  <>
-    <p className="out-of-stock">Out of Stock</p>
-    {console.log(`Out of Stock: ${product.productName}`)} 
-  </>
-) : (
-  <>
-    {product.stock <5 && (
-      <>
-       <p className="low-stock">{product.stock} left! Hurry up!</p>
-        {console.log(`Low Stock: ${product.productName}`)} 
-      </>
-    )}
-    <button
-      className="add-to-cart-btn"
-      onClick={() => handleAddToCart(product)}
-    >
-      Add to Cart
-    </button>
-  </>
-)}
+              <>
+                <p className="out-of-stock">Out of Stock</p>
+              </>
+            ) : (
+              <>
+                {product.stock < 5 && (
+                  <p className="low-stock">{product.stock} left! Hurry up!</p>
+                )}
+                <button className="add-to-cart-btn" onClick={() => handleAddToCart(product)}>
+                  Add to Cart
+                </button>
+              </>
+            )}
           </div>
         ))}
       </div>

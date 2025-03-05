@@ -8,7 +8,7 @@ const AdminUser = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editUser, setEditUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(""); // Added error message state
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -100,11 +100,9 @@ const AdminUser = () => {
 
   return (
     <div className="admin-user-container">
-      <div className="sidebar-container">
-        <Sidebar />
-      </div>
+      <Sidebar />
       <div className="admin-user-content">
-        <h1>Admin - User Management</h1>
+        <h1 className="admin-user">Admin - User Management</h1>
 
         {loading ? (
           <div className="loading-container">

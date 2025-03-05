@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./ListProduct.css";
 import cross_icon from "../Assets/cross_icon.png";
 import Sidebar from "../Sidebar/Sidebar";
+import { FaEdit, FaTrash, FaTimes } from 'react-icons/fa';
 
 const ListProduct = () => {
     const [allProducts, setAllProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [editingProduct, setEditingProduct] = useState(null);
 
     const fetchInfo = async () => {
         try {
@@ -49,6 +51,35 @@ const ListProduct = () => {
         }
     };
 
+    const editProduct = (product) => {
+        setEditingProduct({ ...product });
+    };
+
+    const closeEditModal = () => {
+        setEditingProduct(null);
+    };
+
+    const handleChange = (e) => {
+        setEditingProduct({ ...editingProduct, [e.target.name]: e.target.value });
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await fetch("http://localhost:4000/updateproduct", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editingProduct),
+            });
+            setEditingProduct(null);
+            fetchInfo();
+        } catch (error) {
+            console.error("Error updating product:", error);
+        }
+    };
+
     useEffect(() => {
         fetchInfo();
     }, []);
@@ -58,7 +89,6 @@ const ListProduct = () => {
             <Sidebar />
 
             <div className="list-product-content">
-                {/* New Styled Heading */}
                 <div className="heading-container">
                     <div className="heading-box">All Product List</div>
                 </div>
@@ -89,7 +119,7 @@ const ListProduct = () => {
                                 <th>New Price</th>
                                 <th>Category</th>
                                 <th>Stock</th>
-                                <th>Remove</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,12 +143,12 @@ const ListProduct = () => {
                                         <td>{product.category}</td>
                                         <td>{product.stock || "Out of stock"}</td>
                                         <td>
-                                            <img
-                                                onClick={() => removeProduct(product.id)}
-                                                className="remove-icon"
-                                                src={cross_icon}
-                                                alt="Remove"
-                                            />
+                                            <button className="edit-btn" onClick={() => editProduct(product)}>
+                                                <FaEdit />
+                                            </button>
+                                            <button className="delete-btn" onClick={() => removeProduct(product.id)}>
+                                                <FaTrash />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -126,6 +156,68 @@ const ListProduct = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {editingProduct && (
+                    <div className="modal-overlay">
+                        <div className="modal-container">
+                            <div className="modal-header">
+                                <h2>Edit Product</h2>
+                                <button className="close-btn" onClick={closeEditModal}>
+                                    <FaTimes />
+                                </button>
+                            </div>
+                            <form onSubmit={handleEditSubmit}>
+                                <label>Title:</label>
+                                <input
+                                    type="text"
+                                    name="productName"
+                                    value={editingProduct.productName}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <label>Old Price:</label>
+                                <input
+                                    type="text"
+                                    name="old_price"
+                                    value={editingProduct.old_price}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <label>New Price:</label>
+                                <input
+                                    type="text"
+                                    name="new_price"
+                                    value={editingProduct.new_price}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <label>Category:</label>
+                                <select
+                                    name="category"
+                                    value={editingProduct.category}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="Anklets">Anklets</option>
+                                    <option value="Bracelets">Bracelets</option>
+                                    <option value="Neckpieces">Neckpieces</option>
+                                </select>
+                                <label>Stock:</label>
+                                <input
+                                    type="text"
+                                    name="stock"
+                                    value={editingProduct.stock}
+                                    onChange={handleChange}
+                                    required
+                                />
+
+                                <div className="modal-buttons">
+                                    <button className="save-btn" type="submit">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

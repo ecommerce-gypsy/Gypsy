@@ -53,7 +53,6 @@ const Bracelets = () => {
 
   return (
     <div>
-      <Header />
       <h1>Welcome to the BRACELETS category page!</h1>
 
       {loading ? (

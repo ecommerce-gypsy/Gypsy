@@ -29,9 +29,13 @@ import AdminUser from './Pages/AdminUser';
 import AdminPayment from './Pages/AdminPayment';
 import AdminOrder from './Pages/AdminOrder';
 import AuthCard from './Pages/AuthCard';
+import Chatbot from './Components/Chatbot/Chatbot';
+import Settings from './Pages/Settings';
+import MarqueeBanner from './Components/MarqueeBanner/MarqueeBanner';
 
 const App = () => {
   return (
+  
     <BrowserRouter>
       <Navbar />
       <Header />
@@ -63,7 +67,12 @@ const App = () => {
         <Route path="/adminpayment" element={<AdminPayment />} />
         <Route path="/adminorder" element={<AdminOrder />} />
         <Route path="/authcard" element={<AuthCard />} />
+
+      <Route path="/settings" element={<Settings/>}/>
+      <Route path="marqueebanner" element={<MarqueeBanner/>}/>
       </Routes>
+      <Chatbot/>
+    
     </BrowserRouter>
   );
 };

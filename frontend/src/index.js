@@ -8,9 +8,12 @@ const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
 root.render(
+  
   <React.StrictMode>
     <WishlistProvider>
       <CartProvider>
+      <script src="//code.tidio.co/YOUR_TIDIO_PUBLIC_KEY.js" async></script>
+
         <App />
       </CartProvider>
     </WishlistProvider>

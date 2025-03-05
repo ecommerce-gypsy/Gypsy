@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Header.css'; // Import the CSS for styling
 import searchIcon from '../Assets/search-icon.png'; // Replace with your search icon
+import MarqueeBanner from '../MarqueeBanner/MarqueeBanner';
 
 const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false); // Search bar toggle state
@@ -68,8 +69,14 @@ const Header = () => {
 
   return (
     <div className="header">
-      {/* Search Bar */}
+      {/* Search Bar <MarqueeBanner/>*/}
       <div className="search-container" ref={searchRef}>
+        <img
+          src={searchIcon}
+          alt="Search"
+          className="header-icon"
+          onClick={toggleSearch} // Toggle search bar visibility
+        />
         {searchOpen && (
           <input
             type="text"
@@ -79,12 +86,6 @@ const Header = () => {
             onChange={(e) => setSearchInput(e.target.value)} // Update input value
           />
         )}
-        <img
-          src={searchIcon}
-          alt="Search"
-          className="header-icon"
-          onClick={toggleSearch} // Toggle search bar visibility
-        />
       </div>
 
       {/* Display search results */}

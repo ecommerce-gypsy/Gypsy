@@ -70,20 +70,22 @@ export const SalesReport = () => {
     <div className="sales-report-container">
       <h1 className="sales-report-header">SALES AND REVENUE REPORT</h1>
 
-      {/* Date Filters */}
-      <div className="filters-container">
-        <label>
-          Start Date:
-          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        </label>
-        <label>
-          End Date:
-          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-        </label>
-        <button onClick={fetchSalesReport}>Generate Report</button>
+      {/* Date Filters - Added spacing */}
+      <div className="filters-wrapper">
+        <div className="filters-container">
+          <label>
+            Start Date:
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          </label>
+          <label>
+            End Date:
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          </label>
+          <button onClick={fetchSalesReport}>Generate Report</button>
+        </div>
       </div>
 
-      {/* Summary Section - Side by Side Layout */}
+      {/* Summary Section */}
       <div className="summary-container">
         <div className="report-box revenue-box">
           <h2>Total Revenue</h2>

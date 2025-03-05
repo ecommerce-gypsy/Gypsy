@@ -1,0 +1,90 @@
+/* General Page Styling */
+.settings-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+/* Settings Content */
+.settings-content {
+  width: 100%;
+  max-width: 800px; /* Matches the image width */
+}
+
+/* Card Container */
+.settings-card {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Title Styling */
+.settings-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #222; /* Dark gray color */
+  margin-bottom: 20px;
+}
+
+/* Logout Section */
+.logout-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+/* Logout Icon */
+.logout-icon {
+  font-size: 20px;
+  color: #000;
+}
+
+/* Logout Description */
+.logout-description {
+  font-size: 14px;
+  color: #666;
+  max-width: 80%;
+  line-height: 1.5;
+}
+
+/* Logout Message Box */
+.logout-message {
+  background: #f8f9fa;
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ddd; /* Soft border */
+}
+
+/* Logout Confirm Button */
+.logout-confirm-button {
+  padding: 10px 16px;
+  border: 1px solid #007bff;
+  color: #007bff;
+  background: white;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.logout-confirm-button:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* Logout Message Text */
+.logout-message-text {
+  font-size: 14px;
+  color: #555;
+}

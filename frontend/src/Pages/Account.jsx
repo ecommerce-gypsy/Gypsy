@@ -239,12 +239,12 @@ function Account() {
           <p>Address: Not provided</p>
         )}
 
-        {/* Show the first phone number */}
-        {userData.addresses[0].phone ? (
-          <p>Phone: {userData.addresses[0].phone}</p>
-        ) : (
-          <p>Phone: Not provided</p>
-        )}
+      {/* Show the first phone number */}
+      {userData.addresses?.[0]?.phone ? (
+  <p>Phone: {userData.addresses[0].phone}</p>
+) : (
+  <p>Phone: Not provided</p>
+)}
 
         <button className="logout-button" onClick={handleLogout}>Log out</button>
       </div>

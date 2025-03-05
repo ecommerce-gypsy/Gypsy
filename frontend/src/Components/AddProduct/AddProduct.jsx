@@ -152,7 +152,6 @@ const AddProduct = () => {
         body: JSON.stringify(product),
       });
 
-     
 
       const productData = await productResponse.json(); // Only read response once here
       if (productData.success) {

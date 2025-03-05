@@ -1,113 +1,126 @@
-/* ============ General Admin User Page Styling ============ */
+/* General Container */
 .admin-user-container {
     display: flex;
     min-height: 100vh;
-    background-color: #f4f4f4;
-    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9;
 }
 
 /* Sidebar */
-.sidebar-container {
+.sidebar {
     width: 250px;
-    background: #2c3e50;
-    padding: 20px;
-    min-height: 100vh;
 }
 
-/* Main Content */
+/* Content Area */
 .admin-user-content {
     flex: 1;
-    padding: 30px;
+    padding: 20px;
     background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     margin: 20px;
-    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* ============ Admin Title Styling ============ */
-.admin-title {
-    display: inline-block;
+h1.admin-user {
+    display: block; /* Change to block-level element */
+    text-align: center;
+    margin: 0 auto; /* Centers it horizontally */
     background: linear-gradient(90deg, #7A8DF7, #0047FF);
     color: white;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
-    padding: 12px 30px;
+    padding: 12px 25px;
     border-radius: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: all 0.3s ease-in-out;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    margin: 0 auto 20px;
-    border: none;
+    width: fit-content; /* Ensures it only takes the necessary width */
 }
 
-/* Hover Effect */
-.admin-title:hover {
+h1.admin-user:hover {
     transform: translateY(-2px);
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-    opacity: 0.9;
 }
 
-/* ============ Table Styling ============ */
+
+/* Error Message */
+.error-text {
+    color: red;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Loader */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+/* User Table */
 .admin-user-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
     background: white;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.admin-user-table th,
-.admin-user-table td {
-    padding: 12px 15px;
-    text-align: left;
-}
-
-.admin-user-table th {
-    background: #34495e;
+.admin-user-table thead {
+    background: #0047FF;
     color: white;
-    text-transform: uppercase;
 }
 
-.admin-user-table tr:nth-child(even) {
-    background: #f8f9fa;
+.admin-user-table th, .admin-user-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-.admin-user-table tr:hover {
-    background: #ecf0f1;
+.admin-user-table tbody tr:hover {
+    background: #f1f1f1;
+    transition: 0.3s;
 }
 
-/* ============ Dropdown Styling ============ */
-.admin-user-table select {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    background: white;
-    cursor: pointer;
-}
-
-/* ============ Action Buttons ============ */
+/* Action Buttons */
 .action-buttons {
     display: flex;
     gap: 10px;
 }
 
-/* Edit Icon */
+.icon-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon-btn:hover {
+    transform: scale(1.1);
+}
+
 .edit-icon {
-    width: 20px;
-    height: 20px;
+    color: #2a9d8f;
+    font-size: 18px;
 }
 
-/* Trash Icon */
 .trash-icon {
-    width: 20px;
-    height: 20px;
+    color: #e63946;
+    font-size: 18px;
 }
 
-/* ============ Modal Styling ============ */
+/* Select Dropdown */
+select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Modal Styling */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -116,105 +129,90 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
-/* Modal Container */
 .modal-container {
     background: white;
     padding: 20px;
     width: 400px;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Modal Heading */
-.modal-container h2 {
-    margin-bottom: 15px;
-    font-size: 22px;
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Modal Close Button */
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
 .close-btn {
-    background: #fa0000;
-    color: white;
-    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    background: none;
     cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s ease;
 }
 
-.close-btn:hover {
-    background: #c0392b;
+.close-icon {
+    font-size: 20px;
+    color: #ff4d4d;
 }
 
-/* Form Styling */
+/* Modal Form */
+.modal-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .modal-container label {
-    display: block;
-    text-align: left;
     font-weight: bold;
-    margin-top: 10px;
+    color: #555;
 }
 
-.modal-container input, 
+.modal-container input,
 .modal-container select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
+    padding: 8px;
     border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
+/* Modal Buttons */
 .modal-buttons {
     display: flex;
-    justify-content: center;
-    gap: 10px;
+    justify-content: flex-end;
     margin-top: 15px;
 }
 
-/* Save Button */
 .save-btn {
-    background: #27ae60;
+    background: #0047FF;
     color: white;
-    padding: 10px 15px;
+    padding: 8px 12px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
     transition: background 0.3s ease;
 }
 
 .save-btn:hover {
-    background: #219150;
+    background: #0036cc;
 }
 
-/* ============ Responsive Design ============ */
-@media (max-width: 768px) {
-    .admin-user-container {
-        flex-direction: column;
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
     }
-
-    .sidebar-container {
-        width: 100%;
-        text-align: center;
-    }
-
-    .admin-user-content {
-        margin: 10px;
-        padding: 15px;
-    }
-
-    .admin-user-table th,
-    .admin-user-table td {
-        padding: 8px;
-    }
-
-    .admin-user-table button {
-        padding: 6px 10px;
-        font-size: 12px;
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }

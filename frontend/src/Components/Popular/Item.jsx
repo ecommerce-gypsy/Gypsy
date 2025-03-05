@@ -1,22 +1,14 @@
-import React from 'react';
-import './Item.css'; // Optional CSS for styling
+import React from "react";
+import "./Item.css"; // Make sure this CSS file exists
 
 const Item = ({ id, name, image, new_price, old_price }) => {
   return (
-    <div
-      className="item"
-      data-id={id}
-      data-name={name}
-      data-new-price={new_price}
-      data-old-price={old_price}
-    >
-      
-
+    <div className="item" data-id={id}>
       {/* Item Image */}
       <img src={image} alt={name} className="item-image" />
 
       {/* Item Name */}
-      <h2>{name}</h2>
+      <h2 className="item-name">{name}</h2>
 
       {/* Item Prices */}
       <div className="item-prices">

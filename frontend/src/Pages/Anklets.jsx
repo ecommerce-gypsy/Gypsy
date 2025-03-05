@@ -9,7 +9,6 @@ import SearchBar from "../Components/SearchBar/SearchBar";
 import Filter from "../Components/Filter/Filter";
 import "./Anklets.css";
 import Breadcrumb from "../Components/Breadcrumb/Breadcrumb";
-
 const Anklets = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
   const { cart, addToCart } = useContext(CartContext);
@@ -85,7 +84,6 @@ const Anklets = () => {
 
   return (
     <div className="anklets-container">
-      <Header />
       <Breadcrumb />
       <AnkletBanner />
 
