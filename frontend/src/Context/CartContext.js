@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 
 export const CartContext = createContext();
 
@@ -10,21 +10,12 @@ export const CartProvider = ({ children }) => {
 
   const token = localStorage.getItem("auth_token");
 
-  useEffect(() => {
-    if (token) {
-      setHasToken(true);
-      fetchCart();
-    } else {
-      setHasToken(false);
-    }
-  }, [token]);
-
-  const fetchCart = async () => {
-    if (!hasToken) return;
+  const fetchCart = useCallback(async () => {
+    if (!token) return; // Exit if no token
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/api/cartss/get", {
+      const response = await fetch("http://localhost:4000/api/cart/get", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -44,29 +35,41 @@ export const CartProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]); // Memoize fetchCart with `token` as a dependency
+
+  useEffect(() => {
+    console.log("Fetching cart...");
+    if (token) {
+      setHasToken(true);
+      fetchCart();
+    } else {
+      setHasToken(false);
+    }
+  }, [token, fetchCart]); // Only depend on `token` and `fetchCart`
+
   const addToCart = async (item) => {
+  const token = localStorage.getItem("auth_token");
     if (!hasToken) {
       alert("No token found. Please log in.");
       return;
     }
-  
+
     // Check if the item is already in the cart
     const existingItem = cart.find((cartItem) => cartItem.productid === item.productid);
     if (existingItem) {
       alert(`${item.productName} is already in your cart!`);
       return;
     }
-  
+
     // Check if the item is in stock
     if (item.stock <= 0) {
       alert("This product is out of stock!");
       return;
     }
-  
+
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/api/cartss/add", {
+      const response = await fetch("http://localhost:4000/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -81,14 +84,14 @@ export const CartProvider = ({ children }) => {
           stock: item.stock,
         }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         alert(`${item.productName} added to cart!`);
-  
+
         // Add the item to the cart state only if it's not already there
         setCart((prevCart) => {
-          if (!prevCart.find(cartItem => cartItem.productid === item.productid)) {
+          if (!prevCart.find((cartItem) => cartItem.productid === item.productid)) {
             return [...prevCart, { ...item, quantity: 1 }];
           }
           return prevCart;
@@ -103,44 +106,44 @@ export const CartProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
   const emptyCart = () => {
-    setCart([]);  // Clear cart from state
+    setCart([]); // Clear cart from state
   };
-  
-// Remove item from cart
-const removeItem = async (item) => {
-  const productid = item.productid;
-  console.log("P ",productid);
-  if (!hasToken) {
-    alert("No token found. Please log in.");
-    return;
-  }
 
-  setLoading(true);
-  try {
-    const response = await fetch("http://localhost:4000/api/cartss/remove", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify({ productid }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      alert("Item removed from cart.");
-      setCart((prevCart) => prevCart.filter((item) => item.productid !== productid)); // Update cart state
-    } else {
-      setError(data.message || "Error removing product from cart.");
+  const removeItem = async (item) => {
+    const productid = item.productid;
+    console.log("P ", productid);
+    if (!hasToken) {
+      alert("No token found. Please log in.");
+      return;
     }
-  } catch (err) {
-    console.error("Error removing from cart:", err);
-    setError("Something went wrong, please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:4000/api/cart/remove", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productid }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Item removed from cart.");
+        setCart((prevCart) => prevCart.filter((item) => item.productid !== productid)); // Update cart state
+      } else {
+        setError(data.message || "Error removing product from cart.");
+      }
+    } catch (err) {
+      console.error("Error removing from cart:", err);
+      setError("Something went wrong, please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateQuantity = async (productid, newQuantity) => {
     if (!hasToken) {
@@ -166,7 +169,7 @@ const removeItem = async (item) => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/api/cartss/update", {
+      const response = await fetch("http://localhost:4000/api/cart/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,9 +200,10 @@ const removeItem = async (item) => {
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0); // Calculate total quantity in cart
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeItem, updateQuantity, fetchCart, setCart, emptyCart, cartCount }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeItem, updateQuantity, fetchCart, setCart, emptyCart, cartCount }}
+    >
       {children}
     </CartContext.Provider>
   );
-  
 };

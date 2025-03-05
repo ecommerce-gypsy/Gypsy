@@ -32,6 +32,8 @@ import AuthCard from './Pages/AuthCard';
 import Chatbot from './Components/Chatbot/Chatbot';
 import Settings from './Pages/Settings';
 import MarqueeBanner from './Components/MarqueeBanner/MarqueeBanner';
+import ResetPassword from "./Pages/ResetPassword";
+import ResetPasswordForm from './Pages/ResetPasswordForm';
 
 const App = () => {
   return (
@@ -67,7 +69,8 @@ const App = () => {
         <Route path="/adminpayment" element={<AdminPayment />} />
         <Route path="/adminorder" element={<AdminOrder />} />
         <Route path="/authcard" element={<AuthCard />} />
-
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password-form" element={<ResetPasswordForm />} />
       <Route path="/settings" element={<Settings/>}/>
       <Route path="marqueebanner" element={<MarqueeBanner/>}/>
       </Routes>

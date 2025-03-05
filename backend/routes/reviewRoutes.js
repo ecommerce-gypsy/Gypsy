@@ -41,37 +41,38 @@ router.post('/', authenticateToken, async (req, res) => {
 
 router.get('/:productid', async (req, res) => {
     const { productid } = req.params;
-    const { rating, sort } = req.query; 
+    const { rating, sort } = req.query; // Destructure rating and sort from query params
 
     try {
         let query = { productid: productid };
 
+        // Apply rating filter if provided (filter by minimum rating)
         if (rating) {
             const minRating = parseInt(rating);
             if (minRating < 1 || minRating > 5) {
                 return res.status(400).json({ message: 'Rating filter must be between 1 and 5.' });
             }
-            query.rating = { $gte: minRating }; 
+            query.rating = { $gte: minRating }; // Filter reviews where rating is greater than or equal to minRating
         }
 
-        
-        let sortOrder = {}; 
+        // Sorting logic
+        let sortOrder = {}; // Default sort order (by creation date)
         if (sort) {
             if (sort === 'desc') {
-                sortOrder = { rating: -1 }; 
+                sortOrder = { rating: -1 }; // Sort by rating in descending order
             } else if (sort === 'asc') {
-                sortOrder = { rating: 1 }; 
+                sortOrder = { rating: 1 }; // Sort by rating in ascending order
             } else {
                 return res.status(400).json({ message: 'Sort must be "asc" or "desc".' });
             }
         } else {
-            
-            sortOrder = { createdAt: -1 }; 
+            // Default sorting by most recent
+            sortOrder = { createdAt: -1 }; // If no sort specified, default to sorting by date descending
         }
 
         // Fetch reviews with the filter and sorting applied
         const reviews = await Review.find(query)
-            .populate('userid', 'name email avatar') 
+            .populate('userid', 'name email avatar') // Optional: Populate user info
             .sort(sortOrder);
 
         if (!reviews || reviews.length === 0) {
@@ -81,7 +82,7 @@ router.get('/:productid', async (req, res) => {
         // Calculate average rating
         const avgRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
         const reviewStats = {
-            averageRating: avgRating.toFixed(2),
+            averageRating: avgRating.toFixed(2), // Rounded to 2 decimal places
             numberOfReviews: reviews.length,
         };
 

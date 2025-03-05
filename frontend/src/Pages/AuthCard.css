@@ -218,4 +218,86 @@
   .auth-left button {
     margin-top: 15px;
   }
+}/* Password Strength and Validation Tips */
+
+/* Password Strength and Validation Tips */
+.password-strength-tips {
+  background-color: #f3f4f6;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+}
+
+.password-strength-tips p {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.password-strength-tips ul {
+  list-style-type: none;
+  padding-left: 0;
+  color: #6b7280;
+}
+
+.password-strength-tips li {
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+/* Password Strength Box Container (Box and Text Together) */
+.password-strength-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Password Strength Box */
+.password-strength-box {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background-color: #e5e7eb;
+  transition: width 0.3s ease-in-out;
+  margin-right: 10px;
+}
+
+/* Different password strength colors */
+.password-strength-box.weak {
+  width: 30%;
+  background-color: #f87171; /* Red */
+}
+
+.password-strength-box.medium {
+  width: 60%;
+  background-color: #fbbf24; /* Yellow */
+}
+
+.password-strength-box.strong {
+  width: 100%;
+  background-color: #34d399; /* Green */
+}
+
+/* Password Strength Text */
+.password-strength-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.password-strength-text.weak {
+  color: #f87171; /* Red */
+}
+
+.password-strength-text.medium {
+  color: #fbbf24; /* Yellow */
+}
+
+.password-strength-text.strong {
+  color: #34d399; /* Green */
 }

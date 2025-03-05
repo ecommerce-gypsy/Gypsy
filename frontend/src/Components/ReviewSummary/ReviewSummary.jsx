@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import "./ReviewSummary.css";
 
 const ReviewSummary = ({ productId }) => {
@@ -14,39 +14,32 @@ const ReviewSummary = ({ productId }) => {
   const [submitError, setSubmitError] = useState("");
   const [submitMessage, setSubmitMessage] = useState("");
   const [showAll, setShowAll] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-
-  // Fetch Reviews
-  const fetchReviews = useCallback(async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch(`http://localhost:4000/api/reviews/${productId}`);
-      if (!response.ok) throw new Error("Failed to fetch reviews");
-
-      const data = await response.json();
-      console.log("Fetched Reviews Data:", data); // Debugging Step ✅
-
-      setReviews(data.reviews || []);
-      setAverageRating(Number(data?.reviewStats?.averageRating) || 0);
-      setNumberOfReviews(data?.reviewStats?.numberOfReviews || 0);
-    } catch (err) {
-      console.error("Error fetching reviews:", err.message);
-      setError("Could not load reviews. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  }, [productId]);
+  const [showModal, setShowModal] = useState(false); // Modal state
 
   useEffect(() => {
     fetchReviews();
-  }, [fetchReviews]);
+  }, [productId]);
 
-  // Handle Review Submission
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/reviews/${productId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch reviews");
+      }
+      const data = await response.json();
+      setReviews(data.reviews);
+      setAverageRating(Number(data.reviewStats.averageRating) || 0);
+      setNumberOfReviews(data.reviewStats.numberOfReviews || 0);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (rating === 0) {
       setSubmitError("Please select a rating.");
       return;
@@ -55,9 +48,13 @@ const ReviewSummary = ({ productId }) => {
       setSubmitError("Review must be at least 5 characters.");
       return;
     }
-
-    const reviewData = { productid: productId, rating, reviewText };
-
+  
+    const reviewData = {
+      productid: productId,
+      rating,
+      reviewText, 
+    };
+  
     try {
       const token = localStorage.getItem("auth_token");
       const response = await fetch("http://localhost:4000/api/reviews", {
@@ -68,25 +65,28 @@ const ReviewSummary = ({ productId }) => {
         },
         body: JSON.stringify(reviewData),
       });
-
+  
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to submit review");
-
+  
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to submit review");
+      }
+  
       setSubmitMessage("Review submitted successfully!");
       setSubmitError("");
       setRating(0);
       setReviewText("");
-      setShowModal(false);
-      fetchReviews(); // Refresh reviews
+      setShowModal(false); // Close modal after submitting
+  
+      fetchReviews(); // Refresh reviews after submission
     } catch (err) {
       setSubmitError(err.message);
     }
   };
-
+  
   if (loading) return <p>Loading reviews...</p>;
   if (error) return <p className="error">{error}</p>;
 
-  // Filter & Sort Reviews
   const filteredReviews = selectedRating
     ? reviews.filter((review) => review.rating === selectedRating)
     : reviews;
@@ -112,7 +112,6 @@ const ReviewSummary = ({ productId }) => {
         <p>{numberOfReviews} reviews</p>
       </div>
 
-      {/* Filter & Sort Controls */}
       <div className="filter-sort-controls">
         <label>Filter by Stars:</label>
         <select value={selectedRating} onChange={(e) => setSelectedRating(Number(e.target.value))}>
@@ -130,7 +129,6 @@ const ReviewSummary = ({ productId }) => {
         </select>
       </div>
 
-      {/* Reviews List */}
       <div className="reviews">
         {displayedReviews.length > 0 ? (
           displayedReviews.map((review) => (
@@ -179,8 +177,6 @@ const ReviewSummary = ({ productId }) => {
                     key={star}
                     className={star <= rating ? "star filled" : "star"}
                     onClick={() => setRating(star)}
-                    onKeyDown={(e) => e.key === "Enter" && setRating(star)}
-                    tabIndex={0} // Accessibility
                   >
                     ★
                   </span>

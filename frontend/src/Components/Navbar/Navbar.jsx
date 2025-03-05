@@ -62,7 +62,7 @@ export const Navbar = () => {
           onClick={() => setDropdownOpen(!isDropdownOpen)}
         >
           <div className="nav-user">
-            <Link to="/login">
+            <Link to="/authcard">
               <img src={user} alt="User" />
             </Link>
             <span className={`nav-arrow ${isDropdownOpen ? "open" : ""}`}>

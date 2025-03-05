@@ -32,7 +32,7 @@ const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
 const cartRoutes = require('./routes/cartRoutes');
-app.use('/api/cartss', cartRoutes);
+app.use('/api/cart', cartRoutes);
 const wishlistRoutes = require('./routes/wishlistRoutes');
 app.use('/api/wishlist', wishlistRoutes);
 
@@ -217,6 +217,47 @@ app.get('/allproducts', async (req, res) => {
                 res.status(500).json({ success: false, message: "Error fetching products", error: error.message });
             }
         });
+
+        app.post('/updateproduct', async (req, res) => {
+          try {
+            const { productid, productName, old_price, new_price, category, stock, images, subcategory, specifications, customization, colorOptions, length } = req.body;
+        
+            // Validate the productid
+            if (!productid) {
+              return res.status(400).json({ success: false, message: "Product ID is required." });
+            }
+        
+            // Prepare update object
+            const updateData = {};
+        
+            if (productName) updateData.productName = productName;
+            if (old_price) updateData.old_price = old_price;
+            if (new_price) updateData.new_price = new_price;
+            if (category) updateData.category = category;
+            if (stock !== undefined) updateData.stock = stock;
+            if (images) updateData.images = images;
+            if (subcategory) updateData.subcategory = subcategory;
+            if (specifications) updateData.specifications = specifications;
+            if (customization !== undefined) updateData.customization = customization;
+            if (colorOptions) updateData.colorOptions = colorOptions;
+            if (length) updateData.length = length;
+        
+            // Find the product by productid and update only the fields provided
+            const updatedProduct = await Product.findOneAndUpdate({ productid }, updateData, { new: true });
+        
+            if (!updatedProduct) {
+              return res.status(404).json({ success: false, message: "Product not found." });
+            }
+        
+            console.log("Product updated successfully", updatedProduct);
+            res.json({ success: true, message: "Product updated successfully", product: updatedProduct });
+          } catch (error) {
+            console.error("Error updating product:", error);
+            res.status(500).json({ success: false, message: "Error updating product", error: error.message });
+          }
+        });
+        
+        
         
 //  New Products (Limit to 4)
 app.get('/newcollections', async (req, res) => {
@@ -585,7 +626,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
     return transporter.sendMail(mailOptions);
   };
 
-  app.post("/checkout", authenticateToken, async (req, res) => {
+  app.post("/checknut", authenticateToken, async (req, res) => {
     const { items, shippingAddress, paymentMethod, totalPrice, userEmail } = req.body;
     const userId = req.user.id; 
   
@@ -713,5 +754,84 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
     });
+  });
+
+  app.post("/checkout", authenticateToken, async (req, res) => {
+    const { items, shippingAddress, paymentMethod, totalPrice, userEmail } = req.body;
+    const userId = req.user.id;
+  
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: "Your cart is empty." });
+    }
+  
+    if (!shippingAddress || !paymentMethod || !totalPrice) {
+      return res.status(400).json({ message: "Missing required fields." });
+    }
+  
+    try {
+      const productDetails = [];
+  
+      for (const item of items) {
+        const product = await Product.findOne({ productid: item.productid });
+  
+        if (!product) {
+          return res.status(400).json({ message: `Product with ID ${item.productid} not found.` });
+        }
+  
+        if (product.stock < item.quantity) {
+          return res.status(400).json({
+            message: `Not enough stock for ${product.productName}. Only ${product.stock} available.`,
+          });
+        }
+  
+        product.stock -= item.quantity;
+        await product.save();
+  
+        // Ensure images array is not empty
+        const productImage = product.images && product.images.length > 0 ? product.images[0] : "hello";
+  console.log("PRIMG",productImage );
+        productDetails.push({
+          productid: product.productid,
+          productName: product.productName,
+          images: productImage, 
+          price: product.new_price,
+          quantity: item.quantity,
+        });
+  
+        console.log("Product added to order:", productDetails[productDetails.length - 1]);
+      }
+  
+      const newOrder = new Order({
+        userid: userId,
+        items: productDetails,
+        shippingAddress,
+        paymentMethod,
+        totalPrice,
+        orderStatus: "Pending",
+        paymentStatus: "Pending",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+  
+      await newOrder.save();
+      console.log("New order saved:", newOrder);
+  
+      // Clear the cart
+      await UserCartWishlist.updateOne(
+        { userid: userId },
+        { $set: { items: [] } } // Correcting cart clear logic
+      );
+  
+      await sendConfirmationEmail(newOrder, userEmail);
+  
+      res.status(201).json({
+        message: "Order placed successfully and cart cleared.",
+        orderId: newOrder._id,
+        orderDetails: newOrder,
+      });
+    } catch (err) {
+      console.error("Error during checkout:", err);
+      res.status(500).json({ message: "Something went wrong. Please try again." });
+    }
   });
   

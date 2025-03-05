@@ -21,8 +21,8 @@ const ProductDetail = () => {
       try {
         const response = await fetch(`http://localhost:4000/products/${productId}`);
         if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-        
         const data = await response.json();
+
         setMainImage(data.images?.[0] || "");
         setProduct(data);
       } catch (err) {
@@ -36,12 +36,9 @@ const ProductDetail = () => {
   }, [productId]);
 
   const calculateTotalPrice = () => {
-    if (!product) return "0.00";
-
-    const basePrice = product.new_price || 0;
+    const basePrice = product?.new_price || 0;
     const categoryMultiplier = category === "Adult" ? 1 : 0.8;
     const setMultiplier = setOption === "Single" ? 1 : 2;
-    
     return (basePrice * categoryMultiplier * setMultiplier * quantity).toFixed(2);
   };
 
@@ -52,20 +49,10 @@ const ProductDetail = () => {
   return (
     <div className="product-detail">
       <div className="image-gallery">
-        <img 
-          src={mainImage || "default-image-url"} 
-          alt={product.name} 
-          className="main-image" 
-        />
+        <img src={mainImage || "default-image-url"} alt={product.name} className="main-image" />
         <div className="thumbnails">
           {product.images?.map((image, index) => (
-            <img 
-              key={index} 
-              src={image} 
-              alt={`Thumbnail ${index + 1}`} 
-              className="thumbnail" 
-              onClick={() => setMainImage(image)} 
-            />
+            <img key={index} src={image} alt={`Thumbnail ${index + 1}`} className="thumbnail" onClick={() => setMainImage(image)} />
           ))}
         </div>
       </div>
@@ -73,16 +60,11 @@ const ProductDetail = () => {
       <div className="product-info">
         <h1>{product.name}</h1>
         <p className="price">
-          <strong>₹{product.new_price?.toFixed(2) || "0.00"}</strong>
-          {product.old_price && (
-            <>
-              <span className="old-price">₹{product.old_price.toFixed(2)}</span>
-              <span className="discount">
-                (Save {((1 - product.new_price / product.old_price) * 100).toFixed(0)}%)
-              </span>
-            </>
-          )}
-        </p>
+          <strong>₹{product.new_price.toFixed(2)}</strong>
+          <span className="old-price">₹{product.old_price.toFixed(2)}</span>
+          <span className="discount">(Save {((1 - product.new_price / product.old_price) * 100).toFixed(0)}%)</span>
+        </p>+
+        
         <p className="description"><strong>Description:</strong> {product.description}</p>
 
         <div className="category">
@@ -103,31 +85,18 @@ const ProductDetail = () => {
 
         <div className="quantity">
           <label>Quantity:</label>
-          <input 
-            type="number" 
-            value={quantity} 
-            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))} 
-            min="1" 
-          />
+          <input type="number" value={quantity} onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))} min="1" />
         </div>
 
         <div className="total-price">
           <strong>Total Price (Incl. of all Taxes):</strong> <span>₹ {calculateTotalPrice()}</span>
         </div>
 
-        <button 
-          className="add-to-cart" 
-          onClick={() => !cart.some((item) => item.productId === product.productId) && addToCart(product)}
-        >
-          {cart.some((item) => item.productId === product.productId) ? "In Cart" : "Add to Cart"}
+        <button className="add-to-cart" onClick={() => !cart.some((item) => item.productid === product.productid) && addToCart(product)}>
+          {cart.some((item) => item.productid === product.productid) ? "In Cart" : "Add to Cart"}
         </button>
 
-        <button 
-          className="buy-now" 
-          onClick={() => window.location.href = 
-            `/checkout?productId=${productId}&quantity=${quantity}&totalPrice=${calculateTotalPrice()}`
-          }
-        >
+        <button className="buy-now" onClick={() => window.location.href = `/checkout?productId=${productId}&quantity=${quantity}&totalPrice=${calculateTotalPrice()}`}>
           Buy Now
         </button>
 
@@ -142,11 +111,8 @@ const ProductDetail = () => {
             ))}
           </ul>
         </div>
-        
-        {/* Review Summary Section */}
-     {/* Add a defensive check */}
-{product && productId && <ReviewSummary productId={productId} />}
-
+         {/* Review Summary Section */}
+         <ReviewSummary productId={productId} />
       </div>
     </div>
   );
