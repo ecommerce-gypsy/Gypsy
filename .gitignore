@@ -30,3 +30,4 @@ Thumbs.db
 
 # Cache files (you can ignore the cache file inside node_modules)
 frontend/node_modules/.cache/
+node_modules/

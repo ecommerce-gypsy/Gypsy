@@ -43,7 +43,7 @@ const CheckoutModal = ({ cart, calculateTotal, handleCheckoutSuccess, setError }
           "Authorization": `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          amount: calculateTotal() * 100, // Razorpay expects amount in paise
+          amount: calculateTotal() , // Razorpay expects amount in paise
           currency: "INR",
           cart, // Send cart items for the order creation process
           shippingAddress,
