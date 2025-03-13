@@ -1,134 +1,139 @@
 import React, { useEffect, useContext, useState } from "react";
 import { CartContext } from "../Context/CartContext";
-import CheckoutModal from "./CheckoutModal"; 
-import orderplaced from "../Components/Assets/orderplaced.gif"; 
+import { WishlistContext } from "../Context/WishlistContext";
+import CheckoutModal from "./CheckoutModal";
 import "./Cart.css";
+import { useNavigate } from "react-router-dom"; 
 
 const Cart = () => {
-  const { cart, removeItem, fetchCart, updateQuantity, emptyCart } = useContext(CartContext); // added emptyCart from context
-  const [showGif, setShowGif] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [error, setError] = useState(null);
-
+  const { cart, removeItem, fetchCart, updateQuantity, emptyCart } =
+    useContext(CartContext);
+  const { addToWishlist } = useContext(WishlistContext);
+  const [showCheckout, setShowCheckout] = useState(false); // State to control the form visibility
+  const navigate = useNavigate();
   useEffect(() => {
-    fetchCart(); // Fetch the cart data on mount
-  }, []); // Empty dependency to run only once
+    fetchCart();
+  }, []);
 
+  // Handle Quantity
   const incrementQuantity = (item) => {
-    const newQuantity = item.quantity + 1;
-    updateQuantity(item.productid, newQuantity);
+    updateQuantity(item.productid, item.quantity + 1);
   };
 
   const decrementQuantity = (item) => {
-    const newQuantity = item.quantity > 1 ? item.quantity - 1 : 0;
-    if (newQuantity === 0) {
-      removeItem(item);
+    if (item.quantity > 1) {
+      updateQuantity(item.productid, item.quantity - 1);
     } else {
-      updateQuantity(item.productid, newQuantity);
+      removeItem(item);
     }
   };
 
+  // Calculate Total Amount
   const calculateTotal = () =>
     cart.reduce((total, item) => total + item.new_price * item.quantity, 0);
 
-  const handleCheckoutSuccess = (message) => {
-    setSuccessMessage(message);
-    setShowGif(true);
-    setTimeout(() => {
-      setShowGif(false);
-      emptyCart(); // Clear the cart after the order is placed
-    }, 2000); // Hide GIF and clear the cart after 2 seconds
+  // Move Item to Wishlist
+  const handleMoveToWishlist = (item) => {
+    addToWishlist(item);
+    removeItem(item);
+  };
+
+  // Open Checkout Form
+  const openCheckout = () => {
+    setShowCheckout(true);
+    navigate("/checkoutmodal");
+  };
+
+  // Close Checkout Form
+  const closeCheckout = () => {
+    setShowCheckout(false);
   };
 
   return (
-    <div className="cart-container">
-      <h1 className="cart-heading">Your Cart</h1>
-      <a href="/" className="continue-shopping">
-        Continue shopping
-      </a>
+    <div className="cart-page">
+      <h1 className="cart-title">My Bag ({cart.length} items)</h1>
 
-      <div className="cart-table">
-        <div className="cart-header">
-          <p className="cart-column">Product</p>
-          <p className="cart-column">Quantity</p>
-          <p className="cart-column">Total</p>
-          <p className="cart-column">Remove</p>
-        </div>
-
-        {cart.length > 0 ? (
-          cart.map((item) => (
-            <div className="cart-row" key={item.productid}>
-              <div className="cart-product">
+      {cart.length > 0 ? (
+        <div className="cart-content">
+          {/* Left Section - Cart Items */}
+          <div className="cart-items">
+            {cart.map((item) => (
+              <div className="cart-item" key={item.productid}>
                 <img
                   src={item.images[0]}
-                  alt={item.name}
-                  className="cart-product-image"
+                  alt={item.productName}
+                  className="cart-image"
                 />
-                <div>
-                  <p className="cart-product-name">{item.productName}</p>
-                  <p className="cart-product-count">Price: ₹{item.new_price}</p>
+
+                <div className="cart-item-details">
+                  <p className="cart-item-name">{item.productName}</p>
+                  <p className="cart-item-price">
+                    Rs. {item.new_price.toFixed(2)}
+                  </p>
+
+                  {/* Quantity Controls */}
+                  <div className="cart-quantity">
+                    <button onClick={() => decrementQuantity(item)}>-</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => incrementQuantity(item)}>+</button>
+                  </div>
+                </div>
+
+                {/* Item Total Price */}
+                <div className="cart-item-total">
+                  Rs. {(item.new_price * item.quantity).toFixed(2)}
+                </div>
+
+                {/* Actions */}
+                <div className="cart-actions">
+                  <button
+                    onClick={() => handleMoveToWishlist(item)}
+                    className="wishlist-btn"
+                  >
+                    Move to Wishlist
+                  </button>
+                  <button
+                    onClick={() => removeItem(item)}
+                    className="delete-btn"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
-
-              <div className="cart-quantity">
-                <button
-                  className="quantity-btn decrement-btn"
-                  onClick={() => decrementQuantity(item)}
-                >
-                  -
-                </button>
-                <span className="quantity-value">{item.quantity}</span>
-                <button
-                  className="quantity-btn increment-btn"
-                  onClick={() => incrementQuantity(item)}
-                >
-                  +
-                </button>
-              </div>
-
-              <div className="cart-total">
-                <p>₹{(item.new_price * item.quantity).toFixed(2)}</p>
-              </div>
-
-              <div className="cart-remove">
-                <button
-                  className="remove-btn"
-                  onClick={() => removeItem(item)}
-                >
-                  🗑️
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="empty-cart">Your cart is empty.</p>
-        )}
-      </div>
-
-      {cart.length > 0 && (
-        <div className="cart-summary">
-          <textarea
-            className="special-instructions"
-            placeholder="Order special instructions"
-          ></textarea>
-          <div className="summary-details">
-            <p className="summary-label">Estimated total:</p>
-            <p className="summary-total">₹{calculateTotal().toFixed(2)}</p>
+            ))}
           </div>
-          <CheckoutModal
-            cart={cart}
-            calculateTotal={calculateTotal}
-            handleCheckoutSuccess={handleCheckoutSuccess}
-            setError={setError}
-          />
+
+          {/* Right Section - Summary */}
+          <div className="cart-summary">
+            <div className="summary-box">
+              <h3>Order Details</h3>
+              <p>
+                Bag Total: <span>Rs. {calculateTotal().toFixed(2)}</span>
+              </p>
+              <p>
+                Delivery Fee: <span>Rs. 99.00</span>
+              </p>
+              <p>
+                Platform Fee: <span>Rs. 19.00</span>
+              </p>
+              <h3>
+                Order Total:{" "}
+                <span>Rs. {(calculateTotal() + 99 + 19).toFixed(2)}</span>
+              </h3>
+
+              {/* Proceed to Shipping Button */}
+              <button className="checkout-btn" onClick={openCheckout}>
+                Proceed to Shipping
+              </button>
+            </div>
+          </div>
         </div>
+      ) : (
+        <p className="empty-cart">Your cart is empty.</p>
       )}
 
-      {showGif && (
-        <div className="order-placed-gif">
-          <img src={orderplaced} alt="Order Placed" />
-        </div>
-      )}
+      {/* Checkout Form (Modal) */}
+      {showCheckout && <CheckoutModal onClose={closeCheckout} />}
     </div>
   );
 };

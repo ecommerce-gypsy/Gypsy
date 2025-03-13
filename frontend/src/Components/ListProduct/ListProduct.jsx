@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./ListProduct.css";
 import cross_icon from "../Assets/cross_icon.png";
-import edit_icon from "../Assets/edit_icon.png";  // Assuming you have an edit icon
+import edit from "../Assets/edit.png";  // Assuming you have an edit icon
 import Sidebar from "../Sidebar/Sidebar";
 
 const ListProduct = () => {
@@ -201,8 +201,8 @@ const ListProduct = () => {
                     <td>
                       <img
                         onClick={() => openEditModal(product)}
-                        className="edit-icon"
-                        src={edit_icon}
+                        className="edit"
+                        src={edit}
                         alt="Edit"
                       />
                     </td>
@@ -286,7 +286,7 @@ const ListProduct = () => {
 
               {/* Specifications Section */}
               <button type="button" onClick={() => setSpecificationsOpen(!specificationsOpen)}>
-                {specificationsOpen ? "Hide Specifications" : "Edit Specifications (+)"}
+                {specificationsOpen ? "Hide Specifications" : "Edit Specifications "}
               </button>
               {specificationsOpen && (
                 <>
@@ -349,7 +349,7 @@ const ListProduct = () => {
 
               {/* Customization Section */}
               <button type="button" onClick={() => setCustomizationOpen(!customizationOpen)}>
-                {customizationOpen ? "Hide Customization" : "Edit Customization (+)"}
+                {customizationOpen ? "Hide Customization" : "Edit Customization "}
               </button>
               {customizationOpen && (
                 <>

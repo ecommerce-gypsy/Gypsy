@@ -34,6 +34,10 @@ import Settings from './Pages/Settings';
 import MarqueeBanner from './Components/MarqueeBanner/MarqueeBanner';
 import ResetPassword from "./Pages/ResetPassword";
 import ResetPasswordForm from './Pages/ResetPasswordForm';
+import OrderProcess from './Components/ordersummary/OrderSummary';
+import PaymentComponent from './Pages/PaymentComponent';
+import CheckoutModal from './Pages/CheckoutModal';
+
 
 const App = () => {
   return (
@@ -64,6 +68,8 @@ const App = () => {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/reviewsection" element={<ReviewSection />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/ordersummary" element={<OrderProcess/>}/>
+        <Route path="/PaymentComponent" element={<PaymentComponent/>}/>
         {/* Admin Routes */}
         <Route path="/adminuser" element={<AdminUser />} />
         <Route path="/adminpayment" element={<AdminPayment />} />
@@ -73,6 +79,7 @@ const App = () => {
         <Route path="/reset-password-form" element={<ResetPasswordForm />} />
       <Route path="/settings" element={<Settings/>}/>
       <Route path="marqueebanner" element={<MarqueeBanner/>}/>
+      <Route path="/checkoutmodal" element={<CheckoutModal/>}/>
       </Routes>
       <Chatbot/>
     

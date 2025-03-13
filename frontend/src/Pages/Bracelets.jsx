@@ -4,6 +4,8 @@ import { WishlistContext } from "../Context/WishlistContext";
 import { CartContext } from "../Context/CartContext";
 import Header from "../Components/Header/Header";
 import './Bracelets.css';
+import Breadcrumb from '../Components/Breadcrumb/Breadcrumb';
+import BraceletBanner from '../Components/BraceletBanner/BraceletBanner';
 
 const Bracelets = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -52,7 +54,9 @@ const Bracelets = () => {
   };
 
   return (
-    <div>
+    <div className="bracelets-container">
+      <Breadcrumb/>
+      <BraceletBanner/>
       <h1>Welcome to the BRACELETS category page!</h1>
 
       {loading ? (

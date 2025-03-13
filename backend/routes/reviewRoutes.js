@@ -38,7 +38,29 @@ router.post('/', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
+// Add this route to check if a user has purchased a product
+router.get('/has-purchased/:productid', authenticateToken, async (req, res) => {
+    const { productid } = req.params;
+    const userId = req.user.id;  
+  
+    try {
+      const order = await Order.findOne({
+        userid: userId,
+        'items.productid': productid,
+        orderStatus: 'Delivered',
+      });
+  
+      if (order) {
+        return res.status(200).json({ hasPurchased: true });
+      } else {
+        return res.status(200).json({ hasPurchased: false });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
 router.get('/:productid', async (req, res) => {
     const { productid } = req.params;
     const { rating, sort } = req.query; // Destructure rating and sort from query params
@@ -75,8 +97,15 @@ router.get('/:productid', async (req, res) => {
             .populate('userid', 'name email avatar') // Optional: Populate user info
             .sort(sortOrder);
 
-        if (!reviews || reviews.length === 0) {
-            return res.status(404).json({ message: 'No reviews found for this product.' });
+        // If no reviews found for this product
+        if (reviews.length === 0) {
+            return res.status(200).json({
+                reviews: [],
+                reviewStats: {
+                    averageRating: "0.00", // Send 0.00 for averageRating
+                    numberOfReviews: 0, // Send 0 for numberOfReviews
+                }
+            });
         }
 
         // Calculate average rating
@@ -94,5 +123,7 @@ router.get('/:productid', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+
 
 module.exports = router;

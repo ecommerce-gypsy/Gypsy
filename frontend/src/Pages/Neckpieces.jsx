@@ -5,6 +5,8 @@ import { WishlistContext } from "../Context/WishlistContext";
 import { CartContext } from "../Context/CartContext";
 import Header from "../Components/Header/Header";
 import Footer from "../Components/Footer/Footer";
+import NeckPieceBanner from "../Components/NeckPieceBanner/NeckPieceBanner";
+import Breadcrumb from "../Components/Breadcrumb/Breadcrumb";
 
 const Neckpieces = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -47,8 +49,10 @@ const Neckpieces = () => {
   return (
     <div className="neckpieces-container">
 
-      <h1>Welcome to the NECKPIECES Collection!</h1>
-
+   
+      <Breadcrumb/>
+      <NeckPieceBanner/>
+     <h1>Welcome to the NECKPIECES Collection!</h1>
       {error && <p className="error-message">{error}</p>}
 
       {/* Product Grid */}

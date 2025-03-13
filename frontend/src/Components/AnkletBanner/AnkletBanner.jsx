@@ -1,6 +1,6 @@
 import React from 'react';
 import './AnkletBanner.css';
-import AnkletImage from '../Assets/anklets.png'; // Import the banner image
+import AnkletImage from '../Assets/anklet.png'; // Import the banner image
 //import Breadcrumb from '../Breadcrumb/Breadcrumb'; // Import your Breadcrumb component
 
 const AnkletBanner = () => {

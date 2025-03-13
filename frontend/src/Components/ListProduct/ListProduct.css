@@ -1,39 +1,40 @@
+/* ===== Global Styles ===== */
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom, #ffedd5, #edeaff);
   font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to bottom, #ffedd5, #edeaff);
 }
 
-/* Main Container */
+/* ===== Layout ===== */
 .main-container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Sidebar */
+/* ===== Sidebar ===== */
 .sidebar {
   width: 250px;
-  background-color: #1e293b;
-  padding: 20px;
   min-height: 100vh;
+  background-color: #1e293b;
   color: white;
+  padding: 20px;
 }
 
-/* List Product Content */
+/* ===== Main Content ===== */
 .list-product-content {
   flex: 1;
+  margin: 20px;
   padding: 20px;
-  background-color: white;
+  background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-  margin: 20px;
 }
 
-/* New Heading Styling */
+/* ===== Heading Section ===== */
 .heading-container {
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
@@ -55,10 +56,10 @@ body {
   transform: scale(1.05);
 }
 
-/* Filter */
+/* ===== Filter Section ===== */
 .category-filter {
-  margin-bottom: 20px;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .category-filter select {
@@ -68,13 +69,12 @@ body {
   border: 1px solid #ccc;
 }
 
-/* Table Container */
+/* ===== Table Styles ===== */
 .table-container {
   width: 100%;
   overflow-x: auto;
 }
 
-/* Product Table */
 .product-table {
   width: 100%;
   border-collapse: collapse;
@@ -101,7 +101,7 @@ body {
   background-color: #e5e7eb;
 }
 
-/* Product Image */
+/* ===== Product Image ===== */
 .product-image {
   max-width: 50px;
   height: auto;
@@ -109,82 +109,109 @@ body {
   border-radius: 50%;
 }
 
-/* Remove Icon */
-.remove-icon {
+/* ===== Icons ===== */
+.remove-icon,
+.edit {
   cursor: pointer;
-  width: 25px;
-  height: 25px;
   transition: transform 0.3s, opacity 0.3s;
 }
 
-.remove-icon:hover {
+.remove-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.edit {
+  width: 20px;
+  height: 20px;
+}
+
+.remove-icon:hover,
+.edit:hover {
   transform: scale(1.2);
   opacity: 0.8;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .main-container {
-    flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    min-height: auto;
-  }
-  .product-table th,
-  .product-table td {
-    padding: 8px;
-    font-size: 14px;
-  }
-}
-/* Modal Overlay */
+/* ===== Modal Styles ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  transition: opacity 0.3s ease-in-out;
 }
 
-/* Modal Box */
 .modal {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 25px;
+  border-radius: 10px;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-height: 80vh;  /* Max height for modal */
-  overflow-y: auto;  /* Make modal content scrollable if it exceeds max height */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-height: 80vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  animation: fadeInModal 0.3s ease-in-out forwards;
 }
 
-/* Modal Form */
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Modal Form ===== */
+.modal h3 {
+  text-align: center;
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
 .modal label {
   display: block;
-  margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
 }
 
-.modal input {
+.modal input,
+.modal textarea,
+.modal select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  margin-bottom: 15px;
+  transition: border 0.3s;
 }
 
-/* Modal Actions */
+.modal input:focus,
+.modal textarea:focus,
+.modal select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* ===== Modal Buttons ===== */
 .modal-actions {
   display: flex;
   justify-content: space-between;
+  margin-top: 15px;
 }
 
 .modal-actions button {
@@ -194,6 +221,8 @@ body {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease-in-out;
 }
 
 .modal-actions button[type="button"] {
@@ -204,38 +233,43 @@ body {
   background-color: #0056b3;
 }
 
-/* Edit Icon */
-.edit-icon {
+/* ===== Expandable Sections ===== */
+.expand-button {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  width: 25px;  /* Make it the same size as the remove icon */
-  height: 25px;  /* Set height to match width */
-  transition: transform 0.3s, opacity 0.3s;
+  border-radius: 6px;
+  transition: background 0.3s, transform 0.2s;
+  display: inline-block;
 }
 
-.edit-icon:hover {
-  transform: scale(1.2);
-  opacity: 0.8;
+.expand-button:hover {
+  background-color: #e5e7eb;
+  transform: scale(1.03);
 }
 
-/* Input Field for the New Modal Fields */
-.modal input[type="text"],
-.modal input[type="number"],
-.modal textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 15px;
-}
-
-/* Modifying the Image input field */
-.modal input[name="images"] {
-  height: 50px;
-  padding: 10px;
-}
-
-.modal input[name="colorOptions"],
-.modal input[name="specifications"] {
-  height: 50px;
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+  
+  .product-table th,
+  .product-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .modal {
+    max-width: 90%;
+  }
 }

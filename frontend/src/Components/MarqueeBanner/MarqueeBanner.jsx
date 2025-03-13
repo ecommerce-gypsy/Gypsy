@@ -24,13 +24,7 @@ const MarqueeBanner = () => {
 
   return (
     <div className="marquee-container">
-      {/* Social Media Icons */}
-      <div className="social-icons">
-        <FaFacebookF className="icon" />
-        <FaInstagram className="icon" />
-        <FaYoutube className="icon" />
-      </div>
-
+      
       {/* Message Section with Arrows */}
       <div className="marquee-wrapper">
         <button className="arrow-btn" onClick={prevMessage}>

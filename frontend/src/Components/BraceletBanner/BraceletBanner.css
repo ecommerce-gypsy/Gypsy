@@ -1,0 +1,54 @@
+.bracelet-banner {
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: relative;
+    filter: brightness(1.2); /* Increase brightness of the banner */
+  }
+  
+  .bracelet-banner:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2); /* Light overlay for a brighter effect */
+    z-index: 1;
+  }
+  
+  .bracelet-banner-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  
+  .bracelet-banner-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .bracelet-banner-content p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .bracelet-banner {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  height: 300px; /* Adjust as needed */
+  }
+  
+  .breadcrumb-container {
+  position: absolute;
+  top: 20px; /* Adjust the top margin as needed */
+  left: 20px; /* Adjust the left margin as needed */
+  z-index: 10;
+  }
+  
