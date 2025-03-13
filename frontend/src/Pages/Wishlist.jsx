@@ -1,18 +1,35 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import './Wishlist.css';
 import { WishlistContext } from '../Context/WishlistContext';
-import closeIcon from '../Components/Assets/close.png';
+import { CartContext } from '../Context/CartContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './Wishlist.css';
+import { Trash2 } from 'lucide-react';
 
 const Wishlist = () => {
   const { wishlist, removeFromWishlist } = useContext(WishlistContext);
+  const { addToCart } = useContext(CartContext);
+
+  const moveToCart = (item) => {
+    addToCart(item);
+    removeFromWishlist(item);
+    toast.success("Item moved to cart!");
+  };
+
+  const handleRemove = (item) => {
+    removeFromWishlist(item);
+    toast.error("Item removed from wishlist!");
+  };
 
   return (
     <div className="wishlist-container">
+      <ToastContainer position="top-center" autoClose={1500} />
+      
       {wishlist.length === 0 ? (
         <div className="empty-wishlist">
-          <h2>It feels so empty in here</h2>
-          <p>Make a wish!</p>
+          <h2>Your Wishlist is Empty</h2>
+          <p>Start adding some items!</p>
           <div className="empty-heart">
             <span>💔</span>
           </div>
@@ -26,31 +43,30 @@ const Wishlist = () => {
           <div className="items-container">
             {wishlist.map((item) => (
               <div key={item._id} className="wishlist-item">
-                {/* Remove Icon (Heart) */}
-                <button
-                  className="remove-icon"
-                  onClick={() => {
-                    if (window.confirm('Remove this item from your Wishlist?')) {
-                      removeFromWishlist(item);
-                    }
-                  }}
-                >
-                  <img src={closeIcon} alt="Remove" />
-                </button>
-
-                {/* Image */}
-                <div className="wishlist-image-container">
-                  <img
-                    src={item.images[0] || "placeholder.jpg"}
-                    alt={item.productName || "Product"}
-                    className="wishlist-image"
-                  />
-                </div>
-
-                {/* Product Details */}
+                <img
+                  src={item.images[0] || 'placeholder.jpg'}
+                  alt={item.productName || 'Product'}
+                  className="wishlist-image"
+                />
                 <div className="wishlist-details">
-                  <h3>{item.productName || "Product Name"}</h3>
+                  <h3>{item.productName || 'Product Name'}</h3>
                   <p>Price: ₹{item.new_price || 0}</p>
+                  <div className="wishlist-actions">
+                    <div className="action-buttons">
+                      <button
+                        className="move-to-cart-btn"
+                        onClick={() => moveToCart(item)}
+                      >
+                        Move to Cart
+                      </button>
+                      <button
+                        className="remove-btn"
+                        onClick={() => handleRemove(item)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

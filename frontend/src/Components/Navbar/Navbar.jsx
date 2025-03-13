@@ -39,7 +39,7 @@ export const Navbar = () => {
           <Link to="/bracelets">BRACELETS</Link>
         </li>
         <li>
-          <Link to="/custom">CUSTOMIZATION</Link>
+          <Link to="/CustomDesignPage">CUSTOMIZATION</Link>
         </li>
       </ul>
 

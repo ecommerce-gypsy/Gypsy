@@ -39,9 +39,11 @@
   align-items: center;
 }
 
-.product-image {
-  width: 100%;
+.product-card .product-image {
+  width: 100%; /* Set to full width for responsive design */
   border-radius: 8px;
+  max-width: 200px; /* You can adjust the max width here */
+  height: auto; /* Maintain aspect ratio */
 }
 
 /* Out of Stock Badge */

@@ -1,29 +1,277 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric'; // Fabric.js import
+import './CustomDesignPage.css';
+import 'font-awesome/css/font-awesome.min.css';
 
+const CustomDesignPage = () => {
+  const canvasRef = useRef(null);
+  const [history, setHistory] = useState([]);
+  const [customDesigns, setCustomDesigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [drawing, setDrawing] = useState(false);
+  const [isEraser, setIsEraser] = useState(false);
+
+  useEffect(() => {
+    // Initialize the canvas
+    if (fabric && fabric.Canvas && !canvasRef.current) {
+      const canvas = new fabric.Canvas('designCanvas', {
+        width: 1000,
+        height: 800,
+        backgroundColor: '#f0f0f0',
+      });
+      canvasRef.current = canvas;
+    }
+
+    // Fetch custom designs
+    const fetchCustomDesigns = () => {
+      fetch('http://localhost:4000/api/custom-designs')
+        .then(response => response.json())
+        .then(data => {
+          setCustomDesigns(data);
+        })
+        .catch(error => {
+          setError('Error fetching custom designs');
+        })
+        .finally(() => setLoading(false));
+    };
+
+    fetchCustomDesigns();
+
+    return () => {
+      if (canvasRef.current) {
+        canvasRef.current.dispose();
+        canvasRef.current = null;
+      }
+    };
+  }, []);
+
+  // Add custom design (image) to canvas
+  const addCustomDesign = (imageUrl, left, top) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const imgElement = new Image();
+    imgElement.crossOrigin = "Anonymous";
+
+    imgElement.onload = function() {
+      const img = new fabric.Image(imgElement, {
+        left: left,
+        top: top,
+        width: 150,
+        height: 150,
+        opacity: 1,
+      });
+      canvas.add(img);
+      canvas.renderAll();
+      setHistory((prevHistory) => [...prevHistory, img]);
+    };
+
+    imgElement.onerror = function(error) {
+      console.error("Error loading image:", error);
+    };
+
+    imgElement.src = imageUrl;
+  };
+
+  // Save canvas as image
+  const handleSaveAsImage = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const dataURL = canvas.toDataURL({
+      format: 'png',
+      quality: 1.0,
+    });
+
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'custom-design.png';
+    link.click();
+  };
+
+  // Handle Drag Start Event
+  const handleDragStart = (e, imageUrl) => {
+    e.dataTransfer.setData('text/plain', imageUrl);
+  };
+
+  // Handle Drop Event
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const boundingRect = canvas.getElement().getBoundingClientRect();
+    const left = e.clientX - boundingRect.left;
+    const top = e.clientY - boundingRect.top;
+
+    const imageUrl = e.dataTransfer.getData('text/plain');
+    addCustomDesign(imageUrl, left, top);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  // Start eraser functionality
+  const startErasing = () => {
+    const canvas = canvasRef.current;
+    setIsEraser(true);
+    canvas.isDrawingMode = false;
+    setDrawing(false); // Disable drawing mode when eraser is active
+
+    // Listen to the mouse down event for erasing
+    canvas.on('mouse:down', (e) => {
+      const obj = canvas.getActiveObject();
+      if (obj) {
+        canvas.remove(obj);
+        setHistory((prev) => prev.filter((item) => item !== obj));
+      }
+    });
+  };
+
+  // Undo the last action
+  const undo = () => {
+    const canvas = canvasRef.current;
+    const lastObject = history[history.length - 1];
+    if (lastObject) {
+      canvas.remove(lastObject);
+      setHistory(history.slice(0, -1)); // Remove from history
+    }
+  };
+
+  // Clear the entire canvas
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    canvas.clear();
+    setHistory([]); // Reset history
+  };
+
+  // Change the color of the selected object
+  const changeColor = (color) => {
+    const canvas = canvasRef.current;
+    const activeObject = canvas.getActiveObject();
+
+    if (activeObject) {
+      activeObject.set({ fill: color });
+      canvas.renderAll();
+    }
+  };
+
+  return (
+    <div className="container">
+      <div className="design-tools">
+        <h3>Design Tools</h3>
+        <div className="tools-icons">
+          {loading ? (
+            <p>Loading designs...</p>
+          ) : error ? (
+            <p style={{ color: 'red' }}>{error}</p>
+          ) : customDesigns.length === 0 ? (
+            <p>No designs found</p>
+          ) : (
+            customDesigns.map((design, index) => (
+              <img
+                key={index}
+                src={design.image}
+                alt={design.name}
+                className="design-icon"
+                title={design.name}
+                draggable
+                onDragStart={(e) => handleDragStart(e, design.image)}
+              />
+            ))
+          )}
+<h4>--------</h4>
+          <i className="fa fa-eraser fa-2x" title="Eraser Tool" onClick={startErasing}></i>
+          <i className="fa fa-undo fa-2x" title="Undo" onClick={undo}></i>
+          <i className="fa fa-trash fa-2x" title="Clear Canvas" onClick={clearCanvas}></i>
+          <input type="color" title="Change Color" onChange={(e) => changeColor(e.target.value)} />
+        </div>
+      </div>
+
+      <div
+        className="canvas-container"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        <canvas id="designCanvas"></canvas>
+      </div>
+
+      <button onClick={handleSaveAsImage} className="save-btn">
+        Save as Image
+      </button>
+    </div>
+  );
+};
+
+export default CustomDesignPage;
+
+
+/*import React, { useRef, useEffect, useState } from 'react';
+import * as fabric from 'fabric'; // Fabric.js import
 import 'font-awesome/css/font-awesome.min.css';
 import './CustomDesignPage.css';
 
 const CustomDesignPage = () => {
   const canvasRef = useRef(null);
-  const [history, setHistory] = useState([]); // For undo functionality
+  const [history, setHistory] = useState([]);
   const [drawing, setDrawing] = useState(false);
   const [isEraser, setIsEraser] = useState(false);
+  const [customDesigns, setCustomDesigns] = useState([]); // Store fetched custom designs
 
   useEffect(() => {
-    // Initialize Fabric.js canvas
-    const canvas = new fabric.Canvas('designCanvas', {
-      width: 600,
-      height: 800,
-      backgroundColor: '#f0f0f0',
-    });
+    console.log("Inside useEffect");  // Confirm useEffect runs
+    if (fabric && fabric.Canvas) {
+      const canvas = new fabric.Canvas('designCanvas', {
+        width: 800,
+        height: 800,
+        backgroundColor: '#f0f0f0',
+      });
 
-    canvasRef.current = canvas;
+      canvasRef.current = canvas;
 
-    return () => {
-      canvas.dispose(); // Cleanup on unmount
+      return () => {
+        canvas.dispose();
+      };
+    } else {
+      console.error('Fabric.js is not properly loaded');
+    }
+    
+
+    const fetchCustomDesigns = async () => {
+      console.log("Fetching Design...");  // not working
+      try {
+        const response = await fetch('http://localhost:4000/api/custom-designs');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setCustomDesigns(data);
+        console.log("Fetched Designs: ", data);
+      } catch (error) {
+        console.error('Error fetching custom designs:', error);
+      }
     };
-  }, []);
+    
+    fetchCustomDesigns();
+  }, []);  
+
+  // Add custom design (beads, charms, dollars) to the canvas
+  const addCustomDesign = (imageUrl) => {
+    const canvas = canvasRef.current;
+    fabric.Image.fromURL(imageUrl, (img) => {
+      img.set({
+        left: 100,
+        top: 100,
+        width: 50, 
+        height: 50,
+      });
+      canvas.add(img);
+      canvas.renderAll();
+      setHistory((prevHistory) => [...prevHistory, img]);
+    });
+  };
 
   // Toggle drawing mode (Pencil Tool)
   const startDrawing = () => {
@@ -55,57 +303,6 @@ const CustomDesignPage = () => {
         setHistory((prev) => prev.filter((item) => item !== obj));
       }
     });
-  };
-
-  // Add different shapes
-  const addShape = (shape) => {
-    const canvas = canvasRef.current;
-    let addedObject = null;
-
-    if (shape === 'rectangle') {
-      addedObject = new fabric.Rect({
-        left: 50,
-        top: 50,
-        fill: 'blue',
-        width: 100,
-        height: 100,
-      });
-    } else if (shape === 'circle') {
-      addedObject = new fabric.Circle({
-        left: 150,
-        top: 50,
-        fill: 'red',
-        radius: 50,
-      });
-    } else if (shape === 'triangle') {
-      addedObject = new fabric.Triangle({
-        left: 250,
-        top: 50,
-        width: 100,
-        height: 100,
-        fill: 'green',
-      });
-    }
-
-    if (addedObject) {
-      canvas.add(addedObject);
-      canvas.renderAll();
-      setHistory((prevHistory) => [...prevHistory, addedObject]);
-    }
-  };
-
-  // Add text to canvas
-  const addText = () => {
-    const canvas = canvasRef.current;
-    const text = new fabric.Textbox('Your Text Here', {
-      left: 50,
-      top: 200,
-      width: 200,
-      fontSize: 20,
-    });
-    canvas.add(text);
-    canvas.renderAll();
-    setHistory((prevHistory) => [...prevHistory, text]);
   };
 
   // Undo function
@@ -141,11 +338,18 @@ const CustomDesignPage = () => {
       <div className="design-tools">
         <h3>Design Tools</h3>
         <div className="tools-icons">
-          <i className="fa fa-square fa-2x" title="Rectangle" onClick={() => addShape('rectangle')}></i>
-          <i className="fa fa-circle fa-2x" title="Circle" onClick={() => addShape('circle')}></i>
-          <i className="fa fa-caret-up fa-2x" title="Triangle" onClick={() => addShape('triangle')}></i>
-          <i className="fa fa-font fa-2x" title="Add Text" onClick={addText}></i>
-
+         
+          {customDesigns.map((design, index) => (
+            <img
+              key={index}
+              src={design.image} 
+              alt={design.name}
+              className="design-icon"
+              title={design.name}
+              onClick={() => addCustomDesign(design.image)} 
+            />
+          ))}
+<h4>--------</h4>
           <i className="fa fa-pencil fa-2x" title="Pencil Tool" onClick={startDrawing}></i>
           <i className="fa fa-eraser fa-2x" title="Eraser Tool" onClick={startErasing}></i>
           <i className="fa fa-undo fa-2x" title="Undo" onClick={undo}></i>
@@ -162,3 +366,4 @@ const CustomDesignPage = () => {
 };
 
 export default CustomDesignPage;
+*/

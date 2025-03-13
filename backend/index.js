@@ -36,6 +36,18 @@ app.use('/api/cart', cartRoutes);
 const wishlistRoutes = require('./routes/wishlistRoutes');
 app.use('/api/wishlist', wishlistRoutes);
 
+const review = require('./routes/admin/review');
+app.use('/api/review', review);
+
+const customDesignsRoutes = require('./routes/Customize');
+app.use('/api/custom-designs', customDesignsRoutes); 
+
+const orderRoutes = require('./routes/admin/sales');
+app.use('/api/sales', orderRoutes);
+
+const stock = require('./routes/admin/stock');
+app.use('/api/stock', stock);
+
 app.get("/", (req, res) => {
     res.send("Express App is Running");
 });
@@ -110,6 +122,7 @@ const upload = multer({ storage: storage });
 
 // Serve Static Files
 app.use('/images', express.static('upload/images'));
+
 
 // Upload Endpoint
 app.post("/upload", upload.array('image', 10), (req, res) => {  // Handle multiple images
@@ -734,7 +747,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
       res.status(500).json({ message: "Error deleting user", error: err.message });
     }
   });
-  
+  /*
   const http = require('http');
   const socketIo = require('socket.io');
   const server = http.createServer(app);
@@ -755,7 +768,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
       console.log('user disconnected');
     });
   });
-
+*/
   app.post("/checkout", authenticateToken, async (req, res) => {
     const { items, shippingAddress, paymentMethod, totalPrice, userEmail } = req.body;
     const userId = req.user.id;

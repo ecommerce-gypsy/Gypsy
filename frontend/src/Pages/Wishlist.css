@@ -1,120 +1,85 @@
-/* Main container styling */
 .wishlist-container {
-  max-width: 1200px;
-  margin: 20px auto;
   padding: 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
-  text-align: center;
 }
 
-/* Empty wishlist message */
-.empty-wishlist {
-  text-align: center;
-  padding: 50px 20px;
+.wishlist-items h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.items-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 300px;
-}
-
-.empty-wishlist h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333333;
-  margin-bottom: 10px;
-}
-
-.empty-wishlist p {
-  font-size: 16px;
-  color: #555555;
-  margin-bottom: 20px;
-}
-
-.empty-heart {
-  font-size: 80px;
-  margin: 20px 0;
-  color: #d3d3d3;
-}
-
-/* Shop Now button */
-.shop-now-btn {
-  background-color: #ff6680;
-  color: #ffffff;
-  padding: 12px 24px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.shop-now-btn:hover {
-  background-color: #e45572;
-}
-
-/* Wishlist items */
-.wishlist-items {
-  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .wishlist-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  text-align: center; /* Center-align content */
-  position: relative; /* Required for the absolute positioning of the remove icon */
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
 .wishlist-image {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.wishlist-details {
-  flex-grow: 1;
-  text-align: center; /* Center product details */
+.wishlist-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
-.wishlist-details h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333333;
-}
-
-.wishlist-details p {
-  margin: 0;
-  font-size: 16px;
-  color: #555555;
-}
-
-/* Remove button styling */
-.remove-btn {
-  background-color: transparent;
+.move-to-cart-btn {
+  padding: 8px 12px;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
-  position: absolute; /* Position the remove button absolutely */
-  top: 50%; /* Vertically center the button */
-  right: 20px; /* Place it at the edge */
-  transform: translateY(-50%); /* Adjust for proper centering */
-  padding: 0; /* Remove default padding */
+  transition: background 0.3s;
+  background-color: #28a745;
+  color: white;
 }
 
-.remove-btn img {
+.move-to-cart-btn:hover {
+  background-color: #218838;
+}
+
+.remove-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  background-color: #28a745;
+  color: white;
+}.remove-btn:hover {
+  background-color: #218838;
+}
+
+.close-icon {
   width: 20px;
   height: 20px;
 }
 
-/* No hover effect on remove icon */
+.empty-wishlist {
+  text-align: center;
+  padding: 50px;
+}
+
+.shop-now-btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.shop-now-btn:hover {
+  background-color: #0056b3;
+}

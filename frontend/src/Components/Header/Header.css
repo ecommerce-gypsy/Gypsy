@@ -19,18 +19,18 @@
 
 /* Search Input Field */
 .search-input {
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 10px 14px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
-  width: 200px; /* Default width */
+  width: 250px; /* Increased width for better accessibility */
   transition: width 0.3s ease; /* Smooth expand effect */
 }
 
 /* Expand the search bar when open */
 .search-container input {
-  width: 200px;
+  width: 250px;
 }
 
 .search-container input:focus {
@@ -55,81 +55,94 @@
   position: absolute;
   top: 100%; /* Position below the search input */
   left: 0;
-  width: 200px; /* Same width as the search input */
+  width: 250px; /* Increased width for better readability */
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  max-height: 300px; /* Increased height */
+  max-height: 400px; /* Increased height for more results */
   overflow-y: auto; /* Enable scroll if results overflow */
   z-index: 10;
-  padding: 10px; /* Padding for consistent spacing */
+  padding: 15px 10px; /* More padding for a better design */
   box-sizing: border-box;
+  border-radius: 8px; /* Added rounded corners for a softer look */
+  transition: all 0.3s ease; /* Smooth transition for appearance */
+}
+
+/* Hover effect for search results */
+.search-results:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Result list container */
 .results-list {
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping for multiple items */
-  gap: 10px; /* Reduced gap for compactness */
-  padding: 10px;
+  flex-direction: column; /* Stack items vertically */
+  gap: 15px; /* Increased gap for better spacing */
 }
 
 /* Result item styling */
 .result-item {
   display: flex;
-  flex-direction: column; /* Stack image and text */
+  flex-direction: row; /* Align image and text horizontally */
+  justify-content: space-between;
   align-items: center;
-  justify-content: flex-start;
-  width: calc(50% - 10px); /* Two items per row */
-  padding: 8px;
-  border-radius: 8px;
+  padding: 10px;
   background-color: #f9f9f9;
+  border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   box-sizing: border-box;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer; /* Indicates the item is clickable */
+  pointer-events: auto; /* Ensure clicks are registered */
+}
+
+.result-item * {
+  pointer-events: none; /* Prevent child elements from blocking clicks */
+}
+
+.result-item:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Image styling */
 .product-image {
-  width: 100px; /* Adjusted width for smaller layout */
-  height: 100px; /* Adjusted height for smaller layout */
+  width: 80px; /* Larger images for clarity */
+  height: 80px;
   object-fit: cover; /* Ensure the image covers the area */
-  border-radius: 4px; /* Reduced radius */
-  margin-bottom: 8px; /* Reduced space between image and text */
+  border-radius: 4px;
+  margin-right: 15px; /* Increased space between image and text */
 }
 
 /* Info container */
 .result-info {
   display: flex;
-  flex-direction: row; /* Align text horizontally */
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
   width: 100%;
   text-align: left;
-  gap: 10px;
 }
 
 /* Product name */
 .product-name {
   font-weight: bold;
-  font-size: 14px; /* Adjusted font size */
+  font-size: 16px; /* Increased font size for better visibility */
   color: #333;
-  flex: 2; /* Allow more space for name */
 }
 
 /* Product price */
 .product-price {
   color: #007bff;
-  font-size: 14px; /* Reduced font size */
+  font-size: 14px;
   font-weight: bold;
-  flex: 1; /* Less space for price */
-  text-align: right;
+  margin-top: 5px; /* Added space between name and price */
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .search-input {
-    width: 150px; /* Smaller width for mobile */
+    width: 200px; /* Smaller width for mobile */
   }
 
   .header {
@@ -142,26 +155,24 @@
   }
 
   .search-results {
-    max-height: 150px;
-    width: 150px; /* Same width as the input for mobile */
+    width: 200px; /* Same width as the input for mobile */
   }
 
   .results-list {
-    gap: 8px; /* Smaller gap for mobile */
+    gap: 12px; /* Smaller gap for mobile */
   }
 
   .result-item {
-    width: calc(50% - 8px); /* Two items per row for mobile */
-    padding: 6px; /* Reduced padding */
+    padding: 8px; /* Reduced padding for mobile */
   }
 
   .product-image {
-    width: 80px;
-    height: 80px;
+    width: 60px; /* Smaller images for mobile */
+    height: 60px;
   }
 
   .product-name {
-    font-size: 12px; /* Adjusted font size for mobile */
+    font-size: 14px; /* Adjusted font size for mobile */
   }
 
   .product-price {

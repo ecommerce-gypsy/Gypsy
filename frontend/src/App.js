@@ -37,6 +37,13 @@ import ResetPasswordForm from './Pages/ResetPasswordForm';
 import OrderProcess from './Components/ordersummary/OrderSummary';
 import PaymentComponent from './Pages/PaymentComponent';
 import CheckoutModal from './Pages/CheckoutModal';
+import Adminreview from './Pages/ReviewList';
+import CustomDesignPage from './Pages/CustomDesignPage';
+import AddCustomDesign from './Pages/AddCustomDesign';
+import AdminOutOfStock from './Pages/AdminOutofStock';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import OrderConfirmation from './Pages/OrderConfirmation';
 
 
 const App = () => {
@@ -44,6 +51,7 @@ const App = () => {
   
     <BrowserRouter>
       <Navbar />
+      <ToastContainer />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -80,6 +88,12 @@ const App = () => {
       <Route path="/settings" element={<Settings/>}/>
       <Route path="marqueebanner" element={<MarqueeBanner/>}/>
       <Route path="/checkoutmodal" element={<CheckoutModal/>}/>
+      <Route path="/adminreview" element={<Adminreview/>}/>
+      <Route path="/CustomDesignPage" element={<CustomDesignPage/>}/>
+      <Route path="/AddCustomDesign" element={<AddCustomDesign/>}/>
+      <Route path="/AdminOutOfStock" element={<AdminOutOfStock/>}/>
+      <Route path="/order/:orderId" element={<OrderConfirmation />} />
+      
       </Routes>
       <Chatbot/>
     

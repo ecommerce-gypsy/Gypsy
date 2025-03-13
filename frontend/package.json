@@ -11,6 +11,8 @@
     "chart.js": "^4.4.7",
     "classnames": "^2.5.1",
     "cra-template": "1.2.0",
+    "fabric": "^6.6.1",
+    "font-awesome": "^4.7.0",
     "lucide-react": "^0.475.0",
     "math-intrinsics": "^1.1.0",
     "openai": "^4.85.4",
@@ -21,6 +23,7 @@
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.29.0",
     "react-scripts": "5.0.1",
+    "react-toastify": "^11.0.5",
     "recharts": "^2.15.1",
     "swiper": "^11.2.4",
     "web-vitals": "^4.2.4"

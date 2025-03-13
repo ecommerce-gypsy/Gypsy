@@ -90,7 +90,9 @@
 
 /* Summary Boxes with Light Professional Color Palette */
 .revenue-box,
-.orders-summary-box {
+.orders-summary-box,
+.pending-orders-box,
+.out-of-stock-box {
     flex: 1;
     padding: 25px;
     background: linear-gradient(135deg, #f0f5ff, #e6ebff);
@@ -102,14 +104,18 @@
 
 /* Hover effect for a subtle interaction */
 .revenue-box:hover,
-.orders-summary-box:hover {
+.orders-summary-box:hover,
+.pending-orders-box:hover,
+.out-of-stock-box:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
 }
 
 /* Summary Titles */
 .revenue-box h2,
-.orders-summary-box h2 {
+.orders-summary-box h2,
+.pending-orders-box h2,
+.out-of-stock-box h2 {
     font-size: 20px;
     color: #2c3e50;
     margin-bottom: 10px;
@@ -160,6 +166,16 @@
 
 .orders-box tbody tr:hover {
     background-color: #ddd;
+}
+
+/* Pending Orders Box Styling */
+.pending-orders-box {
+    background: linear-gradient(135deg, #f0f8e4, #e2f4d9); /* Soft greenish tone for pending orders */
+}
+
+/* Out of Stock Box Styling */
+.out-of-stock-box {
+    background: linear-gradient(135deg, #f9dcdc, #fce5e5); /* Soft pinkish/red tone for out-of-stock */
 }
 
 /* Responsive */

@@ -14,7 +14,7 @@ const OrderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
-        productName: { // ✅ Added product name
+        productName: { 
           type: String,
           required: true,
         },
@@ -36,12 +36,12 @@ const OrderSchema = new mongoose.Schema(
     ],
     customDesign: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'CustomDesign', // ✅ Ensure this references the correct model
+      ref: 'CustomDesign', 
       default: null,
     },
     shippingAddress: {
       name: { type: String, required: true },
-      phone: { type: String, required: false }, // ✅ Optional phone number
+      phone: { type: String, required: false }, 
       address: { type: String, required: true },
       city: { type: String, required: true },
       postalCode: { type: String, required: true },

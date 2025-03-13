@@ -55,7 +55,12 @@ const Sidebar = () => {
             <p>ADMIN ORDER </p>
         </div>
         </Link>
-      
+        <Link to={'/adminreview'} style={{textDecoration:"none"}}>
+        <div className="sidebar-item">
+             <img src={Order} alt="order" className="nav-order-icon" />
+            <p>ADMIN REVIEW </p>
+        </div>
+        </Link>
     </div>
   )
 }
