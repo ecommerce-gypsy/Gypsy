@@ -118,6 +118,8 @@ const AdminUser = () => {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Role</th>
+                  <th>Orders</th>
+                  <th>Registration Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -136,6 +138,8 @@ const AdminUser = () => {
                         <option value="admin">Admin</option>
                       </select>
                     </td>
+                    <td>{user.ordersCount}</td> {/* Display number of orders */}
+                    <td>{new Date(user.registrationDate).toLocaleDateString()}</td> {/* Display registration date */}
                     <td>
                       <div className="action-buttons">
                         <button className="icon-btn" onClick={() => openEditModal(user)}>

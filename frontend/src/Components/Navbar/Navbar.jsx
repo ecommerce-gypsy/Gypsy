@@ -10,13 +10,13 @@ import { CartContext } from "../../Context/CartContext";
 export const Navbar = () => {
   const { cartCount } = useContext(CartContext);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [userEmail, setUserEmail] = useState(""); // State to store the email
-  const navigate = useNavigate();
+  const [userEmail, setUserEmail] = useState(""); 
+ const navigate = useNavigate();
   // Handle logout function
   const handleLogout = () => {
-   localStorage.clear();
-   navigate("/authcard");
-    // Add your logout logic here
+    localStorage.clear();
+    window.location.reload(); 
+    navigate("/authcard");
   };
 
   // Fetch user email from localStorage when component mounts
@@ -37,7 +37,7 @@ export const Navbar = () => {
       {/* Navigation Menu */}
       <ul className="nav-menu">
         <li>
-          <Link to="/home">HOME</Link>
+          <Link to="/">HOME</Link>
         </li>
         <li>
           <Link to="/anklets">ANKLETS</Link>
@@ -48,12 +48,9 @@ export const Navbar = () => {
         <li>
           <Link to="/bracelets">BRACELETS</Link>
         </li>
-      <li>
+        <li>
           <Link to="/CustomDesignPage">CUSTOMIZATION</Link>
         </li>
-         {/* <li>
-          <Link to="/beaddesigner">CUSTOMIZATION</Link>
-        </li>*/}
       </ul>
 
       {/* Icons and User Section */}

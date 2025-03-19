@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization":` Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -72,7 +72,7 @@ export const CartProvider = ({ children }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization":`Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           productid: item.productid,

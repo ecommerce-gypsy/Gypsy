@@ -67,11 +67,15 @@ function Account() {
 
     fetchData();
   }, []);
-
   const handleLogout = () => {
+    // Clear all items in localStorage
     localStorage.clear();
-    navigate("/");
+    
+    // Redirect the user to the home page or login page
+    navigate("/authcard");
+    window.location.reload(); 
   };
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

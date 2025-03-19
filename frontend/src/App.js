@@ -40,6 +40,11 @@ import NeckPieceBanner from './Components/NeckPieceBanner/NeckPieceBanner';
 import ReviewList from './Pages/ReviewList';
 import Dashboard from './Pages/Dashboard';
 import CustomDesignPage from './Pages/CustomDesignPage';
+import AddCustomDesign from './Pages/AddCustomDesign';
+import AdminOutOfStock from './Pages/AdminOutofStock';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import OrderConfirmation from './Pages/OrderConfirmation';
 
 // Helper component to manage layout
 const Layout = ({ children }) => {
@@ -63,7 +68,7 @@ const App = () => {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/salesreport" element={<SalesReport />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
@@ -97,6 +102,11 @@ const App = () => {
           <Route path="/reviewlist" element={<ReviewList />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/customdesignpage" element={<CustomDesignPage />} />
+          <Route path="/AddCustomDesign" element={<AddCustomDesign/>}/>
+      <Route path="/AdminOutOfStock" element={<AdminOutOfStock/>}/>
+      <Route path="/order/:orderId" element={<OrderConfirmation />} />
+      <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
+
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -175,45 +175,47 @@ const AdminOrder = () => {
                     <th>Total Price</th>
                     <th>Status</th>
                     <th>Actions</th>
+                    <th>Orderd DAte</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order) => (
-                    <tr key={order._id}>
-                      <td>{order._id}</td>
-                      <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
-                      <td>${order.totalPrice}</td>
-                      <td>
-                        <select
-                          className="status-dropdown"
-                          value={order.orderStatus}
-                          onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                        >
-                          <option value="Pending">Pending</option>
-                          <option value="Processing">Processing</option>
-                          <option value="Shipped">Shipped</option>
-                          <option value="Delivered">Delivered</option>
-                          <option value="Cancelled">Cancelled</option>
-                        </select>
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          <button className="icon-btn" onClick={() => openEditModal(order)}>
-                            <FaEdit className="edit-icon" />
-                          </button>
-                          <button className="icon-btn" onClick={() => handleDelete(order._id)}>
-                            <FaTrash className="trash-icon" />
-                          </button>
-                          <button className="icon-btn" onClick={() => handleViewDetails(order._id)}>
-                            <FaEye className="view-icon" />
-                          </button>
-                        </div>
+  {orders.map((order) => (
+    <tr key={order._id}>
+      <td>{order._id}</td>
+      <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
+      <td>${order.totalPrice}</td>
+      <td>
+        <select
+          className="status-dropdown"
+          value={order.orderStatus}
+          onChange={(e) => handleStatusChange(order._id, e.target.value)}
+        >
+          <option value="Pending">Pending</option>
+          <option value="Processing">Processing</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </td>
+      <td>
+        <div className="action-buttons">
+          <button className="icon-btn" onClick={() => openEditModal(order)}>
+            <FaEdit className="edit-icon" />
+          </button>
+          <button className="icon-btn" onClick={() => handleDelete(order._id)}>
+            <FaTrash className="trash-icon" />
+          </button>
+          <button className="icon-btn" onClick={() => handleViewDetails(order._id)}>
+            <FaEye className="view-icon" />
+          </button>
+        </div>
+      </td>
+      <td>{new Date(order.orderedDate).toLocaleDateString()}</td> {/* Display ordered date */}
+      <td>{order.orderedTime}</td> {/* Display ordered time */}
+    </tr>
+  ))}
+</tbody>
 
-                      </td>
-                      
-                    </tr>
-                  ))}
-                </tbody>
               </table>
             </div>
           </>
@@ -225,7 +227,6 @@ const AdminOrder = () => {
             <div className="modal-header">
               <h2>Edit Order</h2>
               <button className="close-btn" onClick={closeEditModal}>X</button>
-              
             </div>
             <form onSubmit={handleEditSubmit}>
               <label>Status:</label>
@@ -241,7 +242,7 @@ const AdminOrder = () => {
               </select>
               <div className="modal-buttons">
                 <button className="save-btn" type="submit">Save Changes</button>
-                <button className="close-btn" type="button" onClick={closeEditModal}></button>
+                <button className="close-btn" type="button" onClick={closeEditModal}>Close</button>
               </div>
             </form>
           </div>

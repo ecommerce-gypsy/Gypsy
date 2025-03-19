@@ -3,11 +3,16 @@ import "./CheckoutModal.css";
 import { useNavigate } from "react-router-dom";
 
 const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }) => {
-  const navigate = useNavigate();  
-  console.log("CheckoutModal Props - calculateTotal:", subtotal); 
-  console.log("CheckoutModal Props - cart:", cart); 
+  const navigate = useNavigate();   
 
   const [shippingAddress, setShippingAddress] = useState({
+    name: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    country: "",
+  });
+  const [billingAddress, setBillingAddress] = useState({
     name: "",
     address: "",
     city: "",
@@ -19,6 +24,7 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
   const [loading, setLoading] = useState(false);
 
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [useBillingAsShipping, setUseBillingAsShipping] = useState(true); // Default to using shipping as billing
 
   // Load Razorpay script dynamically
   const loadRazorpayScript = () => {
@@ -37,6 +43,13 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
       setError("Please fill in all the shipping details.");
       return;
     }
+
+    // Check for billing address only if it's different from shipping
+    if (!useBillingAsShipping && (!billingAddress.name || !billingAddress.address || !billingAddress.city || !billingAddress.postalCode || !billingAddress.country)) {
+      setError("Please fill in all the billing details.");
+      return;
+    }
+
     if (!isTermsAccepted) {
       setError("You must accept the terms and conditions.");
       return;
@@ -65,6 +78,7 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
           currency: "INR",
           cart,
           shippingAddress,
+          billingAddress: useBillingAsShipping ? shippingAddress : billingAddress, // Send the appropriate billing address
           paymentMethod,
         }),
       });
@@ -117,6 +131,7 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
               price: item.new_price,
             })),
             shippingAddress,
+            billingAddress: useBillingAsShipping ? shippingAddress : billingAddress, 
             paymentMethod: paymentMethod, 
             totalPrice: total,
             userEmail: localStorage.getItem("user_email"),
@@ -138,7 +153,7 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
 
           if (checkoutResponse.ok) {
             handleCheckoutSuccess(checkoutResult.message);
-            navigate(`/order-confirmation/${checkoutResult.orderId}`);
+            navigate(`/order/${checkoutResult.orderId}`);
           } else {
             setError(checkoutResult.message || "Checkout failed.");
           }
@@ -233,11 +248,67 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
               />
             </div>
 
+            {/* Billing Information */}
+            <div className="billing-information">
+              <h3>Billing Information</h3>
+              <label>
+                <input
+                  type="radio"
+                  checked={useBillingAsShipping}
+                  onChange={() => setUseBillingAsShipping(true)}
+                />
+                Use Shipping Address as Billing Address
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  checked={!useBillingAsShipping}
+                  onChange={() => setUseBillingAsShipping(false)}
+                />
+                Use Different Billing Address
+              </label>
+
+              {/* Billing Address Fields (Only show if Use Different Billing Address is selected) */}
+              {!useBillingAsShipping && (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Billing Full Name"
+                    value={billingAddress.name}
+                    onChange={(e) => setBillingAddress({ ...billingAddress, name: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Billing Address"
+                    value={billingAddress.address}
+                    onChange={(e) => setBillingAddress({ ...billingAddress, address: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Billing City"
+                    value={billingAddress.city}
+                    onChange={(e) => setBillingAddress({ ...billingAddress, city: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Billing Postal Code"
+                    value={billingAddress.postalCode}
+                    onChange={(e) => setBillingAddress({ ...billingAddress, postalCode: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Billing Country"
+                    value={billingAddress.country}
+                    onChange={(e) => setBillingAddress({ ...billingAddress, country: e.target.value })}
+                  />
+                </>
+              )}
+            </div>
+
             {/* Payment Information */}
             <div className="payment-information">
               <h3>Payment Information</h3>
               <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-
                 <option value="Razorpay">Razorpay</option>
                 {/* Add more payment methods if needed */}
               </select>

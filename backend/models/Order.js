@@ -47,6 +47,14 @@ const OrderSchema = new mongoose.Schema(
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
     },
+    billingAddress: { 
+      name: { type: String, required: true },
+      phone: { type: String, required: false }, 
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true },
+    },
     paymentMethod: {
       type: String,
       enum: ['Razorpay', 'Credit Card', 'Debit Card', 'UPI'],
@@ -67,7 +75,17 @@ const OrderSchema = new mongoose.Schema(
       default: 'Pending',
     },
     razorpay_order_id: { type: String, required: false },
+    orderedDate: {
+      type: Date,
+      default: Date.now, // Automatically sets to current date and time
+    },
+    orderedTime: {
+      type: String,
+      default: () => new Date().toLocaleTimeString(), // Automatically sets to current time
+    }, // Optional for now
   },
+
+
   { timestamps: true } 
 );
 

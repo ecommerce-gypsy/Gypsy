@@ -347,7 +347,6 @@ app.get('/anklets', async (req, res) => {
     }
     
 });
-
 app.get('/anklets/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -399,6 +398,21 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
+app.get('/orderscon/:id',authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const order = await Order.findById(id)
+      .populate('userid', 'name email')
+      .populate('customDesign', 'name email');
+  console.log(order);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.status(200).json(order);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching order', error: err.message });
+  }
+});
 
 const Tok = (req, res, next) => {
     try {
@@ -706,7 +720,7 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
     }
   });
   
-  
+  /*
 
   app.get('/admin/users', async (req, res) => {
     try {
@@ -746,7 +760,80 @@ app.post('/cartss/add', authenticateToken, async (req, res) => {
     } catch (err) {
       res.status(500).json({ message: "Error deleting user", error: err.message });
     }
-  });
+  }); */
+ // Fetch all users with their order count and registration date
+app.get('/admin/users', async (req, res) => {
+  try {
+    // Fetch all users
+    const users = await Users.find(); 
+
+    // Fetch order count for each user
+    const usersWithOrders = await Promise.all(users.map(async (user) => {
+      // Count the number of orders for the user
+      const orderCount = await Order.countDocuments({ userid: user._id }); 
+
+      // Add the registration date (createdAt) from the User schema
+      const registrationDate = user.createdAt; 
+
+      return {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        ordersCount: orderCount, // Include the order count
+        registrationDate: registrationDate, // Include registration date
+      };
+    }));
+
+    res.status(200).json(usersWithOrders);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ message: "Error fetching users", error: err.message });
+  }
+});
+
+// Update user role for admin
+app.put('/admin/user/:id', async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.body;
+
+  // Validate role input
+  if (!['user', 'admin', 'vendor'].includes(role)) {
+    return res.status(400).json({ message: "Invalid role" });
+  }
+
+  try {
+    // Find and update user by id
+    const user = await Users.findByIdAndUpdate(id, { role }, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("Error updating user role:", err);
+    res.status(500).json({ message: "Error updating role", error: err.message });
+  }
+});
+
+// Delete user for admin
+app.delete('/admin/user/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find and delete user by id
+    const user = await Users.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    res.status(500).json({ message: "Error deleting user", error: err.message });
+  }
+});
   /*
   const http = require('http');
   const socketIo = require('socket.io');

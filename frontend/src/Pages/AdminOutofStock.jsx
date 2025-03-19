@@ -15,9 +15,9 @@ const AdminOutOfStock = () => {
   }, [statusFilter]);
 
   const fetchProducts = async () => {
-    let url = 'http://localhost:4000/api/stock'; // Default to fetch all products
+    let url = 'http://localhost:4000/api/stock'; 
     if (statusFilter !== 'all') {
-      url = `http://localhost:4000/api/stock`; // Adjust based on your filtering route
+      url = `http://localhost:4000/api/stock`; 
     }
 
     const token = localStorage.getItem('auth_token');
@@ -53,7 +53,7 @@ const AdminOutOfStock = () => {
 
     const updatedProductData = {
       ...editProduct,
-      stock: parseInt(editProduct.stock), // Ensure stock is an integer
+      stock: parseInt(editProduct.stock), 
     };
 
     try {
