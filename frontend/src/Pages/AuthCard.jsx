@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaGoogle, FaLinkedinIn } from "react-icons/fa";
 import "./AuthCard.css";
+import sign from "../Components/Assets/signin.png";
+
 
 const AuthCard = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -11,7 +13,12 @@ const AuthCard = () => {
   const navigate = useNavigate();
   const [passwordFocus, setPasswordFocus] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState("");
-  
+  useEffect(() => {
+    const authToken = localStorage.getItem("auth_token");
+    if (authToken) {
+      navigate("/account");  // Redirect to account page if already logged in
+    }
+  }, [navigate]);
   // Handle Input Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -148,12 +155,18 @@ const AuthCard = () => {
       <div className={`auth-card ${isSignUp ? "sign-up-mode" : ""}`}>
         {/* Left Panel */}
         <div className={`auth-left ${isSignUp ? "signup" : "signin"}`}>
-          <h2>{isSignUp ? "Welcome Back!" : "Hello, Friend!"}</h2>
+    
+        <img src={sign} alt="Sign Illustration" />
+
+          <h2>{isSignUp ? "Welcome Back!" : "Hello, Welcome to our Store... We're thrilled to have you here !"}</h2>
           <p>
             {isSignUp
               ? "To keep connected with us, please log in with your personal info."
-              : "Enter your details and start your journey with us!"}
+              : "Enter your details and start purchasing with us!"}
           </p>
+       
+ 
+
           <button onClick={() => setIsSignUp(!isSignUp)}>
             {isSignUp ? "SIGN IN" : "SIGN UP"}
           </button>

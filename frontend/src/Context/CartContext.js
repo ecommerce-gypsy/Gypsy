@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
-import { toast, ToastContainer } from "react-toastify"; // Make sure ToastContainer is imported
-import "react-toastify/dist/ReactToastify.css"; // Import CSS for toast
+import { toast, ToastContainer } from "react-toastify"; // Ensure ToastContainer is properly imported
+import "react-toastify/dist/ReactToastify.css"; // Import the toast CSS
 
 export const CartContext = createContext();
 
@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          "Authorization":` Bearer ${token}`,
         },
       });
 
@@ -40,7 +40,6 @@ export const CartProvider = ({ children }) => {
   }, [token]);
 
   useEffect(() => {
-    console.log("Fetching cart...");
     if (token) {
       setHasToken(true);
       fetchCart();
@@ -52,20 +51,18 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (item) => {
     const token = localStorage.getItem("auth_token");
     if (!hasToken) {
-      toast.error("No token found. Please log in."); // Use toast instead of alert
+      toast.error("No token found. Please log in.");
       return;
     }
 
-    // Check if the item is already in the cart
     const existingItem = cart.find((cartItem) => cartItem.productid === item.productid);
     if (existingItem) {
-      toast.info(`${item.productName} is already in your cart!`); // Use toast instead of alert
+      toast.info(`${item.productName} is already in your cart!`);
       return;
     }
 
-    // Check if the item is in stock
     if (item.stock <= 0) {
-      toast.error("This product is out of stock!"); // Use toast instead of alert
+      toast.error("This product is out of stock!");
       return;
     }
 
@@ -75,7 +72,7 @@ export const CartProvider = ({ children }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          "Authorization":`Bearer ${token}`,
         },
         body: JSON.stringify({
           productid: item.productid,
@@ -89,9 +86,7 @@ export const CartProvider = ({ children }) => {
 
       const data = await response.json();
       if (response.ok) {
-        toast.success(`${item.productName} added to cart!`); // Use toast instead of alert
-
-        // Add the item to the cart state only if it's not already there
+        toast.success(`${item.productName} added to cart!`);
         setCart((prevCart) => {
           if (!prevCart.find((cartItem) => cartItem.productid === item.productid)) {
             return [...prevCart, { ...item, quantity: 1 }];
@@ -110,15 +105,14 @@ export const CartProvider = ({ children }) => {
   };
 
   const emptyCart = () => {
-    setCart([]); // Clear cart from state
-    toast.info("Cart has been emptied!"); // Use toast instead of alert
+    setCart([]);
+    toast.info("Cart has been emptied!");
   };
 
   const removeItem = async (item) => {
     const productid = item.productid;
-    console.log("P ", productid);
     if (!hasToken) {
-      toast.error("No token found. Please log in."); // Use toast instead of alert
+      toast.error("No token found. Please log in.");
       return;
     }
 
@@ -135,8 +129,8 @@ export const CartProvider = ({ children }) => {
 
       const data = await response.json();
       if (response.ok) {
-        toast.success("Item removed from cart."); // Use toast instead of alert
-        setCart((prevCart) => prevCart.filter((item) => item.productid !== productid)); // Update cart state
+        toast.success("Item removed from cart.");
+        setCart((prevCart) => prevCart.filter((item) => item.productid !== productid));
       } else {
         setError(data.message || "Error removing product from cart.");
       }
@@ -150,23 +144,23 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = async (productid, newQuantity) => {
     if (!hasToken) {
-      toast.error("No token found. Please log in."); // Use toast instead of alert
+      toast.error("No token found. Please log in.");
       return;
     }
 
     const product = cart.find((item) => item.productid === productid);
     if (!product) {
-      toast.error("Product not found in cart."); // Use toast instead of alert
+      toast.error("Product not found in cart.");
       return;
     }
 
     if (newQuantity > product.stock) {
-      toast.error(`Only ${product.stock} items are available in stock.`); // Use toast instead of alert
+      toast.error(`Only ${product.stock} items are available in stock.`);
       return;
     }
 
     if (newQuantity <= 0) {
-      toast.error("Quantity must be greater than zero."); // Use toast instead of alert
+      toast.error("Quantity must be greater than zero.");
       return;
     }
 
@@ -188,7 +182,7 @@ export const CartProvider = ({ children }) => {
             item.productid === productid ? { ...item, quantity: newQuantity } : item
           )
         );
-        toast.success("Cart updated successfully."); // Use toast instead of alert
+        toast.success("Cart updated successfully.");
       } else {
         setError(data.message || "Error updating cart.");
       }
@@ -200,17 +194,22 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0); // Calculate total quantity in cart
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <>
-      {/* Render the toast container */}
-      <ToastContainer />
-      <CartContext.Provider
-        value={{ cart, addToCart, removeItem, updateQuantity, fetchCart, setCart, emptyCart, cartCount }}
-      >
-        {children}
-      </CartContext.Provider>
-    </>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeItem,
+        updateQuantity,
+        fetchCart,
+        setCart,
+        emptyCart,
+        cartCount,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
   );
 };

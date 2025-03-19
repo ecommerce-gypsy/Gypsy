@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../Assets/logo.png";
 import cart from "../Assets/cart.png";
@@ -10,12 +10,22 @@ import { CartContext } from "../../Context/CartContext";
 export const Navbar = () => {
   const { cartCount } = useContext(CartContext);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
+  const [userEmail, setUserEmail] = useState(""); // State to store the email
+  const navigate = useNavigate();
   // Handle logout function
   const handleLogout = () => {
-    console.log("Logging out..."); 
+   localStorage.clear();
+   navigate("/authcard");
     // Add your logout logic here
   };
+
+  // Fetch user email from localStorage when component mounts
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("user_email");
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+    }
+  }, []);
 
   return (
     <div className="navbar">
@@ -27,7 +37,7 @@ export const Navbar = () => {
       {/* Navigation Menu */}
       <ul className="nav-menu">
         <li>
-          <Link to="/">HOME</Link>
+          <Link to="/home">HOME</Link>
         </li>
         <li>
           <Link to="/anklets">ANKLETS</Link>
@@ -38,9 +48,12 @@ export const Navbar = () => {
         <li>
           <Link to="/bracelets">BRACELETS</Link>
         </li>
-        <li>
+      <li>
           <Link to="/CustomDesignPage">CUSTOMIZATION</Link>
         </li>
+         {/* <li>
+          <Link to="/beaddesigner">CUSTOMIZATION</Link>
+        </li>*/}
       </ul>
 
       {/* Icons and User Section */}
@@ -76,7 +89,8 @@ export const Navbar = () => {
             <div className="user-dropdown">
               <div className="user-info">
                 <img src={user} alt="User" />
-                <span>roshnivr06@gmail.com</span>
+                {/* Display user email dynamically from localStorage */}
+                <span>{userEmail || "Guest"}</span> {/* Fallback to "Guest" if email is not set */}
               </div>
               <hr />
               <Link to="/account" className="dropdown-item">

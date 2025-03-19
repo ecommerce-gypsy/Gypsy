@@ -9,6 +9,7 @@ import SearchBar from "../Components/SearchBar/SearchBar";
 import Filter from "../Components/Filter/Filter";
 import "./Anklets.css";
 import Breadcrumb from "../Components/Breadcrumb/Breadcrumb";
+
 const Anklets = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
   const { cart, addToCart } = useContext(CartContext);
@@ -83,11 +84,13 @@ const Anklets = () => {
   };
 
   return (
+  
     <div className="anklets-container">
+    
       <Breadcrumb />
       <AnkletBanner />
 
-      <h1>Welcome to the Anklets Collection!</h1>
+      <h1>Embrace your free spirit with our stunning anklet collection!</h1>
       {error && <p className="error-message">{error}</p>}
 
       <Filter />
@@ -105,9 +108,10 @@ const Anklets = () => {
       )}
 
      
-
-      <Footer />
+<Footer/>
+  
     </div>
+  
   );
 };
 

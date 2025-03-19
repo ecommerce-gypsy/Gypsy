@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar } from './Components/Navbar/Navbar';
-import  ReviewSummary  from './Components/ReviewSummary/ReviewSummary';
+import ReviewSummary from './Components/ReviewSummary/ReviewSummary';
 import { SalesReport } from './Components/SalesReport/SalesReport';
 import { LoginSignup } from './Pages/LoginSignup';
 import Cart from './Pages/Cart';
@@ -23,7 +23,6 @@ import { Gallery } from './Components/Gallery';
 import Header from './Components/Header/Header';
 import FAQ from './Components/Faq';
 import ReviewSection from './Components/ReviewSection';
-import Checkout from './Pages/Checkout';
 import AddressForm from './Components/AddressForm/AddressForm';
 import AdminUser from './Pages/AdminUser';
 import AdminPayment from './Pages/AdminPayment';
@@ -32,71 +31,74 @@ import AuthCard from './Pages/AuthCard';
 import Chatbot from './Components/Chatbot/Chatbot';
 import Settings from './Pages/Settings';
 import MarqueeBanner from './Components/MarqueeBanner/MarqueeBanner';
-import ResetPassword from "./Pages/ResetPassword";
+import ResetPassword from './Pages/ResetPassword';
 import ResetPasswordForm from './Pages/ResetPasswordForm';
 import OrderProcess from './Components/ordersummary/OrderSummary';
 import PaymentComponent from './Pages/PaymentComponent';
 import CheckoutModal from './Pages/CheckoutModal';
-import Adminreview from './Pages/ReviewList';
+import NeckPieceBanner from './Components/NeckPieceBanner/NeckPieceBanner';
+import ReviewList from './Pages/ReviewList';
+import Dashboard from './Pages/Dashboard';
 import CustomDesignPage from './Pages/CustomDesignPage';
-import AddCustomDesign from './Pages/AddCustomDesign';
-import AdminOutOfStock from './Pages/AdminOutofStock';
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import OrderConfirmation from './Pages/OrderConfirmation';
 
+// Helper component to manage layout
+const Layout = ({ children }) => {
+  const location = useLocation();
+  
+  // Hide Navbar, Header, and Chatbot on /login and /admin pages
+  const hideLayout = location.pathname === '/login' || location.pathname === '/admin'|| location.pathname === '/dashboard'|| location.pathname === '/addproduct'|| location.pathname === '/listproduct'|| location.pathname === '/adminuser'|| location.pathname === '/adminorder'|| location.pathname === '/reviewlist';
+
+  return (
+    <>
+      {!hideLayout && <Navbar />}
+      {!hideLayout && <Header />}
+      {children}
+      {!hideLayout && <Chatbot />}
+    </>
+  );
+};
 
 const App = () => {
   return (
-  
     <BrowserRouter>
-      <Navbar />
-      <ToastContainer />
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/salesreport" element={<SalesReport />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<LoginSignup />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/addproduct" element={<AddProduct />} />
-        <Route path="/listproduct" element={<ListProduct />} />
-        <Route path="/sidebar" element={<Sidebar />} />
-        <Route path="/anklets" element={<Anklets />} />
-        <Route path="/ankletbanner" element={<AnkletBanner />} />
-        <Route path="/AddressForm" element={<AddressForm />} />
-        <Route path="/bracelets" element={<Bracelets />} />
-        <Route path="/review" element={<ReviewSummary />} />
-        <Route path="/neckpieces" element={<Neckpieces />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/custproduct" element={<CustProduct />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/reviewsection" element={<ReviewSection />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/ordersummary" element={<OrderProcess/>}/>
-        <Route path="/PaymentComponent" element={<PaymentComponent/>}/>
-        {/* Admin Routes */}
-        <Route path="/adminuser" element={<AdminUser />} />
-        <Route path="/adminpayment" element={<AdminPayment />} />
-        <Route path="/adminorder" element={<AdminOrder />} />
-        <Route path="/authcard" element={<AuthCard />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/reset-password-form" element={<ResetPasswordForm />} />
-      <Route path="/settings" element={<Settings/>}/>
-      <Route path="marqueebanner" element={<MarqueeBanner/>}/>
-      <Route path="/checkoutmodal" element={<CheckoutModal/>}/>
-      <Route path="/adminreview" element={<Adminreview/>}/>
-      <Route path="/CustomDesignPage" element={<CustomDesignPage/>}/>
-      <Route path="/AddCustomDesign" element={<AddCustomDesign/>}/>
-      <Route path="/AdminOutOfStock" element={<AdminOutOfStock/>}/>
-      <Route path="/order/:orderId" element={<OrderConfirmation />} />
-      
-      </Routes>
-      <Chatbot/>
-    
+      <Layout>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/salesreport" element={<SalesReport />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<LoginSignup />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/addproduct" element={<AddProduct />} />
+          <Route path="/listproduct" element={<ListProduct />} />
+          <Route path="/sidebar" element={<Sidebar />} />
+          <Route path="/anklets" element={<Anklets />} />
+          <Route path="/ankletbanner" element={<AnkletBanner />} />
+          <Route path="/AddressForm" element={<AddressForm />} />
+          <Route path="/bracelets" element={<Bracelets />} />
+          <Route path="/review" element={<ReviewSummary />} />
+          <Route path="/neckpieces" element={<Neckpieces />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/custproduct" element={<CustProduct />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/reviewsection" element={<ReviewSection />} />
+          <Route path="/adminuser" element={<AdminUser />} />
+          <Route path="/adminpayment" element={<AdminPayment />} />
+          <Route path="/adminorder" element={<AdminOrder />} />
+          <Route path="/authcard" element={<AuthCard />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/reset-password-form" element={<ResetPasswordForm />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/marqueebanner" element={<MarqueeBanner />} />
+          <Route path="/checkoutmodal" element={<CheckoutModal />} />
+          <Route path="/neckpiecebanner" element={<NeckPieceBanner />} />
+          <Route path="/reviewlist" element={<ReviewList />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/customdesignpage" element={<CustomDesignPage />} />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 };

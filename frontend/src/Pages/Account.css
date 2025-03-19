@@ -1,14 +1,15 @@
 /* General Styles */
 .account-container {
-  width: 100%;
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 30px;
+  width: 100vw; /* Full viewport width */
+  max-width: 100%; /* No max width limit */
+  margin: 0; /* Remove margin */
+  padding: 30px; /* Keep padding for inner content */
   background: #ffffff;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  box-shadow: none; /* Remove shadow if unnecessary */
+  border-radius: 0; /* Remove border-radius to fully extend */
   font-family: 'Poppins', sans-serif;
 }
+
 
 /* Account Header */
 .account-header {

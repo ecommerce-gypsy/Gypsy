@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
-import './AddProduct.css';
-import Sidebar from '../Sidebar/Sidebar';
+import React, { useState } from "react";
+import "./AddProduct.css";
+import Sidebar from "../Sidebar/Sidebar";
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
-    productName: '',
-    description: '',
-    new_price: '',
-    old_price: '',
-    stock: '',
-    category: '',
-    subcategory: '',
+    productName: "",
+    description: "",
+    new_price: "",
+    old_price: "",
+    stock: "",
+    category: "",
+    subcategory: "",
     specifications: {
-      material: '',
-      beadSize: '',
-      beadShape: '',
-      stringingMaterial: '',
-      closureType: '',
-      weight: '',
+      material: "",
+      beadSize: "",
+      beadShape: "",
+      stringingMaterial: "",
+      closureType: "",
+      weight: "",
     },
     customization: false,
     colorOptions: [],
-    length: '',
+    length: "",
     images: [],
     ratings: [],
     isActive: true,
@@ -29,197 +29,190 @@ const AddProduct = () => {
 
   const [images, setImages] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Handle input change for general fields and specification fields
+  // Handle input change for general fields and specifications
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+
     if (name in formData.specifications) {
-      setFormData({
-        ...formData,
-        specifications: {
-          ...formData.specifications,
-          [name]: value,
-        },
-      });
-    } else if (name === 'customization') {
-      setFormData({
-        ...formData,
-        [name]: e.target.checked,
-      });
+      setFormData((prev) => ({
+        ...prev,
+        specifications: { ...prev.specifications, [name]: value },
+      }));
+    } else if (type === "checkbox") {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
+    // Clear errors when user types
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  // Add color options
-  const handleColorInput = () => {
-    setFormData({
-      ...formData,
-      colorOptions: [...formData.colorOptions, ''],
-    });
+  // Add a new color option
+  const handleAddColor = () => {
+    setFormData((prev) => ({
+      ...prev,
+      colorOptions: [...prev.colorOptions, ""],
+    }));
   };
 
-  // Handle change for each color input
+  // Update color value
   const handleColorChange = (index, e) => {
-    const newColorOptions = [...formData.colorOptions];
-    newColorOptions[index] = e.target.value;
-    setFormData({
-      ...formData,
-      colorOptions: newColorOptions,
-    });
+    const newColors = [...formData.colorOptions];
+    newColors[index] = e.target.value;
+    setFormData((prev) => ({ ...prev, colorOptions: newColors }));
   };
 
   // Remove a color option
-  const handleColorRemove = (index) => {
-    const newColorOptions = [...formData.colorOptions];
-    newColorOptions.splice(index, 1);
-    setFormData({
-      ...formData,
-      colorOptions: newColorOptions,
-    });
+  const handleRemoveColor = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      colorOptions: prev.colorOptions.filter((_, i) => i !== index),
+    }));
   };
 
-  // Handle image selection and preview
+  // Handle image upload and preview
   const imageHandler = (e) => {
     const files = Array.from(e.target.files);
     setImages(files);
-    const previews = files.map((file) => URL.createObjectURL(file));
-    setPreviewUrls(previews);
+    setPreviewUrls(files.map((file) => URL.createObjectURL(file)));
+  };
+
+  // Validate form fields
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.productName.trim()) newErrors.productName = "Product name is required.";
+    if (!formData.description.trim()) newErrors.description = "Description is required.";
+    if (!formData.new_price) newErrors.new_price = "Price is required.";
+    if (!formData.category) newErrors.category = "Category is required.";
+    if (!formData.subcategory) newErrors.subcategory = "Subcategory is required.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const {
-      productName,
-      description,
-      category,
-      subcategory,
-      specifications,
-      customization,
-      colorOptions,
-      length,
-      old_price,
-      new_price,
-      stock,
-    } = formData;
+    if (!validateForm()) return;
+
+    setIsLoading(true);
 
     const formDataToSubmit = new FormData();
-    images.forEach((file) => {
-      formDataToSubmit.append('image', file);
-    });
+    images.forEach((file) => formDataToSubmit.append("image", file));
 
     try {
-      // Image upload request
-      const imageResponse = await fetch('http://localhost:4000/upload', {
-        method: 'POST',
+      const imageResponse = await fetch("http://localhost:4000/upload", {
+        method: "POST",
         body: formDataToSubmit,
       });
 
-      if (!imageResponse.ok) {
-        throw new Error('Image upload failed');
-      }
+      if (!imageResponse.ok) throw new Error("Image upload failed");
 
-      const imageData = await imageResponse.json(); // Only read response once here
+      const imageData = await imageResponse.json();
 
       const product = {
-        productName,
-        description,
-        category,
-        subcategory,
-        specifications,
-        customization,
-        colorOptions,
-        length,
-        old_price,
-        new_price,
-        stock,
-        ratings: [],
-        isActive: formData.isActive,
-        images: imageData.image_urls, // Use image URLs from imageData
+        ...formData,
+        images: imageData.image_urls,
       };
 
-      // Product creation request
-      const productResponse = await fetch('http://localhost:4000/addproductss', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const productResponse = await fetch("http://localhost:4000/addproductss", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product),
       });
 
+      const productData = await productResponse.json();
 
-      const productData = await productResponse.json(); // Only read response once here
       if (productData.success) {
-        alert('Product added successfully!');
+        alert("Product added successfully!");
         resetForm();
       } else {
-        alert('Failed to add product');
+        alert("Failed to add product");
       }
     } catch (error) {
-      console.error("Error:", error); // Log the error message
-      alert('An error occurred while adding the product. Please check the console for details.');
+      console.error("Error:", error);
+      alert("An error occurred while adding the product.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Reset the form after successful submission
+  // Reset the form
   const resetForm = () => {
     setFormData({
-      productName: '',
-      description: '',
-      new_price: '',
-      old_price: '',
-      stock: '',
-      category: '',
-      subcategory: '',
+      productName: "",
+      description: "",
+      new_price: "",
+      old_price: "",
+      stock: "",
+      category: "",
+      subcategory: "",
       specifications: {
-        material: '',
-        beadSize: '',
-        beadShape: '',
-        stringingMaterial: '',
-        closureType: '',
-        weight: '',
+        material: "",
+        beadSize: "",
+        beadShape: "",
+        stringingMaterial: "",
+        closureType: "",
+        weight: "",
       },
       customization: false,
       colorOptions: [],
-      length: '',
+      length: "",
       images: [],
       ratings: [],
       isActive: true,
     });
     setImages([]);
     setPreviewUrls([]);
+    setErrors({});
+  };
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
   };
 
   return (
-    <div className="add-product-container">
+    <div className={`add-product-container ${isDarkMode ? "dark-mode" : ""}`}>
       <Sidebar />
       <div className="add-product">
-        <form onSubmit={handleSubmit}>
-          {/* Product Name */}
-          <div className="addproduct-itemfield">
-            <p>Product Name</p>
-            <input
-              type="text"
-              name="productName"
-              value={formData.productName}
-              onChange={handleInputChange}
-            />
-          </div>
+        {/* Theme Toggle Button */}
+        <div className="theme-toggle-container">
+          <button className="theme-toggle" onClick={toggleDarkMode}>
+            {isDarkMode ? "🌙" : "☀️"}
+          </button>
+        </div>
 
-          {/* Description */}
-          <div className="addproduct-itemfield">
-            <p>Description</p>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-            />
-          </div>
+        <form onSubmit={handleSubmit}>
+          <h2 className="add-title">Add New Product</h2>
+
+          {/* Input Fields */}
+          {[
+            "productName",
+            "description",
+            "new_price",
+            "old_price",
+            "stock",
+            "length",
+          ].map((field) => (
+            <div key={field} className="addproduct-itemfield">
+              <p>{field.replace("_", " ").toUpperCase()}</p>
+              <input
+                type="text"
+                name={field}
+                value={formData[field]}
+                onChange={handleInputChange}
+              />
+              {errors[field] && <span className="error-message">{errors[field]}</span>}
+            </div>
+          ))}
 
           {/* Category */}
           <div className="addproduct-itemfield">
@@ -235,6 +228,7 @@ const AddProduct = () => {
               <option value="bracelets">Bracelets</option>
               <option value="rings">Rings</option>
             </select>
+            {errors.category && <span className="error-message">{errors.category}</span>}
           </div>
 
           {/* Subcategory */}
@@ -250,11 +244,12 @@ const AddProduct = () => {
               <option value="multistranded">Multistranded</option>
               <option value="minimalistic">Minimalistic</option>
             </select>
+            {errors.subcategory && <span className="error-message">{errors.subcategory}</span>}
           </div>
 
           {/* Specifications */}
           {Object.entries(formData.specifications).map(([key, value]) => (
-            <div className="addproduct-itemfield" key={key}>
+            <div key={key} className="addproduct-itemfield">
               <p>{key.charAt(0).toUpperCase() + key.slice(1)}</p>
               <input
                 type="text"
@@ -265,49 +260,16 @@ const AddProduct = () => {
             </div>
           ))}
 
-          {/* New Price */}
-          <div className="addproduct-itemfield">
-            <p>New Price</p>
-            <input
-              type="text"
-              name="new_price"
-              value={formData.new_price}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          {/* Old Price */}
-          <div className="addproduct-itemfield">
-            <p>Old Price</p>
-            <input
-              type="text"
-              name="old_price"
-              value={formData.old_price}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          {/* Stock */}
-          <div className="addproduct-itemfield">
-            <p>Stock</p>
-            <input
-              type="text"
-              name="stock"
-              value={formData.stock}
-              onChange={handleInputChange}
-            />
-          </div>
-
           {/* Customization */}
           <div className="addproduct-itemfield">
-            <label>
-              Allow Customization
+            <label className="customization-label">
               <input
                 type="checkbox"
                 name="customization"
                 checked={formData.customization}
                 onChange={handleInputChange}
               />
+              <span>Allow Customization</span>
             </label>
           </div>
 
@@ -315,34 +277,23 @@ const AddProduct = () => {
           <div className="addproduct-itemfield">
             <p>Color Options</p>
             {formData.colorOptions.map((color, index) => (
-              <div key={index}>
+              <div key={index} className="color-input-group">
                 <input
                   type="text"
                   value={color}
                   onChange={(e) => handleColorChange(index, e)}
                 />
-                <button type="button" onClick={() => handleColorRemove(index)}>
+                <button type="button" onClick={() => handleRemoveColor(index)}>
                   Remove
                 </button>
               </div>
             ))}
-            <button type="button" onClick={handleColorInput}>
+            <button type="button" onClick={handleAddColor}>
               Add Color
             </button>
           </div>
 
-          {/* Length */}
-          <div className="addproduct-itemfield">
-            <p>Length</p>
-            <input
-              type="text"
-              name="length"
-              value={formData.length}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          {/* Images */}
+          {/* Image Upload */}
           <div className="addproduct-itemfield">
             <p>Images</p>
             <input type="file" multiple onChange={imageHandler} />
@@ -353,9 +304,9 @@ const AddProduct = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
-          <button type="submit" className="addproduct-submit">
-            Add Product
+          {/* Submit */}
+          <button type="submit" className="addproduct-submit" disabled={isLoading}>
+            {isLoading ? "Adding Product..." : "Add Product"}
           </button>
         </form>
       </div>
@@ -364,220 +315,3 @@ const AddProduct = () => {
 };
 
 export default AddProduct;
-
-
-/*
-import React, { useState } from 'react';
-import './AddProduct.css';
-import upload_area from '../Assets/upload_area.png'; 
-//import Sidebar from "../Components/Sidebar/Sidebar";// Ensure this path is correct
-
-const AddProduct = () => {
-  const [images, setImages] = useState([]); // Array to store actual file objects
-  const [previewUrls, setPreviewUrls] = useState([]); // Array to store preview URLs
-  const [loading, setLoading] = useState(false); // Loading state for button
-  const [productDetails, setProductDetails] = useState({
-    name: '',
-    description: '',
-    price: '',
-    old_price: '',
-    new_price: '',
-    stock: '',
-    category: 'anklets',
-  });
-
-  // Handler for multiple image uploads
-  const imageHandler = (e) => {
-    const files = Array.from(e.target.files); // Convert FileList to an array
-    setImages(files); // Store actual file objects for backend
-    const previews = files.map((file) => URL.createObjectURL(file)); // Generate preview URLs
-    setPreviewUrls(previews);
-  };
-
-  // Handler for form input changes
-  const changeHandler = (e) => {
-    setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
-  };
-
-  // Function to add the product
-  const Add_Product = async () => {
-    setLoading(true);
-    try {
-      // Create FormData for image upload
-      const formData = new FormData();
-      images.forEach((file) => {
-        formData.append('image', file);
-      });
-  
-      // Upload images
-      const imageResponse = await fetch('http://localhost:4000/upload', {
-        method: 'POST',
-        body: formData,
-      });
-  
-      if (!imageResponse.ok) {
-        const errorMessage = await imageResponse.text();
-        alert(`Image upload failed: ${errorMessage}`);
-        return;
-      }
-  
-      const imageData = await imageResponse.json();
-  
-      const product = { 
-        ...productDetails, 
-        images: imageData.image_urls // Ensure this matches your backend response
-      };
-  
-      // Add product
-      const productResponse = await fetch('http://localhost:4000/addproduct', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(product),
-      });
-  
-      if (!productResponse.ok) {
-        const errorMessage = await productResponse.text();
-        alert(`Failed to add product: ${errorMessage}`);
-        return;
-      }
-  
-      const productData = await productResponse.json();
-      if (productData.success) {
-        alert('Product added successfully!');
-        // Reset form
-        setProductDetails({
-          name: '',
-          description: '',
-          price: '',
-          old_price: '',
-          new_price: '',
-          stock: '',
-          category: 'anklets',
-        });
-        setImages([]);
-        setPreviewUrls([]);
-      } else {
-        alert('Failed to add product');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert(`Error: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  return (
-    
-    <div className="add-product">
-      
-      
-      <div className="addproduct-itemfield">
-        <p>Product Title</p>
-        <input
-          value={productDetails.name}
-          onChange={changeHandler}
-          type="text"
-          name="name"
-          placeholder="Type here"
-        />
-      </div>
-      <div className="addproduct-itemfield">
-        <p>Description</p>
-        <textarea
-          value={productDetails.description}
-          onChange={changeHandler}
-          name="description"
-          placeholder="Product description"
-        />
-      </div>
-      <div className="addproduct-price">
-        
-        <div className="addproduct-itemfield">
-          <p>Old Price</p>
-          <input
-            value={productDetails.old_price}
-            onChange={changeHandler}
-            type="number"
-            name="old_price"
-            placeholder="Old Price"
-          />
-        </div>
-        <div className="addproduct-itemfield">
-          <p>New Price</p>
-          <input
-            value={productDetails.new_price}
-            onChange={changeHandler}
-            type="number"
-            name="new_price"
-            placeholder="New Price"
-          />
-        </div>
-        <div className="addproduct-itemfield">
-          <p>Stock Quantity</p>
-          <input
-            value={productDetails.stock}
-            onChange={changeHandler}
-            type="number"
-            name="stock"
-            placeholder="Stock Quantity"
-          />
-        </div>
-      </div>
-      <div className="addproduct-itemfield">
-        <p>Product Category</p>
-        <select
-          value={productDetails.category}
-          onChange={changeHandler}
-          name="category"
-          className="add-product-selector"
-        >
-          <option value="anklets">ANKLETS</option>
-          <option value="bracelets">BRACELETS</option>
-          <option value="neckpieces">NECKPIECES</option>
-          <option value="rings">RINGS</option>
-        </select>
-      </div>
-      <div className="addproduct-itemfield">
-        <label htmlFor="file-input">
-          {previewUrls.length > 0 ? (
-            previewUrls.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                className="addproduct-thumnail-img"
-                alt={`Preview ${index}`}
-              />
-            ))
-          ) : (
-            <img
-              src={upload_area}
-              className="addproduct-thumnail-img"
-              alt="Upload thumbnail"
-            />
-          )}
-        </label>
-        <input
-          onChange={imageHandler}
-          type="file"
-          name="image"
-          id="file-input"
-          multiple
-          hidden
-        />
-      </div>
-      <button
-        onClick={Add_Product}
-        className="addproduct-btn"
-        disabled={loading}
-      >
-        {loading ? 'Adding...' : 'ADD'}
-      </button>
-    </div>
-  );
-};
-
-export default AddProduct;
-*/

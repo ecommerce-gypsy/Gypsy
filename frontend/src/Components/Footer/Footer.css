@@ -1,9 +1,9 @@
 .footer {
-  background-color: #f9f9f9; /* Light gray background for a clean look */
-  padding: 50px 20px;
-  border-top: 1px solid #dcdcdc; /* Soft border for separation */
-  font-family: 'Roboto', sans-serif; /* Professional and modern font */
-  color: #444; /* Slightly darker text for readability */
+  background: linear-gradient(90deg, #5b6780, #b76e8b); /* Matching header gradient */
+  padding: 30px 20px; /* Reduced height for a sleeker look */
+  border-top: none; /* Remove border for a cleaner design */
+  font-family: 'Roboto', sans-serif; /* Keep a professional font */
+  color: #fff; /* White text for better contrast */
 }
 
 .footer-container {
@@ -12,132 +12,113 @@
   flex-wrap: wrap;
   gap: 30px;
   max-width: 1200px;
-  margin: 0 auto; /* Center the footer content */
+  margin: 0 auto;
 }
 
 .footer-section {
   flex: 1;
   min-width: 220px;
-  margin: 10px;
 }
 
 .footer-section h3 {
-  font-size: 20px;
-  margin-bottom: 20px;
-  color: #2d2d2d; /* Darker heading for emphasis */
-  font-weight: 700;
-  border-bottom: 2px solid #87ceeb; /* Soft blue underline */
-  padding-bottom: 8px;
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Subtle white underline */
+  padding-bottom: 5px;
 }
 
 .footer-section ul {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .footer-section ul li {
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 .footer-section ul li a {
   text-decoration: none;
-  color: #666; /* Neutral link color */
-  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8); /* Softer white links */
   transition: color 0.3s ease;
 }
 
 .footer-section ul li a:hover {
-  color: #4682b4; /* Slightly darker blue hover effect */
+  color: #ffffff; /* Pure white on hover */
 }
 
 .footer-bottom {
-  margin-top: 40px;
+  margin-top: 20px;
   text-align: center;
   font-size: 14px;
-  color: #888; /* Softer text for footer bottom */
-  padding-top: 20px;
-  border-top: 1px solid #dcdcdc;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .subscription-form {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .subscription-form input {
-  padding: 12px;
-  border: 1px solid #ccc; /* Light border for inputs */
-  border-radius: 30px; /* Smooth rounded design */
-  width: 320px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 25px;
+  width: 300px;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #fff; /* White background for inputs */
+  background-color: transparent; /* Transparent input background */
+  color: white;
 }
 
-.subscription-form input:focus {
-  border-color: #87ceeb;
-  box-shadow: 0 0 5px rgba(135, 206, 235, 0.4); /* Subtle blue glow */
+.subscription-form input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .subscription-form button {
-  padding: 12px 25px;
-  background-color: #4682b4; /* Light blue for buttons */
-  color: #fff; /* White text for contrast */
-  font-size: 15px;
+  padding: 10px 20px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
   border: none;
-  border-radius: 30px;
-  margin-left: 15px;
+  border-radius: 25px;
+  margin-left: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .subscription-form button:hover {
-  background-color: #4169e1; /* Slightly darker blue for hover */
-  box-shadow: 0 4px 12px rgba(65, 105, 225, 0.3);
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .footer-socials {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .footer-socials .social-icon {
-  margin: 0 12px;
+  margin: 0 10px;
   text-decoration: none;
-  color: #666; /* Neutral link color */
-  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .footer-socials .social-icon:hover {
-  color: #4682b4; /* Blue hover effect */
-  transform: scale(1.15); /* Subtle zoom for hover effect */
+  color: white; /* Brighter hover */
+  transform: scale(1.1); /* Smooth zoom effect */
 }
 
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
-    align-items: center;
     text-align: center;
-  }
-
-  .footer-section {
-    margin-bottom: 20px;
   }
 
   .subscription-form {
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
   }
 
-  .subscription-form input {
-    width: 100%;
-  }
-
+  .subscription-form input,
   .subscription-form button {
     width: 100%;
   }

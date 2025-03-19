@@ -69,7 +69,7 @@ function Account() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("auth_token");
+    localStorage.clear();
     navigate("/");
   };
 

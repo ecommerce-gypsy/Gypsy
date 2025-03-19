@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 75vh;
+  min-height: 100vh; /* Full height for centering */
   background-color: #f3f4f6;
   padding: 20px;
   box-sizing: border-box;
@@ -14,6 +14,7 @@
   width: 100%;
   max-width: 900px;
   display: flex;
+  align-items: stretch; /* Ensures equal height of both panels */
   background-color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -32,6 +33,14 @@
   color: white;
   transition: all 0.5s ease-in-out;
   min-height: 100%;
+  position: relative;
+  text-align: center;
+}
+
+.auth-left img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain; /* Prevents distortion */
 }
 
 /* Background Gradient for Left Panel */
@@ -81,6 +90,7 @@
   flex-direction: column;
   justify-content: center;
   min-height: 100%;
+  position: relative;
 }
 
 /* Form Header */
@@ -93,7 +103,8 @@
 /* Social Icons */
 .auth-social {
   display: flex;
-  gap: 10px;
+  justify-content: center; /* Align icons */
+  gap: 15px; /* Add spacing */
   margin-bottom: 20px;
 }
 
@@ -106,6 +117,9 @@
   font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .auth-social button:hover {
@@ -140,7 +154,7 @@
   background-color: #be123c;
 }
 
-/* Forgot Password (Appears on Hover) */
+/* Forgot Password */
 .forgot-password {
   color: #007bff;
   cursor: pointer;
@@ -156,40 +170,12 @@
   color: #0056b3;
 }
 
-.Super-Admin-Dashboard {
-  color: #007bff;
-  cursor: pointer;
-  text-align: left;
-  font-size: 14px;
-  margin-top: 5px;
-  text-decoration: underline;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.Super-Admin-Dashboard:hover {
-  color: #0056b3;
-}
-
-.Admin-Dashboard {
-  color: #007bff;
-  cursor: pointer;
-  text-align: center;
-  font-size: 14px;
-  margin-top: 5px;
-  text-decoration: underline;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.Admin-Dashboard:hover {
-  color: #0056b3;
-}
-
+/* Dashboard Links */
+.Super-Admin-Dashboard,
+.Admin-Dashboard,
 .Vendor-Dashboard {
   color: #007bff;
   cursor: pointer;
-  text-align: right;
   font-size: 14px;
   margin-top: 5px;
   text-decoration: underline;
@@ -197,28 +183,23 @@
   transition: opacity 0.3s ease-in-out;
 }
 
+.Super-Admin-Dashboard:hover,
+.Admin-Dashboard:hover,
 .Vendor-Dashboard:hover {
   color: #0056b3;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .auth-card {
-    flex-direction: column;
-    max-width: 90%;
-  }
+.Super-Admin-Dashboard {
+  text-align: left;
+}
 
-  .auth-left,
-  .auth-right {
-    width: 100%;
-    padding: 30px;
-    text-align: center;
-  }
+.Admin-Dashboard {
+  text-align: center;
+}
 
-  .auth-left button {
-    margin-top: 15px;
-  }
-}/* Password Strength and Validation Tips */
+.Vendor-Dashboard {
+  text-align: right;
+}
 
 /* Password Strength and Validation Tips */
 .password-strength-tips {
@@ -249,14 +230,13 @@
   align-items: center;
 }
 
-/* Password Strength Box Container (Box and Text Together) */
+/* Password Strength Box */
 .password-strength-container {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
 
-/* Password Strength Box */
 .password-strength-box {
   width: 100%;
   height: 8px;
@@ -266,23 +246,21 @@
   margin-right: 10px;
 }
 
-/* Different password strength colors */
 .password-strength-box.weak {
   width: 30%;
-  background-color: #f87171; /* Red */
+  background-color: #f87171;
 }
 
 .password-strength-box.medium {
   width: 60%;
-  background-color: #fbbf24; /* Yellow */
+  background-color: #fbbf24;
 }
 
 .password-strength-box.strong {
   width: 100%;
-  background-color: #34d399; /* Green */
+  background-color: #34d399;
 }
 
-/* Password Strength Text */
 .password-strength-text {
   font-size: 14px;
   font-weight: bold;
@@ -291,13 +269,38 @@
 }
 
 .password-strength-text.weak {
-  color: #f87171; /* Red */
+  color: #f87171;
 }
 
 .password-strength-text.medium {
-  color: #fbbf24; /* Yellow */
+  color: #fbbf24;
 }
 
 .password-strength-text.strong {
-  color: #34d399; /* Green */
+  color: #34d399;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-card {
+    flex-direction: column;
+    max-width: 90%;
+  }
+
+  .auth-left,
+  .auth-right {
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+  }
+
+  .auth-left img {
+    max-width: 50%;
+    max-height: 50%;
+    margin-bottom: 20px;
+  }
+
+  .auth-social {
+    justify-content: center; /* Ensure icons align in mobile */
+  }
 }

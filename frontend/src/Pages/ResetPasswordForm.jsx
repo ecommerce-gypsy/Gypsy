@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-
+import './ResetPasswordForm.css';
 const ResetPasswordForm = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token'); // Extract token from URL

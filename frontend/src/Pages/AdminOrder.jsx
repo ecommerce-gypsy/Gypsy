@@ -225,6 +225,7 @@ const AdminOrder = () => {
             <div className="modal-header">
               <h2>Edit Order</h2>
               <button className="close-btn" onClick={closeEditModal}>X</button>
+              
             </div>
             <form onSubmit={handleEditSubmit}>
               <label>Status:</label>
@@ -240,7 +241,7 @@ const AdminOrder = () => {
               </select>
               <div className="modal-buttons">
                 <button className="save-btn" type="submit">Save Changes</button>
-                <button className="close-btn" type="button" onClick={closeEditModal}>Close</button>
+                <button className="close-btn" type="button" onClick={closeEditModal}></button>
               </div>
             </form>
           </div>

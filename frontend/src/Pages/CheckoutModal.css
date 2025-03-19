@@ -1,120 +1,199 @@
 /* General Modal Styles */
 .checkout-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.checkout-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Allows scrolling if content exceeds the height */
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* Order Summary Section */
+.order-summary {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+}
+
+.order-summary h3 {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.order-summary ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.order-summary li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.subtotal, .shipping, .total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+/* Shipping Information Section */
+.shipping-information {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+}
+
+.shipping-information h3 {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.shipping-information input {
+  margin-bottom: 12px;
+}
+
+/* Payment Information Section */
+.payment-information {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+}
+
+.payment-information h3 {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.payment-information select {
+  margin-bottom: 12px;
+}
+
+/* Terms and Conditions Section */
+.terms-conditions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.terms-conditions input {
+  margin-right: 10px;
+}
+
+.terms-conditions a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.terms-conditions a:hover {
+  text-decoration: underline;
+}
+
+/* Submit Button */
+.submit-checkout-btn {
+  width: 100%;
+  background: #007bff;
+  color: white;
+  padding: 12px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-checkout-btn:hover {
+  background: #0056b3;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 1rem;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+}
+
+/* Final Review & Confirmation */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.submit-checkout-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
   .checkout-modal {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 600px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
   }
-  
-  /* Modal Header */
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 10px;
-  }
-  
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #888;
-  }
-  
-  .close-btn:hover {
-    color: #333;
-  }
-  
-  /* Form Layout */
+
   .modal-content {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px 0;
+    flex-direction: column;
   }
-  
-  /* Left & Right Sections */
+
   .left-section,
   .right-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 48%;
-  }
-  
-  /* Input Fields */
-  input,
-  select {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
   }
-  
-  /* Submit Button */
+
+  .order-summary,
+  .shipping-information,
+  .payment-information {
+    margin-bottom: 15px;
+  }
+
   .submit-checkout-btn {
-    width: 100%;
-    background: #007bff;
-    color: white;
-    padding: 12px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  .submit-checkout-btn:hover {
-    background: #0056b3;
-  }
-  
-  /* Checkout Button */
-  .checkout-btn {
-    background: #28a745;
-    color: white;
-    padding: 12px 20px;
     font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    padding: 10px;
+    
   }
-  
-  .checkout-btn:hover {
-    background: #218838;
-  }
-  
-  /* Responsive Design */
-  @media screen and (max-width: 600px) {
-    .checkout-modal {
-      width: 90%;
-    }
-  
-    .modal-content {
-      flex-direction: column;
-    }
-  
-    .left-section,
-    .right-section {
-      width: 100%;
-    }
-  }
-  
+}

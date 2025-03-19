@@ -1,68 +1,67 @@
-import React from 'react'
-import'./Sidebar.css'
-import{Link} from 'react-router-dom'
-import cart from '../Assets/Cartt.png'; // Path to your cart icon
-import List from '../Assets/Listt.png'; // Path to your cart icon
-import admin from '../Assets/Admin.png';
-import sales from '../Assets/Sales.png';
-import Order from '../Assets/order.png';
-import  dashboard from  '../Assets/data.png';
+// Sidebar.jsx
+import React from "react";
+import { FaSignOutAlt } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import "./Sidebar.css";
+
+// Importing Icons
+import cart from "../Assets/Cartt.png";
+import list from "../Assets/Listt.png";
+import admin from "../Assets/Admin.png";
+import sales from "../Assets/Sales.png";
+import order from "../Assets/order.png";
+import dashboard from "../Assets/data.png";
+import review from "../Assets/review.png";
+
 const Sidebar = () => {
+  const navigate = useNavigate();
+
+  // ✅ Logout Function
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      console.log("Logging out...");
+      sessionStorage.removeItem("token"); // Clear session storage
+      navigate("/login"); // Redirect to login page
+    }
+  };
+
+  // ✅ Sidebar Menu Items
+  const menuItems = [
+    { path: "/dashboard", icon: dashboard, label: "Dashboard" },
+    { path: "/addproduct", icon: cart, label: "Add Product" },
+    { path: "/listproduct", icon: list, label: "Product List" },
+    { path: "/admin", icon: sales, label: "Admin" },
+    { path: "/adminuser", icon: admin, label: "Admin User" },
+    { path: "/adminorder", icon: order, label: "Admin Order" },
+    { path: "/reviewlist", icon: review, label: "Admin Review" },
+  ];
+
   return (
     <div className="sidebar">
-          
-            <Link to={'/dashboard'} style={{textDecoration:"none"}}>
-        <div className="sidebar-item">
-            <img src={dashboard} alt="Dashboard" className="nav-dashboard-icon" />
-            <p>DASHBOARD</p>
-        </div>
-        </Link>
+      {/* Sidebar Header */}
+      <div className="sidebar-header">
+        <h2>Admin Dashboard</h2>
+      </div>
 
+      {/* Sidebar Menu */}
+      <nav className="sidebar-menu">
+        {menuItems.map((item, index) => (
+          <Link to={item.path} key={index} className="sidebar-link">
+            <div className="sidebar-item">
+              <img src={item.icon} alt={item.label} className="sidebar-icon" />
+              <span>{item.label}</span>
+            </div>
+          </Link>
+        ))}
+      </nav>
 
-        <Link to={'/addproduct'} style={{textDecoration:"none"}}>
-        <div className="sidebar-item">
-            <img src={cart} alt="Cart" className="nav-cart-icon" />
-            <p>ADD PRODUCT</p>
-        </div>
-        </Link>
-
-        <Link to={'/listproduct'} style={{textDecoration:"none"}}>
-        <div className="sidebar-item">
-            <img src={List} alt="Cart" className="nav-List-icon" />
-            <p>PRODUCT LIST</p>
-        </div>
-        </Link>
-
-        <Link to={'/admin'} style={{textDecoration:"none"}}>
-        <div className="sidebar-item">
-            <img src={sales} alt="Sales" className="nav-Admin-icon" />
-            <p>ADMIN </p>
-        </div>
-        </Link>
-
-
-        <Link to={'/adminuser'} style={{textDecoration:"none"}}>
-        <div className="sidebar-item">
-        <img src={admin} alt="Admin" className="nav-Admin-icon" />
-            <p>ADMIN USER </p>
-        </div>
-        </Link>
-
-
-        <Link to={'/adminorder'} style={{textDecoration:"none"}}>
-        <div className="sidebar-item">
-             <img src={Order} alt="order" className="nav-order-icon" />
-            <p>ADMIN ORDER </p>
-        </div>
-        </Link>
-        <Link to={'/adminreview'} style={{textDecoration:"none"}}>
-        <div className="sidebar-item">
-             <img src={Order} alt="order" className="nav-order-icon" />
-            <p>ADMIN REVIEW </p>
-        </div>
-        </Link>
+      {/* Logout Button */}
+      <button onClick={handleLogout} className="logout-button">
+        <FaSignOutAlt className="logout-icon" />
+        Logout
+      </button>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

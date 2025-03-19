@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "./CheckoutModal.css";
-import { useNavigate } from "react-router-dom";  // Importing useNavigate for redirecting to another page
+import { useNavigate } from "react-router-dom";
 
-const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
-  const navigate = useNavigate();  // Hook to navigate to another route
+const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }) => {
+  const navigate = useNavigate();  
   console.log("CheckoutModal Props - calculateTotal:", subtotal); 
-  console.log("CheckoutModal Props - cart:", cart); // Debugging
+  console.log("CheckoutModal Props - cart:", cart); 
 
   const [shippingAddress, setShippingAddress] = useState({
     name: "",
@@ -16,40 +16,44 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
   });
   const [paymentMethod, setPaymentMethod] = useState("Razorpay");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
   // Load Razorpay script dynamically
   const loadRazorpayScript = () => {
-    console.log("Loading Razorpay script...");
     return new Promise((resolve) => {
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => {
-        console.log("Razorpay script loaded successfully.");
-        resolve(true);
-      };
-      script.onerror = () => {
-        console.log("Failed to load Razorpay script.");
-        resolve(false);
-      };
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
       document.body.appendChild(script);
     });
   };
 
   // Handle payment and Razorpay integration
   const handlePayment = async () => {
-    console.log("Starting payment process...");
+    if (!shippingAddress.name || !shippingAddress.address || !shippingAddress.city || !shippingAddress.postalCode || !shippingAddress.country) {
+      setError("Please fill in all the shipping details.");
+      return;
+    }
+    if (!isTermsAccepted) {
+      setError("You must accept the terms and conditions.");
+      return;
+    }
+
+    setLoading(true);
+
     const isLoaded = await loadRazorpayScript();
     if (!isLoaded) {
       setError("Failed to load Razorpay. Try again.");
-      console.log("Razorpay script failed to load.");
+      setLoading(false);
       return;
     }
 
     try {
       const accessToken = localStorage.getItem("auth_token");
-      console.log("Access Token:", accessToken);
 
-      // Create the order on the backend
       const response = await fetch("http://localhost:4000/api/payment/create-order", {
         method: "POST",
         headers: {
@@ -57,7 +61,7 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
           "Authorization": `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          amount: subtotal,
+          amount: total,
           currency: "INR",
           cart,
           shippingAddress,
@@ -66,29 +70,27 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
       });
 
       const orderData = await response.json();
-      console.log("Order data from server:", orderData);
 
       if (!response.ok) {
         setError(orderData.message || "Failed to create payment order.");
-        console.log("Failed to create payment order:", orderData.message);
+        setLoading(false);
         return;
       }
 
-      // Razorpay options setup
       const options = {
-        key: "rzp_test_6y4ihF8KtZx61t", // Replace with your Razorpay Key
+        key: "rzp_test_6y4ihF8KtZx61t",
         amount: orderData.amount,
         currency: orderData.currency,
         name: "RP Collections",
         description: "Purchase Items",
         order_id: orderData.id,
         handler: async function (paymentResult) {
-          console.log("Payment result received:", paymentResult);
-
           const paymentDetails = {
             razorpay_order_id: paymentResult.razorpay_order_id,
             razorpay_payment_id: paymentResult.razorpay_payment_id,
             razorpay_signature: paymentResult.razorpay_signature,
+            paymentMethodUsed: paymentResult.method,
+            paymentAmount: total,  // Capturing the selected payment method (UPI, card, etc.)
           };
 
           const verifyResponse = await fetch("http://localhost:4000/api/payment/verify-payment", {
@@ -101,11 +103,10 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
           });
 
           const verifyResult = await verifyResponse.json();
-          console.log("Payment verification result:", verifyResult);
 
           if (!verifyResponse.ok) {
             setError(verifyResult.message || "Payment verification failed.");
-            console.log("Payment verification failed:", verifyResult.message);
+            setLoading(false);
             return;
           }
 
@@ -116,8 +117,8 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
               price: item.new_price,
             })),
             shippingAddress,
-            paymentMethod,
-            totalPrice: subtotal,
+            paymentMethod: paymentMethod, 
+            totalPrice: total,
             userEmail: localStorage.getItem("user_email"),
             paymentStatus: "Paid",
             razorpay_order_id: paymentResult.razorpay_order_id,
@@ -134,18 +135,14 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
           });
 
           const checkoutResult = await checkoutResponse.json();
-          console.log("Checkout response result:", checkoutResult);
 
           if (checkoutResponse.ok) {
             handleCheckoutSuccess(checkoutResult.message);
-
-            // Navigate to the order confirmation page with the orderId
             navigate(`/order-confirmation/${checkoutResult.orderId}`);
-           
           } else {
             setError(checkoutResult.message || "Checkout failed.");
-            console.log("Checkout failed:", checkoutResult.message);
           }
+          setLoading(false);
         },
         prefill: {
           name: shippingAddress.name,
@@ -158,7 +155,7 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
       rzp.open();
     } catch (error) {
       setError("Payment process failed. Try again.");
-      console.log("Error during payment process:", error);
+      setLoading(false);
     }
   };
 
@@ -168,13 +165,42 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
         <div className="checkout-modal">
           <div className="modal-header">
             <h2>Checkout</h2>
-            <button className="close-btn" onClick={onClose}>
-              ✖
-            </button>
+            <button className="close-btn" onClick={onClose}>✖</button>
           </div>
 
           <div className="modal-content">
-            <div className="left-section">
+            {/* Order Summary */}
+            <div className="order-summary">
+              <h3>Order Summary</h3>
+              <ul>
+                {cart.map((item) => (
+                  <li key={item.productid}>
+                    <span>{item.name}</span>
+                    <span>{item.quantity} x ₹{item.new_price}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="subtotal">
+                <span>Subtotal:</span>
+                <span>₹{subtotal}</span>
+              </div>
+              <div className="shipping">
+                <span>Delivery Fee:</span>
+                <span>₹{99}</span>
+              </div>
+              <div className="shipping">
+                <span>Platform Fee:</span>
+                <span>₹{19}</span>
+              </div>
+              <div className="total">
+                <span>Total:</span>
+                <span>₹{subtotal + 118}</span>
+              </div>
+            </div>
+
+            {/* Shipping Information */}
+            <div className="shipping-information">
+              <h3>Shipping Information</h3>
               <input
                 type="text"
                 placeholder="Full Name"
@@ -193,9 +219,6 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
                 value={shippingAddress.city}
                 onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
               />
-            </div>
-
-            <div className="right-section">
               <input
                 type="text"
                 placeholder="Postal Code"
@@ -209,13 +232,37 @@ const CheckoutModal = ({ cart, subtotal, handleCheckoutSuccess, onClose }) => {
                 onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
               />
             </div>
+
+            {/* Payment Information */}
+            <div className="payment-information">
+              <h3>Payment Information</h3>
+              <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+
+                <option value="Razorpay">Razorpay</option>
+                {/* Add more payment methods if needed */}
+              </select>
+            </div>
+
+            {/* Terms and Conditions */}
+            <div className="terms-conditions">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isTermsAccepted}
+                  onChange={() => setIsTermsAccepted(!isTermsAccepted)}
+                />
+                I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a>
+              </label>
+            </div>
           </div>
 
-          <button className="submit-checkout-btn" onClick={handlePayment}>
-            Pay Now
-          </button>
-
-          {error && <div className="error-message">{error}</div>}
+          {/* Final Review & Confirmation */}
+          <div className="modal-footer">
+            {error && <div className="error-message">{error}</div>}
+            <button className="submit-checkout-btn" onClick={handlePayment} disabled={loading}>
+              {loading ? "Processing..." : "Pay Now"}
+            </button>
+          </div>
         </div>
       </div>
     </>

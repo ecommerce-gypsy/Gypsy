@@ -33,15 +33,18 @@ const Cart = () => {
     removeItem(item);
   };
 
-  // Calculate the total and subtotal
+  // Calculate the total and subtotal, including delivery and platform fees
   const calculateTotal = () => {
-    const subtotal = cart.reduce((total, item) => total + item.new_price * item.quantity, 0);
+    const subtotal = cart.reduce(
+      (total, item) => total + item.new_price * item.quantity,
+      0
+    );
     const deliveryFee = 99;
     const platformFee = 19;
     const total = subtotal + deliveryFee + platformFee;
     console.log("Calculated total:", total); // Debugging line in Cart component
 
-    return { subtotal, total };
+    return { subtotal, deliveryFee, platformFee, total };
   };
 
   const handleCheckoutSuccess = (message) => {
@@ -50,7 +53,7 @@ const Cart = () => {
     navigate("/order-confirmation");
   };
 
-  const { subtotal, total } = calculateTotal(); // Calculate totals before passing to CheckoutModal
+  const { subtotal, deliveryFee, platformFee, total } = calculateTotal(); // Calculate totals before passing to CheckoutModal
 
   // Function to handle showing the CheckoutModal
   const openCheckoutModal = () => {
@@ -110,10 +113,10 @@ const Cart = () => {
                 Bag Total: <span>Rs. {subtotal.toFixed(2)}</span>
               </p>
               <p>
-                Delivery Fee: <span>Rs. 99.00</span>
+                Delivery Fee: <span>Rs. {deliveryFee.toFixed(2)}</span>
               </p>
               <p>
-                Platform Fee: <span>Rs. 19.00</span>
+                Platform Fee: <span>Rs. {platformFee.toFixed(2)}</span>
               </p>
               <h3>
                 Order Total: <span>Rs. {total.toFixed(2)}</span>
@@ -132,8 +135,10 @@ const Cart = () => {
       {showCheckoutModal && (
         <CheckoutModal
           cart={cart}
-          subtotal={subtotal} 
-          total={total}         
+          subtotal={subtotal}
+          deliveryFee={deliveryFee}
+          platformFee={platformFee}
+          total={total} // Pass the total amount to CheckoutModal
           handleCheckoutSuccess={handleCheckoutSuccess}
         />
       )}

@@ -1,210 +1,298 @@
 /* =======================
    General Navbar Styles
-   ======================= */
-   .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 25px;
-    background-color: #F5F5F5;
-    font-family: 'Arial', sans-serif;
-    border-bottom: 1px solid rgba(108, 91, 123, 0.3);
-    position: relative;
-    overflow: visible;
+======================= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: linear-gradient(135deg, #6C5B7B, #355C7D, #C06C84); /* Gradient background */
+  font-family: "Poppins", sans-serif; /* Modern font */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: sticky; /* Keeps navbar at the top */
+  top: 0;
+  z-index: 1000; /* Ensures navbar is above marquee */
+}
+
+/* =======================
+   Logo Section
+======================= */
+.nav-logo img {
+  width: 120px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.nav-logo:hover img {
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* =======================
+   Navigation Menu
+======================= */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 30px;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #ffffff; /* White text */
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.3s ease;
+  position: relative; /* For underline effect */
+}
+
+/* Underline effect on hover */
+.nav-menu a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff; /* White underline */
+  transition: width 0.3s ease;
+}
+
+.nav-menu a:hover::after {
+  width: 100%;
+}
+
+/* Active and hover state */
+.nav-menu a:hover,
+.nav-menu a.active {
+  color: #f8b195; /* Highlight color */
+}
+
+/* =======================
+   Icons Section
+======================= */
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+/* Icon styling */
+.nav-icon img,
+.nav-cart img,
+.nav-user img {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  filter: brightness(0) invert(1); /* White icons */
+}
+
+.nav-icon img:hover,
+.nav-cart img:hover,
+.nav-user img:hover {
+  transform: scale(1.1);
+}
+
+/* =======================
+   Cart Section
+======================= */
+.nav-cart {
+  position: relative;
+}
+
+/* Cart badge */
+.nav-cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff6b6b; /* Red badge */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 4px 8px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* =======================
+   User Dropdown Styles
+======================= */
+.nav-user-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-user img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  filter: brightness(0) invert(1); /* White icon */
+}
+
+/* Dropdown arrow styling */
+.nav-arrow {
+  font-size: 14px;
+  color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+/* Rotate arrow when dropdown is open */
+.nav-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* User dropdown */
+.user-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 15px;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  z-index: 999; /* Ensures dropdown is above other content */
+  animation: fadeIn 0.3s ease;
+}
+
+/* Fade-in animation for dropdown */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  
-  /* =======================
-     Logo Section
-     ======================= */
-  .nav-logo img {
-    width: 100px;
-    height: 75px;
-    transition: transform 0.3s ease;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .nav-logo:hover img {
-    transform: scale(1.1);
+}
+
+/* User info at top of dropdown */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  padding-bottom: 10px;
+}
+
+.user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Dropdown separator */
+.user-dropdown hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 10px 0;
+}
+
+/* Dropdown items */
+.dropdown-item {
+  padding: 12px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  transition: background 0.3s ease;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+/* Logout Button */
+.logout-button {
+  padding: 12px;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logout-button:hover {
+  background: #ff4c4c;
+}
+
+/* =======================
+   Marquee Section (Light Color Palette)
+======================= */
+.marquee-container {
+  overflow: hidden; /* Ensure marquee stays in bounds */
+  background: #f5f5f5; /* Light gray background */
+  color: #333; /* Dark text for contrast */
+  padding: 10px 0;
+  position: relative; /* Ensure it stays below the navbar */
+  z-index: 900; /* Below navbar but above other content */
+  margin-top: 70px; /* Adjust this value to match navbar height */
+}
+
+/* Marquee styling */
+marquee {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #555; /* Slightly darker text for better readability */
+}
+
+/* =======================
+   Responsive Design
+======================= */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
   }
-  
-  /* =======================
-     Navigation Menu
-     ======================= */
+
   .nav-menu {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 25px;
-  }
-  
-  .nav-menu a {
-    text-decoration: none;
-    color: #355C7D;
-    font-size: 16px;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-  
-  .nav-menu a:hover,
-  .nav-menu a.active {
-    color: #6C5B7B;
-    font-weight: bold;
-  }
-  
-  /* =======================
-     Icons Section
-     ======================= */
-  .nav-icons {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  
-  /* Individual Icon Styling */
-  .nav-icon img,
-  .nav-cart img,
-  .nav-user img {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .nav-icon img:hover,
-  .nav-cart img:hover,
-  .nav-user img:hover {
-    transform: scale(1.1);
-  }
-  
-  /* =======================
-     Cart Section
-     ======================= */
-  .nav-cart {
-    position: relative;
-  }
-  
-  .nav-cart-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #C06C84;
-    color: white;
-    font-size: 12px;
-    border-radius: 50%;
-    padding: 2px 6px;
-  }
-  
-  /* =======================
-     User Icon & Dropdown Arrow
-     ======================= */
-  .nav-user-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .nav-user {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .nav-user img {
-    width: 32px;
-    height: 32px;
-  }
-  
-  /* Dropdown Arrow */
-  .nav-arrow {
-    font-size: 16px;
-    color: #333;
-    transition: transform 0.3s ease;
-  }
-  
-  /* Rotate arrow when dropdown is open */
-  .nav-arrow.open {
-    transform: rotate(180deg);
-  }
-  
-  /* =======================
-     User Dropdown Styles
-     ======================= */
-  .user-dropdown {
-    position: absolute;
-    top: 45px; /* Correctly positioned below the user icon */
-    right: 0;
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 15px;
-    width: 220px;
-    display: flex;
+    display: none; /* Hide by default on mobile */
     flex-direction: column;
-    z-index: 9999;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    background-color: rgba(108, 91, 123, 0.95);
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
   }
-  
-  /* User info at the top */
-  .user-info {
+
+  /* Show menu when active */
+  .nav-menu.active {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    padding-bottom: 10px;
   }
-  
-  .user-info img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+
+  .nav-menu li {
+    padding: 10px 20px;
   }
-  
-  /* Horizontal line for separation */
-  .user-dropdown hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 10px 0;
+
+  /* Adjust icon gap for smaller screens */
+  .nav-icons {
+    gap: 15px;
   }
-  
-  /* Dropdown items */
-  .dropdown-item {
-    padding: 12px;
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
-    transition: background 0.3s ease;
+
+  .nav-arrow {
+    font-size: 12px;
   }
-  
-  .dropdown-item:hover {
-    background: #f5f5f5;
+
+  /* Marquee adjustment on small screens */
+  .marquee-container {
+    margin-top: 90px; /* Avoid overlapping */
   }
-  
-  /* =======================
-     Responsive Design Fixes
-     ======================= */
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      background-color: #fff;
-      width: 100%;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      z-index: 100;
-    }
-  
-    .nav-menu.active {
-      display: flex;
-    }
-  
-    .nav-icons {
-      gap: 15px;
-    }
-  
-    .nav-arrow {
-      font-size: 14px;
-    }
-  }
-  
+}

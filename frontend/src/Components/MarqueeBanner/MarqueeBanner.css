@@ -1,78 +1,86 @@
-/* Marquee Container */
+/* Import Professional Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/* ============================
+   Marquee Container (Sticky & Non-Overlapping)
+============================= */
 .marquee-container {
-  position: absolute;
-  top: 0;
+  position: fixed; /* Keep it fixed at the top */
+  top: 0; /* Ensure it sticks to the top */
   left: 0;
-  width: 100%;
-  background-color: #b68d4c;
-  color: white;
+  width: 100%; /* Full width */
+  background: linear-gradient(135deg, #fafafa, #f0f0f5); /* Light gradient */
+  color: #333; /* Darker text for contrast */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
-  height: 50px;
-  z-index: 1000;
+  padding: 12px 20px; /* Consistent padding */
+  height: 60px; /* Fixed height to prevent overlap */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: 'Inter', sans-serif; /* Clean, modern font */
+  box-sizing: border-box; /* Include padding in width calculation */
+  z-index: 999; /* Ensure it stays above other elements */
 }
 
-/* Social Media Icons */
-.social-icons {
-  display: flex;
-  gap: 15px;
+/* Push content below marquee */
+body {
+  padding-top: 70px; /* Ensure content does not overlap */
 }
 
-.icon {
-  font-size: 18px;
-  cursor: pointer;
-}
-
-/* Marquee Wrapper */
+/* ============================
+   Marquee Wrapper (Message Holder)
+============================= */
 .marquee-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
-  gap: 10px;
+  flex-grow: 1; /* Allows flexible growth */
+  overflow: hidden; /* Prevent content overflow */
 }
 
-/* Message Box */
+/* ============================
+   Message Box
+============================= */
 .message-box {
-  width: 300px; /* Increased width to fit messages */
-  height: 20px;
-  text-align: center;
-  overflow: hidden;
   position: relative;
+  width: 100%;
+  max-width: 600px; /* Ensure message is contained */
+  text-align: center;
+  height: 40px; /* Fixed height to avoid flickering */
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden; /* Avoids overflow */
 }
 
-/* Marquee Message */
+/* ============================
+   Marquee Message (Sliding Text)
+============================= */
 .marquee-message {
-  font-size: 16px;
-  font-weight: 600;
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  opacity: 0;
-  white-space: nowrap;
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap; /* Keeps message on a single line */
+  opacity: 0; /* Hide until animated */
+  position: absolute; /* Enable animation */
+  animation-duration: 0.6s; /* Smooth animation */
+  animation-fill-mode: forwards; /* Keeps final position */
 }
 
-/* Slide in from right */
+/* Slide from Right */
 .marquee-message.right {
-  animation: slideRight 0.5s ease forwards;
+  animation-name: slideRight;
 }
 
-/* Slide in from left */
+/* Slide from Left */
 .marquee-message.left {
-  animation: slideLeft 0.5s ease forwards;
+  animation-name: slideLeft;
 }
 
 /* Slide Animations */
 @keyframes slideRight {
   from {
     opacity: 0;
-    transform: translateX(50px);
+    transform: translateX(50%);
   }
   to {
     opacity: 1;
@@ -83,7 +91,7 @@
 @keyframes slideLeft {
   from {
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translateX(-50%);
   }
   to {
     opacity: 1;
@@ -91,17 +99,54 @@
   }
 }
 
-/* Navigation Arrows */
+/* ============================
+   Navigation Arrows
+============================= */
 .arrow-btn {
   background: none;
   border: none;
-  color: white;
-  font-size: 18px;
+  color: #555; /* Neutral arrow color */
+  font-size: 24px; /* Bigger arrows for better UX */
   cursor: pointer;
-  padding: 5px;
-  transition: opacity 0.3s ease;
+  padding: 10px; /* Clickable area */
+  transition: opacity 0.3s ease; /* Smooth hover */
 }
 
+/* Hover Effect */
 .arrow-btn:hover {
-  opacity: 0.7;
+  opacity: 0.8; /* Slight fade on hover */
+}
+
+/* Left Arrow */
+.left-arrow {
+  position: absolute;
+  left: 10px; /* Space from left */
+}
+
+/* Right Arrow */
+.right-arrow {
+  position: absolute;
+  right: 10px; /* Space from right */
+}
+
+/* ============================
+   Responsive Design (Mobile Optimized)
+============================= */
+@media (max-width: 768px) {
+  .marquee-container {
+    padding: 8px 12px;
+    height: 50px; /* Smaller for mobile */
+  }
+
+  .arrow-btn {
+    font-size: 20px; /* Adjust arrow size */
+  }
+
+  .marquee-message {
+    font-size: 14px; /* Adjust text size */
+  }
+
+  body {
+    padding-top: 60px; /* Adjust offset for mobile */
+  }
 }

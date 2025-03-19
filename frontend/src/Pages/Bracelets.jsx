@@ -6,6 +6,7 @@ import Header from "../Components/Header/Header";
 import './Bracelets.css';
 import Breadcrumb from '../Components/Breadcrumb/Breadcrumb';
 import BraceletBanner from '../Components/BraceletBanner/BraceletBanner';
+import Footer from '../Components/Footer/Footer';
 
 const Bracelets = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
@@ -116,9 +117,10 @@ const Bracelets = () => {
         </div>
       )}
 
-      <button className="customize-btn" onClick={() => navigate("/customize")}>
+      {/*<button className="customize-btn" onClick={() => navigate("/customize")}>
         Customize
-      </button>
+      </button>*/}
+      <Footer/>
     </div>
   );
 };

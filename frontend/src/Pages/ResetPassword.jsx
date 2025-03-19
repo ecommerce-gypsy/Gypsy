@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import './ResetPassword.css';
+import './ResetPassword.css';
 
 const ResetPassword = () => {
   const [email, setEmail] = useState('');
@@ -55,5 +54,3 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
-
-

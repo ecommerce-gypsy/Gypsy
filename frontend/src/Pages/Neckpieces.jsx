@@ -52,7 +52,7 @@ const Neckpieces = () => {
    
       <Breadcrumb/>
       <NeckPieceBanner/>
-     <h1>Welcome to the NECKPIECES Collection!</h1>
+     <h1>Discover the art of refined beauty with our stunning neckpieces!</h1>
       {error && <p className="error-message">{error}</p>}
 
       {/* Product Grid */}
