@@ -45,13 +45,14 @@ import AdminOutOfStock from './Pages/AdminOutofStock';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrderConfirmation from './Pages/OrderConfirmation';
+//import AdminPanel from './Pages/AdminPanel';
 
 // Helper component to manage layout
 const Layout = ({ children }) => {
   const location = useLocation();
   
   // Hide Navbar, Header, and Chatbot on /login and /admin pages
-  const hideLayout = location.pathname === '/login' || location.pathname === '/admin'|| location.pathname === '/dashboard'|| location.pathname === '/addproduct'|| location.pathname === '/listproduct'|| location.pathname === '/adminuser'|| location.pathname === '/adminorder'|| location.pathname === '/reviewlist';
+  const hideLayout = location.pathname === '/login' || location.pathname === '/admin'|| location.pathname === '/dashboard'|| location.pathname === '/addproduct'|| location.pathname === '/listproduct'|| location.pathname === '/adminuser'|| location.pathname === '/adminorder'|| location.pathname === '/reviewlist'|| location.pathname === '/adminpanel';
 
   return (
     <>
@@ -68,7 +69,7 @@ const App = () => {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/salesreport" element={<SalesReport />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />

@@ -31,17 +31,24 @@ const Footer = () => {
         {/* Contact */}
         <div className="footer-section contact-section">
           <h3>Contact Us</h3>
-          <p>+91 9360495115</p>
-          <p>Madras Christian College</p>
-          <p>Email: <a href="mailto:roshnivr06@gmail.com">roshnivr06@gmail.com</a></p>
+          <p>📞 +91 9360495115</p>
+          <p>📍 Madras Christian College</p>
+          <p>
+            ✉️ Email:{" "}
+            <a href="mailto:roshnivr06@gmail.com">roshnivr06@gmail.com</a>
+          </p>
         </div>
 
         {/* Subscription Form */}
         <div className="footer-section footer-subscribe">
           <h3>Stay Updated</h3>
           <form className="subscription-form">
-            <input type="email" placeholder="Your email" required />
-            <button type="submit">→</button>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              required
+            />
+            <button type="submit">Subscribe</button>
           </form>
         </div>
       </div>

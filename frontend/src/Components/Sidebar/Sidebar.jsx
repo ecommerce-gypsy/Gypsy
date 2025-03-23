@@ -1,7 +1,7 @@
 // Sidebar.jsx
 import React from "react";
 import { FaSignOutAlt } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 
 // Importing Icons
@@ -15,13 +15,13 @@ import review from "../Assets/review.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // ✅ Logout Function
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to log out?")) {
-      console.log("Logging out...");
-      sessionStorage.removeItem("token"); // Clear session storage
-      navigate("/login"); // Redirect to login page
+      sessionStorage.removeItem("token");
+      navigate("/login");
     }
   };
 
@@ -40,25 +40,32 @@ const Sidebar = () => {
     <div className="sidebar">
       {/* Sidebar Header */}
       <div className="sidebar-header">
-        <h2>Admin Dashboard</h2>
+        <h2>Admin Panel</h2>
       </div>
 
       {/* Sidebar Menu */}
       <nav className="sidebar-menu">
         {menuItems.map((item, index) => (
           <Link to={item.path} key={index} className="sidebar-link">
-            <div className="sidebar-item">
+            <div
+              className={`sidebar-item ${
+                location.pathname === item.path ? "active" : ""
+              }`}
+            >
               <img src={item.icon} alt={item.label} className="sidebar-icon" />
-              <span>{item.label}</span>
+              <p>{item.label}</p>
             </div>
           </Link>
         ))}
       </nav>
 
+      {/* Divider for clean separation */}
+      <div className="sidebar-divider"></div>
+
       {/* Logout Button */}
       <button onClick={handleLogout} className="logout-button">
         <FaSignOutAlt className="logout-icon" />
-        Logout
+        <span>Logout</span>
       </button>
     </div>
   );

@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ListProduct.css";
 import cross_icon from "../Assets/cross_icon.png";
-import edit from "../Assets/edit.png";  // Assuming you have an edit icon
+import edit from "../Assets/edit.png"; // Assuming you have an edit icon
 import Sidebar from "../Sidebar/Sidebar";
 
 const ListProduct = () => {
+  const navigate = useNavigate(); // Hook to handle navigation
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);  // For managing modal visibility
-  const [currentProduct, setCurrentProduct] = useState(null); // To store the product being edited
-  const [specificationsOpen, setSpecificationsOpen] = useState(false); // For showing specifications
-  const [customizationOpen, setCustomizationOpen] = useState(false); // For showing customization
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [specificationsOpen, setSpecificationsOpen] = useState(false);
+  const [customizationOpen, setCustomizationOpen] = useState(false);
 
   const fetchInfo = async () => {
     try {
@@ -65,50 +67,42 @@ const ListProduct = () => {
   };
 
   const handleInputChange = (e) => {
-    setCurrentProduct({
-      ...currentProduct,
-      [e.target.name]: e.target.value,
-    });
     const { name, value } = e.target;
 
-  // Handle colorOptions as an array
-  if (name === "colorOptions") {
-    const updatedColorOptions = value ? value.split(',').map(item => item.trim()) : [];
-    setCurrentProduct({
-      ...currentProduct,
-      [name]: updatedColorOptions,
-    });
-  } else {
-    setCurrentProduct({
-      ...currentProduct,
-      [name]: value,
-    });
-  }
+    if (name === "colorOptions") {
+      const updatedColorOptions = value ? value.split(",").map((item) => item.trim()) : [];
+      setCurrentProduct({
+        ...currentProduct,
+        [name]: updatedColorOptions,
+      });
+    } else {
+      setCurrentProduct({
+        ...currentProduct,
+        [name]: value,
+      });
+    }
   };
 
   const updateProduct = async () => {
     try {
-      // Log the data to ensure it's correct before sending
-      console.log('Update Data:', currentProduct);
-  
+      console.log("Update Data:", currentProduct);
+
       const updateData = {};
       for (let key in currentProduct) {
         if (currentProduct[key] !== undefined && currentProduct[key] !== null) {
           updateData[key] = currentProduct[key];
         }
       }
-  
-      // Ensure the product ID is included
+
       if (!updateData.productid) {
-        updateData.productid = currentProduct.productid;  // Add the 'productid' here if missing
+        updateData.productid = currentProduct.productid;
       }
-  
-      // Check if the data is valid
+
       if (!updateData.productid || !updateData.productName) {
-        console.error('Missing required fields!');
+        console.error("Missing required fields!");
         return;
       }
-  
+
       const res = await fetch("http://localhost:4000/updateproduct", {
         method: "POST",
         headers: {
@@ -117,7 +111,7 @@ const ListProduct = () => {
         },
         body: JSON.stringify(updateData),
       });
-  
+
       if (!res.ok) {
         console.error("Failed to update product:", res.status);
         const errorData = await res.json();
@@ -130,7 +124,7 @@ const ListProduct = () => {
       console.error("Error updating product:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchInfo();
   }, []);
@@ -142,6 +136,10 @@ const ListProduct = () => {
       <div className="list-product-content">
         <div className="heading-container">
           <div className="heading-box">All Product List</div>
+          {/* Add Product Button */}
+          <button className="add-product-button" onClick={() => navigate("/addproduct")}>
+            Add Product
+          </button>
         </div>
 
         <div className="category-filter">
@@ -221,167 +219,6 @@ const ListProduct = () => {
           </table>
         </div>
       </div>
-
-      {/* Edit Product Modal */}
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Edit Product</h3>
-            <form onSubmit={(e) => e.preventDefault()}>
-              {/* Basic Fields */}
-              <label>
-                Title:
-                <input
-                  type="text"
-                  name="productName"
-                  value={currentProduct.productName}
-                  onChange={handleInputChange}
-                />
-              </label>
-              <label>
-                Description:
-                <input
-                  type="text"
-                  name="description"
-                  value={currentProduct.description}
-                  onChange={handleInputChange}
-                />
-              </label>
-              <label>
-                Old Price:
-                <input
-                  type="number"
-                  name="old_price"
-                  value={currentProduct.old_price}
-                  onChange={handleInputChange}
-                />
-              </label>
-              <label>
-                New Price:
-                <input
-                  type="number"
-                  name="new_price"
-                  value={currentProduct.new_price}
-                  onChange={handleInputChange}
-                />
-              </label>
-              <label>
-                Stock:
-                <input
-                  type="number"
-                  name="stock"
-                  value={currentProduct.stock}
-                  onChange={handleInputChange}
-                />
-              </label>
-              <label>
-                Category:
-                <input
-                  type="text"
-                  name="category"
-                  value={currentProduct.category}
-                  onChange={handleInputChange}
-                />
-              </label>
-
-              {/* Specifications Section */}
-              <button type="button" onClick={() => setSpecificationsOpen(!specificationsOpen)}>
-                {specificationsOpen ? "Hide Specifications" : "Edit Specifications "}
-              </button>
-              {specificationsOpen && (
-                <>
-                  <label>
-                    Material:
-                    <input
-                      type="text"
-                      name="specifications.material"
-                      value={currentProduct.specifications?.material || ''}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                  <label>
-                    Bead Size:
-                    <input
-                      type="text"
-                      name="specifications.beadSize"
-                      value={currentProduct.specifications?.beadSize || ''}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                  <label>
-                    Bead Shape:
-                    <input
-                      type="text"
-                      name="specifications.beadShape"
-                      value={currentProduct.specifications?.beadShape || ''}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                  <label>
-                    Stringing Material:
-                    <input
-                      type="text"
-                      name="specifications.stringingMaterial"
-                      value={currentProduct.specifications?.stringingMaterial || ''}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                  <label>
-                    Closure Type:
-                    <input
-                      type="text"
-                      name="specifications.closureType"
-                      value={currentProduct.specifications?.closureType || ''}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                  <label>
-                    Weight:
-                    <input
-                      type="text"
-                      name="specifications.weight"
-                      value={currentProduct.specifications?.weight || ''}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                </>
-              )}
-
-              {/* Customization Section */}
-              <button type="button" onClick={() => setCustomizationOpen(!customizationOpen)}>
-                {customizationOpen ? "Hide Customization" : "Edit Customization "}
-              </button>
-              {customizationOpen && (
-                <>
-                  <label>
-                    Color Options:
-                    <input
-                      type="text"
-                      name="colorOptions"
-                      value={currentProduct.colorOptions?.join(", ")}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                  <label>
-                    Images (URLs):
-                    <input
-                      type="text"
-                      name="images"
-                      value={currentProduct.images?.join(", ")}
-                      onChange={handleInputChange}
-                    />
-                  </label>
-                </>
-              )}
-
-              <div className="modal-actions">
-                <button type="button" onClick={updateProduct}>Update</button>
-                <button type="button" onClick={closeModal}>Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

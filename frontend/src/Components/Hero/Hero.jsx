@@ -2,7 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 import logo from "../Assets/People.png"; 
-import MarqueeBanner from "../MarqueeBanner/MarqueeBanner";
+
+
 
 export const Hero = () => {
   const navigate = useNavigate();
@@ -10,10 +11,11 @@ export const Hero = () => {
   return (
     <div className="hero-container">
       {/* Marquee Banner at the Top */}
-      <MarqueeBanner />
+      
       
       {/* Hero Section */}
       <div className="hero">
+      
         <div className="hero-left">
           <div className="hero-text">
             <div className="hero-user">

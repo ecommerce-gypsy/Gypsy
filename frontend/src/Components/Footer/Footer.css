@@ -1,74 +1,107 @@
+/* Footer Container */
 .footer {
-  background: linear-gradient(90deg, #5b6780, #b76e8b); /* Matching header gradient */
-  padding: 30px 20px; /* Reduced height for a sleeker look */
-  border-top: none; /* Remove border for a cleaner design */
-  font-family: 'Roboto', sans-serif; /* Keep a professional font */
-  color: #fff; /* White text for better contrast */
+  background: linear-gradient(135deg, #4e5b70, #b76e8b);
+  color: #fff;
+  padding: 40px 0; /* Remove left/right padding */
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Avoid box model issues */
+  overflow: hidden; /* Prevent overflow */
+  margin: 0; /* Ensure no gaps */
 }
 
+/* Footer Content Wrapper */
 .footer-container {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
+  justify-content: space-between; /* Ensure equal spacing */
+  align-items: flex-start; /* Align to the top */
+  flex-wrap: wrap; /* Handle responsiveness */
+  max-width: 1200px; /* Limit container width */
+  margin: 0 auto; /* Center content */
+  padding: 0 20px; /* Add padding only inside the container */
+  box-sizing: border-box; /* Include padding in width calculation */
+  gap: 20px; /* Ensure consistent spacing */
 }
 
+/* Footer Section */
 .footer-section {
-  flex: 1;
-  min-width: 220px;
+  flex: 1; /* Distribute sections evenly */
+  min-width: 250px; /* Ensure sections do not shrink */
+  text-align: left; /* Align text to the left */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
+/* Section Headings */
 .footer-section h3 {
-  font-size: 18px;
-  margin-bottom: 15px;
+  font-size: 20px;
+  margin-bottom: 20px;
   font-weight: 600;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Subtle white underline */
-  padding-bottom: 5px;
+  position: relative;
 }
 
+/* Underline for Headings */
+.footer-section h3::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #ffffff;
+  margin-top: 8px;
+}
+
+/* Footer Links */
 .footer-section ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .footer-section ul li {
-  margin: 8px 0;
+  margin: 12px 0;
 }
 
 .footer-section ul li a {
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.8); /* Softer white links */
+  color: rgba(255, 255, 255, 0.8);
   transition: color 0.3s ease;
 }
 
 .footer-section ul li a:hover {
-  color: #ffffff; /* Pure white on hover */
+  color: #ffffff;
+  text-decoration: underline;
 }
 
-.footer-bottom {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+/* Contact Information */
+.contact-section p {
+  margin: 10px 0;
 }
 
-.subscription-form {
+.contact-section a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+}
+
+.contact-section a:hover {
+  text-decoration: underline;
+}
+
+/* Subscription Form */
+.footer-subscribe .subscription-form {
   display: flex;
-  justify-content: center;
-  margin-top: 15px;
+  gap: 10px;
 }
 
 .subscription-form input {
-  padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 12px;
+  border: none;
   border-radius: 25px;
-  width: 300px;
   font-size: 14px;
   outline: none;
-  background-color: transparent; /* Transparent input background */
+  flex: 1; /* Ensure input fills space */
+  background: rgba(255, 255, 255, 0.2);
   color: white;
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .subscription-form input::placeholder {
@@ -76,50 +109,84 @@
 }
 
 .subscription-form button {
-  padding: 10px 20px;
-  background-color: rgba(255, 255, 255, 0.3);
-  color: white;
+  padding: 12px 20px;
   border: none;
   border-radius: 25px;
-  margin-left: 10px;
+  background: #fff;
+  color: #4e5b70;
+  font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .subscription-form button:hover {
-  background-color: rgba(255, 255, 255, 0.6);
+  background: #ddd;
 }
 
+/* Social Links */
 .footer-socials {
   text-align: center;
-  margin-top: 20px;
+  margin: 30px 0;
 }
 
-.footer-socials .social-icon {
-  margin: 0 10px;
-  text-decoration: none;
+.footer-socials a {
+  margin: 0 15px;
   color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.footer-socials .social-icon:hover {
-  color: white; /* Brighter hover */
-  transform: scale(1.1); /* Smooth zoom effect */
+.footer-socials a:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Admin Login */
+.footer-admin {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.footer-admin a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+}
+
+.footer-admin a:hover {
+  color: white;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .footer-container {
+    justify-content: space-around; /* More balanced spacing */
+  }
 }
 
 @media (max-width: 768px) {
   .footer-container {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: column; /* Stack sections vertically */
+    text-align: center; /* Center content */
   }
 
-  .subscription-form {
-    flex-direction: column;
-    gap: 10px;
+  .footer-section {
+    margin-bottom: 20px; /* Space between sections */
+  }
+
+  .footer-subscribe .subscription-form {
+    flex-direction: column; /* Stack input and button */
   }
 
   .subscription-form input,
   .subscription-form button {
-    width: 100%;
+    width: 100%; /* Full width on small screens */
   }
 }

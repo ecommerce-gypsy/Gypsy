@@ -3,7 +3,9 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
-  background: linear-gradient(to bottom, #ffedd5, #edeaff);
+  background: linear-gradient(to bottom, #f0f4ff, #ffffff);
+  color: #333;
+  line-height: 1.6;
 }
 
 /* ===== Layout ===== */
@@ -27,33 +29,51 @@ body {
   margin: 20px;
   padding: 20px;
   background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== Heading Section ===== */
 .heading-container {
   display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
 .heading-box {
-  background: linear-gradient(135deg, #6b73ff, #000dff);
+  background: linear-gradient(135deg, #007bff, #0046b3);
   color: white;
   padding: 15px 30px;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   text-transform: uppercase;
-  text-align: center;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   transition: transform 0.3s ease-in-out;
+  align-items: center;
 }
 
 .heading-box:hover {
   transform: scale(1.05);
+}
+
+/* ===== Add Product Button ===== */
+.add-product-button {
+  padding: 12px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-product-button:hover {
+  background-color: #45a049;
 }
 
 /* ===== Filter Section ===== */
@@ -63,10 +83,16 @@ body {
 }
 
 .category-filter select {
-  padding: 8px;
+  padding: 10px;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 8px;
   border: 1px solid #ccc;
+  transition: border 0.3s;
+}
+
+.category-filter select:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 /* ===== Table Styles ===== */
@@ -78,32 +104,39 @@ body {
 .product-table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.product-table th,
+/* Table Header */
+.product-table th {
+  background-color: #007bff;
+  color: white;
+  padding: 14px;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Table Rows */
 .product-table td {
   padding: 12px;
   text-align: center;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
-.product-table th {
-  background-color: #f8fafc;
-  font-weight: bold;
-  color: #374151;
-}
-
+/* Alternate Row Colors */
 .product-table tr:nth-child(even) {
   background-color: #f9fafb;
 }
 
 .product-table tr:hover {
-  background-color: #e5e7eb;
+  background-color: #e8f0ff;
 }
 
 /* ===== Product Image ===== */
 .product-image {
-  max-width: 50px;
+  max-width: 60px;
   height: auto;
   object-fit: cover;
   border-radius: 50%;
@@ -117,13 +150,13 @@ body {
 }
 
 .remove-icon {
-  width: 25px;
-  height: 25px;
+  width: 28px;
+  height: 28px;
 }
 
 .edit {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
 .remove-icon:hover,
@@ -139,35 +172,43 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
 }
 
 .modal {
   background: white;
-  padding: 25px;
-  border-radius: 10px;
-  max-width: 500px;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 550px;
   width: 100%;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   max-height: 80vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  animation: fadeInModal 0.3s ease-in-out forwards;
+  animation: slideIn 0.4s ease-in-out forwards;
 }
 
-@keyframes fadeInModal {
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-30px);
+  }
+  to {
     transform: translateY(0);
   }
 }
@@ -175,16 +216,16 @@ body {
 /* ===== Modal Form ===== */
 .modal h3 {
   text-align: center;
-  font-size: 22px;
+  font-size: 24px;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .modal label {
   display: block;
   font-size: 15px;
   font-weight: bold;
-  color: #333;
+  color: #555;
   margin-bottom: 8px;
 }
 
@@ -195,9 +236,8 @@ body {
   padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
   margin-bottom: 15px;
-  transition: border 0.3s;
 }
 
 .modal input:focus,
@@ -211,45 +251,31 @@ body {
 .modal-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .modal-actions button {
-  padding: 10px 20px;
+  padding: 12px 25px;
   border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: bold;
-  transition: background 0.3s ease-in-out;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-.modal-actions button[type="button"] {
+.modal-actions button:first-child {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-actions button:last-child {
   background-color: #6c757d;
+  color: white;
 }
 
 .modal-actions button:hover {
-  background-color: #0056b3;
-}
-
-/* ===== Expandable Sections ===== */
-.expand-button {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #d1d5db;
-  padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.3s, transform 0.2s;
-  display: inline-block;
-}
-
-.expand-button:hover {
-  background-color: #e5e7eb;
-  transform: scale(1.03);
+  opacity: 0.9;
 }
 
 /* ===== Responsive Design ===== */
@@ -257,19 +283,23 @@ body {
   .main-container {
     flex-direction: column;
   }
-  
+
   .sidebar {
     width: 100%;
     min-height: auto;
   }
-  
+
   .product-table th,
   .product-table td {
     padding: 8px;
     font-size: 14px;
   }
-  
+
   .modal {
     max-width: 90%;
+  }
+
+  .add-product-button {
+    padding: 8px 16px;
   }
 }

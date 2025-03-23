@@ -1,53 +1,54 @@
-/* =======================
-   General Navbar Styles
-======================= */
+/* General Navbar Styles */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 40px; /* Reduced padding to make the navbar shorter */
-  background: linear-gradient(135deg, #6C5B7B, #355C7D, #C06C84); /* Gradient background */
-  font-family: "Poppins", sans-serif; /* Modern font */
+  justify-content: space-between; /* Space logo & nav links */
+  align-items: center; /* Vertical alignment */
+  padding: 10px 20px; /* Better padding for spacing */
+  background: linear-gradient(135deg, #6C5B7B, #355C7D, #C06C84);
+  font-family: "Poppins", sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  position: sticky; /* Keeps navbar at the top */
+  position: sticky;
   top: 0;
-  z-index: 1000; /* Ensures navbar is above marquee */
+  z-index: 1000;
+  padding-top: 50px;
 }
 
-/* =======================
-   Logo Section
-======================= */
+/* Logo Section */
+.nav-logo {
+  display: flex;
+  align-items: center; /* Align logo with menu */
+  margin-left: -200px; /* Space between logo and menu */
+}
+
 .nav-logo img {
-  width: 100px; /* Reduced size of logo */
+  width: 120px; /* Adjust size */
   height: auto;
   transition: transform 0.3s ease;
 }
 
 .nav-logo:hover img {
-  transform: scale(1.05); /* Slight zoom effect */
+  transform: scale(1.05);
 }
 
-/* =======================
-   Navigation Menu
-======================= */
+/* Navigation Menu */
 .nav-menu {
   display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 20px; /* Reduced gap between menu items */
+  gap: 80px; /* Increased spacing between menu items */
+  align-items: center; /* Ensure vertical alignment */
 }
 
 .nav-menu a {
   text-decoration: none;
-  color: #ffffff; /* White text */
-  font-size: 14px; /* Reduced font size */
+  color: #ffffff;
+  font-size: 16px;
   font-weight: 500;
   transition: color 0.3s ease, transform 0.3s ease;
-  position: relative; /* For underline effect */
+  position: relative;
 }
 
-/* Underline effect on hover */
 .nav-menu a::after {
   content: "";
   position: absolute;
@@ -55,7 +56,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #ffffff; /* White underline */
+  background-color: #ffffff;
   transition: width 0.3s ease;
 }
 
@@ -63,30 +64,26 @@
   width: 100%;
 }
 
-/* Active and hover state */
 .nav-menu a:hover,
 .nav-menu a.active {
-  color: #f8b195; /* Highlight color */
+  color: #f8b195;
 }
 
-/* =======================
-   Icons Section
-======================= */
+/* Icons Section */
 .nav-icons {
   display: flex;
-  align-items: center;
-  gap: 20px; /* Reduced gap between icons */
+  align-items: center; /* Align icons vertically */
+  gap: 25px; /* Spacing between icons */
 }
 
-/* Icon styling */
 .nav-icon img,
 .nav-cart img,
 .nav-user img {
-  width: 22px; /* Reduced icon size */
-  height: 22px;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
   transition: transform 0.3s ease;
-  filter: brightness(0) invert(1); /* White icons */
+  filter: brightness(0) invert(1);
 }
 
 .nav-icon img:hover,
@@ -95,204 +92,66 @@
   transform: scale(1.1);
 }
 
-/* =======================
-   Cart Section
-======================= */
+/* Cart Badge */
 .nav-cart {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-/* Cart badge */
 .nav-cart-count {
   position: absolute;
-  top: -6px; /* Reduced position for a tighter look */
-  right: -6px;
-  background: #ff6b6b; /* Red badge */
+  top: -5px;
+  right: -5px;
+  background: #ff6b6b;
   color: white;
-  font-size: 10px; /* Reduced font size */
+  font-size: 12px;
   font-weight: bold;
   border-radius: 50%;
-  padding: 4px 6px;
+  padding: 3px 6px;
   min-width: 18px;
   text-align: center;
 }
 
-/* =======================
-   User Dropdown Styles
-======================= */
-.nav-user-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.nav-user {
-  display: flex;
-  align-items: center;
-  gap: 6px; /* Reduced gap between user image and arrow */
-}
-
-.nav-user img {
-  width: 28px; /* Reduced user image size */
-  height: 28px;
-  border-radius: 50%;
-  filter: brightness(0) invert(1); /* White icon */
-}
-
-/* Dropdown arrow styling */
-.nav-arrow {
-  font-size: 12px; /* Smaller arrow size */
-  color: #ffffff;
-  transition: transform 0.3s ease;
-}
-
-/* Rotate arrow when dropdown is open */
-.nav-arrow.open {
-  transform: rotate(180deg);
-}
-
-/* User dropdown */
-.user-dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 12px; /* Reduced padding */
-  width: 200px; /* Narrower dropdown */
-  display: flex;
-  flex-direction: column;
-  z-index: 999; /* Ensures dropdown is above other content */
-  animation: fadeIn 0.3s ease;
-}
-
-/* Fade-in animation for dropdown */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* User info at top of dropdown */
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* Reduced gap between image and text */
-  font-size: 12px; /* Reduced font size */
-  padding-bottom: 8px; /* Reduced padding */
-}
-
-.user-info img {
-  width: 32px; /* Reduced image size */
-  height: 32px;
-  border-radius: 50%;
-}
-
-/* Dropdown separator */
-.user-dropdown hr {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin: 8px 0; /* Reduced margin */
-}
-
-/* Dropdown items */
-.dropdown-item {
-  padding: 10px;
-  text-decoration: none;
-  color: #333;
-  font-size: 12px; /* Reduced font size */
-  transition: background 0.3s ease;
-  border-radius: 6px;
-}
-
-.dropdown-item:hover {
-  background: #f5f5f5;
-}
-
-/* Logout Button */
-.logout-button {
-  padding: 10px; /* Reduced padding */
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 12px; /* Reduced font size */
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.logout-button:hover {
-  background: #ff4c4c;
-}
-
-/* =======================
-   Marquee Section (Light Color Palette)
-======================= */
-.marquee-container {
-  overflow: hidden; /* Ensure marquee stays in bounds */
-  background: #f5f5f5; /* Light gray background */
-  color: #333; /* Dark text for contrast */
-  padding: 8px 0; /* Reduced padding */
-  position: relative; /* Ensure it stays below the navbar */
-  z-index: 900; /* Below navbar but above other content */
-  margin-top: 60px; /* Adjust this value to match navbar height */
-}
-
-/* Marquee styling */
-marquee {
-  font-size: 12px; /* Reduced font size */
-  font-weight: 500;
-  white-space: nowrap;
-  color: #555; /* Slightly darker text for better readability */
-}
-
-/* =======================
-   Responsive Design
-======================= */
-@media (max-width: 768px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
   .navbar {
-    padding: 10px 20px; /* Further reduced padding on mobile */
+    padding: 15px 20px;
+  }
+
+  .nav-logo img {
+    width: 100px;
   }
 
   .nav-menu {
-    display: none; /* Hide by default on mobile */
+    gap: 25px; /* Less spacing on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
     flex-direction: column;
-    position: absolute;
-    top: 60px; /* Adjusted top to match new navbar height */
-    left: 0;
-    background-color: rgba(108, 91, 123, 0.95);
+    align-items: flex-start; /* Align left for mobile */
+  }
+
+  .nav-logo {
+    margin-bottom: 15px; /* Space under logo */
+  }
+
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    gap: 25px;
     width: 100%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 8px 0; /* Reduced padding */
+ 
   }
 
-  /* Show menu when active */
   .nav-menu.active {
-    display: flex;
+    display: flex; /* Show menu on toggle */
   }
 
-  .nav-menu li {
-    padding: 8px 20px; /* Reduced padding in menu items */
-  }
-
-  /* Adjust icon gap for smaller screens */
   .nav-icons {
-    gap: 12px; /* Reduced gap between icons */
-  }
-
-  .nav-arrow {
-    font-size: 10px; /* Smaller arrow on mobile */
-  }
-
-  /* Marquee adjustment on small screens */
-  .marquee-container {
-    margin-top: 80px; /* Avoid overlapping */
+    justify-content: flex-end;
+    width: 100%;
   }
 }

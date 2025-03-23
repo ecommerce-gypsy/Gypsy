@@ -6,6 +6,7 @@ import cart from "../Assets/cart.png";
 import heart from "../Assets/heart-logo.png";
 import user from "../Assets/userr.png";
 import { CartContext } from "../../Context/CartContext";
+import MarqueeBanner from "../MarqueeBanner/MarqueeBanner";
 
 export const Navbar = () => {
   const { cartCount } = useContext(CartContext);
@@ -29,15 +30,18 @@ export const Navbar = () => {
 
   return (
     <div className="navbar">
-      {/* Logo Section */}
+      <div className="marquee container">
+      {/* Logo Section */}<MarqueeBanner/>
+      </div>
       <div className="nav-logo">
         <img src={logo} alt="Logo" />
       </div>
 
       {/* Navigation Menu */}
       <ul className="nav-menu">
+      
         <li>
-          <Link to="/">HOME</Link>
+          <Link to="/home">HOME</Link>
         </li>
         <li>
           <Link to="/anklets">ANKLETS</Link>

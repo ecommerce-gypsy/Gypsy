@@ -2,247 +2,246 @@
 
 /* General Layout */
 .admin-layout {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f9f9f9;
-  }
-  
-  .admin-container {
-    flex: 1;
-    padding: 2rem;
-    overflow-x: auto;
-  }
-  
-  .admin-title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 1.5rem;
-  }
-  
-  /* Status Filter */
-  .status-filter {
-    margin-bottom: 1.5rem;
-  }
-  
-  .status-filter button {
-    margin-right: 1rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .status-filter button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Table Styling */
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    background: white;
-  }
-  
-  .review-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-  }
-  
-  .review-table thead {
-    background-color: #0047FF;
-    color: white;
-  }
-  
-  .review-table th, .review-table td {
-    padding: 1rem;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .review-table tbody tr:hover {
-    background-color: #f3f4f6;
-  }
-  
-  /* Action Buttons */
-  .action-buttons {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .icon-btn:hover {
-    transform: scale(1.1);
-  }
-  
-  .edit-icon {
-    color: #28a745;
-  }
-  
-  .trash-icon {
-    color: #dc3545;
-  }
-  
-  .view-icon {
-    color: #17a2b8;
-  }
-  
-  /* Modals */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.admin-container {
+  flex: 1;
+  padding: 2rem;
+  overflow-x: auto;
+}
+
+.admin-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+/* Status Filter */
+.status-filter {
+  margin-bottom: 1.5rem;
+}
+
+.status-filter button {
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.status-filter button:hover {
+  background-color: #0056b3;
+}
+
+/* Table Styling */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: white;
+}
+
+.review-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.review-table thead {
+  background-color: #0047FF;
+  color: white;
+}
+
+.review-table th, .review-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.review-table tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
+}
+
+.edit-icon {
+  color: #28a745;
+}
+
+.trash-icon {
+  color: #dc3545;
+}
+
+.view-icon {
+  color: #17a2b8;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative; /* Ensure child positioning is relative */
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+/* Close Button (Fixed Inside Modal) */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #dc3545;
+  transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1.2);
+}
+
+/* Modal Body */
+.modal-body p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+/* Form in Modal */
+form label {
+  display: block;
+  margin: 1rem 0 0.5rem;
+  font-weight: 600;
+  color: #555;
+}
+
+form select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* Modal Buttons */
+.modal-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.save-btn, .cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+
+
+/* Error Message */
+.error-text {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+/* Loading Spinner */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .modal-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    position: relative; /* Ensure child positioning is relative */
+    padding: 1.5rem;
+    width: 95%;
   }
-  
-  /* Modal Header */
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+
+  .admin-container {
+    padding: 1rem;
   }
-  
+
+  .status-filter button {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
   .modal-header h2 {
-    margin: 0;
-    font-size: 1.75rem;
-    color: #333;
-  }
-  
-  /* Close Button (Fixed Inside Modal) */
-  .close-btn {
-    background: none;
-    border: none;
     font-size: 1.5rem;
-    cursor: pointer;
-    color: #dc3545;
-    transition: transform 0.2s ease;
   }
-  
-  .close-btn:hover {
-    transform: scale(1.2);
-  }
-  
-  /* Modal Body */
-  .modal-body p {
-    margin: 0.5rem 0;
-    line-height: 1.6;
-  }
-  
-  /* Form in Modal */
-  form label {
-    display: block;
-    margin: 1rem 0 0.5rem;
-    font-weight: 600;
-    color: #555;
-  }
-  
-  form select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-  }
-  
-  /* Modal Buttons */
-  .modal-buttons {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-  
+
   .save-btn, .cancel-btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
   }
-  
-  .save-btn {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .save-btn:hover {
-    background-color: #218838;
-  }
-  
-  .cancel-btn {
-    background-color: #dc3545;
-    color: white;
-  }
- 
-  
-  
-  /* Error Message */
-  .error-text {
-    color: #dc3545;
-    margin-bottom: 1rem;
-  }
-  
-  /* Loading Spinner */
-  .loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .modal-container {
-      padding: 1.5rem;
-      width: 95%;
-    }
-  
-    .admin-container {
-      padding: 1rem;
-    }
-  
-    .status-filter button {
-      padding: 0.5rem;
-      font-size: 0.875rem;
-    }
-  
-    .modal-header h2 {
-      font-size: 1.5rem;
-    }
-  
-    .save-btn, .cancel-btn {
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-    }
-  }
-  
+}
