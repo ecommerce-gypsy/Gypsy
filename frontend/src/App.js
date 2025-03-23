@@ -46,6 +46,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrderConfirmation from './Pages/OrderConfirmation';
 //import AdminPanel from './Pages/AdminPanel';
+import Payment from './Pages/AdminPayment';
 
 // Helper component to manage layout
 const Layout = ({ children }) => {
@@ -69,7 +70,7 @@ const App = () => {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/salesreport" element={<SalesReport />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
@@ -107,7 +108,7 @@ const App = () => {
       <Route path="/AdminOutOfStock" element={<AdminOutOfStock/>}/>
       <Route path="/order/:orderId" element={<OrderConfirmation />} />
       <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
-
+      <Route path="/adminpayment" component={Payment} />
         </Routes>
       </Layout>
     </BrowserRouter>

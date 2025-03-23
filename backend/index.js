@@ -48,6 +48,9 @@ app.use('/api/sales', orderRoutes);
 const stock = require('./routes/admin/stock');
 app.use('/api/stock', stock);
 
+const dashboard = require('./routes/dashboard');
+app.use('/api/dashboard', dashboard);
+
 app.get("/", (req, res) => {
     res.send("Express App is Running");
 });
