@@ -1,78 +1,78 @@
 /* General Styles */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f9f9f9;
   color: #333;
 }
 
-/* ====== PRODUCT CATEGORY SECTION ====== */
+/* ===== PRODUCT CATEGORY SECTION ===== */
 .product-category-section {
   text-align: center;
   margin: 50px auto;
-  padding: 40px 20px;
+  padding: 50px 0;
   background: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  width: 90%;
-  max-width: 1100px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  max-width: 100%;
 }
 
+/* Section Title */
 .product-category-section h2 {
-  font-size: 2em;
+  font-size: 3rem;
   font-weight: bold;
   color: #171717;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
-/* Product category container */
+/* Product Category Container (More Width) */
 .product-category-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 50px;
+  padding: 0 5%;
 }
 
-/* Category box (circular image with text below) */
+/* Category Card (Increased Size) */
 .product-category {
-  width: 250px;
-  height: 250px;
+  flex: 1;
+  max-width: 450px;
+  height: 400px;
   background: white;
-  border-radius: 15px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
 }
 
 .product-category:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
 }
 
-/* Circular Image */
+/* Category Image (Increased Size) */
 .product-category img {
-  width: 130px;
-  height: 130px;
+  width: 180px;
+  height: 180px;
   object-fit: cover;
   border-radius: 50%;
-  background: white;
-  padding: 10px;
+  margin-bottom: 20px;
 }
 
-/* Button */
+/* Explore Button */
 .product-category button {
-  margin-top: 15px;
-  padding: 10px 20px;
+  margin-top: 20px;
+  padding: 12px 30px;
   background-color: #ff6600;
   border: none;
-  border-radius: 20px;
+  border-radius: 30px;
   color: white;
-  font-size: 1em;
+  font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;
@@ -83,198 +83,67 @@ body {
   background-color: #e65c00;
 }
 
-/* Latest Collection Section */
+/* ===== LATEST COLLECTION ===== */
 .popular {
   text-align: center;
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  height: auto;
-}
-
-.popular-item {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px; /* Space between items */
-  margin-top: 30px;
-  padding-bottom: 50px; /* Prevents overlapping with the footer */
-}
-
-/* Image Styling */
-.popular-item img {
-  width: 250px; /* Increased size */
-  height: 250px;
-  object-fit: cover;
-  border-radius: 15px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.popular-item img:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Floating Chat Button */
-.chat-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  margin-top: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.chat-button {
-  background-color: #5a5a42;
-  border: none;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.chat-button:hover {
-  background-color: #4a4a32;
-}
-
-.chat-button img {
-  width: 24px;
-  height: 24px;
-}
-
-/* Chat Box */
-.chat-box {
-  width: 320px;
-  height: 420px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Chat Header */
-.chat-header {
-  background-color: #5a5a42;
-  color: white;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  border-radius: 10px 10px 0 0;
-}
-
-.chat-header button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-/* Chat Body */
-.chat-body {
-  flex-grow: 1;
-  padding: 15px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Chat Messages */
-.chat-message {
-  max-width: 80%;
-  padding: 10px;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.chat-message.bot {
-  background-color: #f1f1f1;
-  align-self: flex-start;
-}
-
-.chat-message.user {
-  background-color: #5a5a42;
-  color: white;
-  align-self: flex-end;
-}
-
-/* Chat Input */
-.chat-footer {
-  display: flex;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
-  border-radius: 0 0 10px 10px;
-}
-
-.chat-footer input {
-  flex-grow: 1;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.chat-footer button {
-  padding: 8px 15px;
-  background-color: #5a5a42;
-  border: none;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  margin-left: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background 0.3s;
-}
-
-.chat-footer button:hover {
-  background-color: #4a4a32;
-}
-/* Fix Swiper Container */
+/* Swiper Container */
 .swiper-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: auto;
   overflow: hidden;
 }
 
-/* Fix Swiper Slide Layout */
+/* Swiper Slide */
 .swiper-slide {
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
 }
 
-/* Fix Navigation Buttons */
+/* Swiper Navigation Buttons */
 .swiper-button-next,
 .swiper-button-prev {
-  color: #333; /* Change to visible color */
+  color: #333;
 }
 
-/* Ensure images fit properly */
-.swiper-slide img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .product-category-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .product-category {
+    max-width: 90%;
+    height: 350px;
+  }
 }
 
+@media (max-width: 600px) {
+  .product-category-section h2 {
+    font-size: 2rem;
+  }
+
+  .product-category {
+    max-width: 100%;
+    height: 300px;
+  }
+
+  .product-category img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .product-category button {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+}

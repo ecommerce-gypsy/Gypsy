@@ -1,13 +1,31 @@
 import React from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 import { UserCircle } from "@radix-ui/react-icons";
-import "./Dashboard.css"; // Import CSS
+import "./Dashboard.css";
 
+// Data for Line Chart
 const data = [
   { year: 1972, value: 0.1 },
   { year: 1975, value: 0.15 },
   { year: 1980, value: 0.05 },
   { year: 1982, value: 0.2 },
+];
+
+// Data for Pie Chart (Top Selling Products)
+const pieData = [
+  { name: "Able Pro", value: 16300, color: "#FF7E5F" },
+  { name: "Photoshop", value: 26421, color: "#38EF7D" },
+  { name: "Figma", value: 18400, color: "#0072FF" },
 ];
 
 const Dashboard = () => {
@@ -46,35 +64,44 @@ const Dashboard = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* User Activity & Application Sales */}
+      {/* User Activity & Top Selling Products */}
       <div className="stats-grid">
-        {/* Application Sales */}
-        <div className="table-container">
-          <h3>Application Sales</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Application</th>
-                <th>Sales</th>
-                <th>Avg Price</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Able Pro</td>
-                <td>16,300</td>
-                <td>$53</td>
-                <td>$15,652</td>
-              </tr>
-              <tr>
-                <td>Photoshop</td>
-                <td>26,421</td>
-                <td>$35</td>
-                <td>$18,785</td>
-              </tr>
-            </tbody>
-          </table>
+        {/* Top Selling Products */}
+        <div className="top-selling-container">
+          <h3>Top Selling Products</h3>
+          <div className="chart-container">
+            <ResponsiveContainer width={160} height={160}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={50} // Reduced size
+                  innerRadius={30} // Optional: for a donut style
+                  label
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+
+            {/* Product List */}
+            <ul className="product-list">
+              {pieData.map((product, index) => (
+                <li key={index} className="product-item">
+                  <span
+                    className="product-color"
+                    style={{ background: product.color }}
+                  ></span>
+                  {product.name}: {product.value} sales
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* User Activity */}

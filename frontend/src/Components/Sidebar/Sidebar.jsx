@@ -12,6 +12,8 @@ import sales from "../Assets/Sales.png";
 import order from "../Assets/order.png";
 import dashboard from "../Assets/data.png";
 import review from "../Assets/review.png";
+import stock from "../Assets/stock.png";
+import payment from "../Assets/payment.png";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -34,6 +36,8 @@ const Sidebar = () => {
     { path: "/adminuser", icon: admin, label: "Admin User" },
     { path: "/adminorder", icon: order, label: "Admin Order" },
     { path: "/reviewlist", icon: review, label: "Admin Review" },
+    {path:"/adminoutofstock",icon:stock,label: "Admin Stock"},
+    {path:"/adminpayment",icon:payment,label: "Admin Payment"}
   ];
 
   return (

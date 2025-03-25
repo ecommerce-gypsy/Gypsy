@@ -7,7 +7,7 @@
   background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
-  position: relative; /* Ensures position control */
+  position: relative;
 }
 
 /* Search Container */
@@ -24,158 +24,113 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
-  width: 250px; /* Increased width for better accessibility */
-  transition: width 0.3s ease; /* Smooth expand effect */
-}
-
-/* Expand the search bar when open */
-.search-container input {
   width: 250px;
+  transition: width 0.3s ease;
 }
 
-.search-container input:focus {
-  border-color: #007BFF;
-}
-
-/* Search Icon Style */
+/* Search Icon */
 .header-icon {
-  width: 24px; /* Icon size */
+  width: 24px;
   height: 24px;
   cursor: pointer;
   margin-left: 10px;
 }
 
-/* Right alignment for the search bar and icon */
-.search-container {
-  margin-left: auto; /* Push to the right */
-}
-
-/* Results container */
+/* Position search results to the right */
 .search-results {
   position: absolute;
-  top: 100%; /* Position below the search input */
-  left: 0;
-  width: 250px; /* Increased width for better readability */
+  top: 50px; /* Position below the search bar */
+  right: 0; /* Align to the right */
+  width: 300px;
   background-color: white;
   border: 1px solid #ccc;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  max-height: 400px; /* Increased height for more results */
-  overflow-y: auto; /* Enable scroll if results overflow */
-  z-index: 10;
-  padding: 15px 10px; /* More padding for a better design */
-  box-sizing: border-box;
-  border-radius: 8px; /* Added rounded corners for a softer look */
-  transition: all 0.3s ease; /* Smooth transition for appearance */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 15px 10px;
 }
 
-/* Hover effect for search results */
-.search-results:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Result list container */
+/* Result List */
 .results-list {
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  gap: 15px; /* Increased gap for better spacing */
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* Result item styling */
+/* Result Item */
 .result-item {
   display: flex;
-  flex-direction: row; /* Align image and text horizontally */
-  justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  box-sizing: border-box;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer; /* Indicates the item is clickable */
-  pointer-events: auto; /* Ensure clicks are registered */
-}
-
-.result-item * {
-  pointer-events: none; /* Prevent child elements from blocking clicks */
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
 }
 
 .result-item:hover {
-  transform: translateY(-5px); /* Slight lift on hover */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  background-color: #f1f1f1;
 }
 
-/* Image styling */
+/* Product Image */
 .product-image {
-  width: 80px; /* Larger images for clarity */
-  height: 80px;
-  object-fit: cover; /* Ensure the image covers the area */
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
   border-radius: 4px;
-  margin-right: 15px; /* Increased space between image and text */
+  margin-right: 10px;
 }
 
-/* Info container */
+/* Product Info */
 .result-info {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
   text-align: left;
 }
 
-/* Product name */
 .product-name {
+  font-size: 14px;
   font-weight: bold;
-  font-size: 16px; /* Increased font size for better visibility */
   color: #333;
 }
 
-/* Product price */
 .product-price {
+  font-size: 12px;
   color: #007bff;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 5px; /* Added space between name and price */
+  margin-top: 4px;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  text-align: center;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .search-input {
-    width: 200px; /* Smaller width for mobile */
-  }
-
-  .header {
-    padding: 10px;
-  }
-
-  .header-icon {
-    width: 20px;
-    height: 20px;
+    width: 200px;
   }
 
   .search-results {
-    width: 200px; /* Same width as the input for mobile */
-  }
-
-  .results-list {
-    gap: 12px; /* Smaller gap for mobile */
+    width: 260px;
   }
 
   .result-item {
-    padding: 8px; /* Reduced padding for mobile */
+    padding: 6px;
   }
 
   .product-image {
-    width: 60px; /* Smaller images for mobile */
-    height: 60px;
+    width: 50px;
+    height: 50px;
   }
 
   .product-name {
-    font-size: 14px; /* Adjusted font size for mobile */
+    font-size: 13px;
   }
 
   .product-price {
-    font-size: 12px; /* Adjusted font size for mobile */
+    font-size: 11px;
   }
 }

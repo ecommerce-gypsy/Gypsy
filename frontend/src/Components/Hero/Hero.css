@@ -1,20 +1,25 @@
-/* Ensure Marquee is at the Top */
+/* Hero Container */
 .hero-container {
-  position: relative;
   width: 100%;
+  min-height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #f9fafb, #ffffff);
+  animation: fadeInPage 1s ease-in-out;
 }
 
-/* Hero Section Styling */
+/* Hero Section */
 .hero {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  height: 100vh;
-  background: linear-gradient(180deg, #fde1ff, #e1ffea22 60%);
-  padding: 80px 100px 0; /* Added top padding for the marquee */
+  align-items: center;
+  padding: 80px 100px;
+  gap: 50px;
   box-sizing: border-box;
-  padding-top: 50px;
+  max-width: 1200px;
+  width: 100%;
 }
 
 /* Left Section */
@@ -23,79 +28,197 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 20px;
-  padding-left: 50px;
-  line-height: 1.2;
+  gap: 30px;
+  animation: slideInLeft 1s ease-in-out;
 }
 
-.hero-left p {
-  color: #171717;
-  font-size: 60px;
-  font-weight: 700;
-  margin: 5px 0;
-  max-width: 600px;
+/* Hero Text */
+.hero-text h1 {
+  font-size: 70px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+  background: linear-gradient(90deg, #2c3e50, #4a6fa1);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hero-text h1 span {
+  background: linear-gradient(90deg, #e9b6c1, #f3d9d6);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* CTA Button */
+.hero-btn-container {
+  display: flex;
+  justify-content: flex-start;
 }
 
 /* Explore Button */
-.hero-latest-btn {
+.explore-btn {
+  padding: 14px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #4a90e2, #6bb4ff);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.explore-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 30px rgba(74, 144, 226, 0.6);
+}
+
+/* Stats Section */
+.stats-section {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 60px;
+  flex-wrap: wrap;
+}
+
+/* Stat Box */
+.stat-box {
+  position: relative; /* For ripple effect */
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  text-align: center;
+  width: 250px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer; /* Hand cursor on hover */
+  overflow: hidden; /* Contain ripple */
+}
+
+/* Hover Effect – Glow & Scale */
+.stat-box:hover {
+  transform: translateY(-10px) scale(1.08); /* Smooth scale */
+  box-shadow: 0 15px 40px rgba(0, 119, 255, 0.4); /* Soft blue glow */
+}
+
+/* Stat Number */
+.stat-number {
+  font-size: 3rem;
+  font-weight: bold;
+  animation: bounceIn 1s ease-in-out forwards;
+}
+
+/* Click Ripple Animation */
+.stat-box::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: rgba(0, 119, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+/* Trigger Ripple on Click */
+.stat-box:active::after {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
+}
+
+/* Bounce-In Animation */
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Pop-Up Container (Hidden by Default) */
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 280px;
-  height: 60px;
-  border-radius: 50px;
-  margin-top: 20px;
-  background: #ff4141;
-  color: white;
-  font-size: 18px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  z-index: 999;
 }
 
-.hero-latest-btn:hover {
-  background: #d93636;
+/* Active Pop-Up */
+.popup-container.active {
+  opacity: 1;
+  visibility: visible;
 }
 
-/* Right Section */
-.hero-right {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.hero-right img.hero-logo {
+/* Pop-Up Content */
+.popup-content {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  animation: popIn 0.5s ease;
   max-width: 500px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 10px;
+  text-align: center;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .hero {
+/* Pop-Up Title */
+.popup-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Close Button */
+.close-btn {
+  background: #4a90e2;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.close-btn:hover {
+  background: #357abd;
+}
+
+/* Pop-Up Animation */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-section {
     flex-direction: column;
-    text-align: center;
-    height: auto;
-    padding: 100px 20px 50px; /* Adjusted padding for marquee */
-  }
-
-  .hero-left, .hero-right {
-    justify-content: center;
     align-items: center;
-    padding: 0;
   }
 
-  .hero-right {
-    margin-top: 30px;
-  }
-
-  .hero-right img.hero-logo {
-    max-width: 80%;
-  }
-
-  .hero-left p {
-    font-size: 50px;
+  .popup-content {
+    width: 90%;
   }
 }

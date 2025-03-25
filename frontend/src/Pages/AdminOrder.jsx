@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AdminOrder.css';
 import Sidebar from '../Components/Sidebar/Sidebar';
-import { FaEdit, FaTrash,FaEye } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { ThreeDots } from 'react-loader-spinner';
 
 const AdminOrder = () => {
@@ -9,8 +9,7 @@ const AdminOrder = () => {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [editOrder, setEditOrder] = useState(null);
-  const [viewOrder, setViewOrder] = useState(null); 
-
+  const [viewOrder, setViewOrder] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -90,44 +89,15 @@ const AdminOrder = () => {
     }
   };
 
-  const openEditModal = (order) => {
-    console.log(order);
-    setEditOrder(order);
-  };
-
-  const closeEditModal = () => {
-    setEditOrder(null);
-  };
+  const openEditModal = (order) => setEditOrder(order);
+  const closeEditModal = () => setEditOrder(null);
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
-      setErrorMessage('No token found. Please log in.');
-      return;
-    }
-    try {
-      const response = await fetch(`http://localhost:4000/admin/orders/${editOrder._id}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          orderStatus: editOrder.orderStatus,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update order');
-      }
-      const updatedOrder = await response.json();
-      setOrders(orders.map((order) => (order._id === editOrder._id ? updatedOrder : order)));
-      closeEditModal();
-    } catch (err) {
-      setErrorMessage('Error updating order: ' + err.message);
-    }
+    await handleStatusChange(editOrder._id, editOrder.orderStatus);
+    closeEditModal();
   };
-  
+
   const handleViewDetails = async (orderId) => {
     const token = localStorage.getItem('auth_token');
     if (!token) {
@@ -151,9 +121,8 @@ const AdminOrder = () => {
     }
   };
 
-  const closeViewModal = () => {
-    setViewOrder(null);
-  };
+  const closeViewModal = () => setViewOrder(null);
+
   return (
     <div className="admin-layout">
       <Sidebar />
@@ -174,53 +143,51 @@ const AdminOrder = () => {
                     <th>User</th>
                     <th>Total Price</th>
                     <th>Status</th>
+                    <th>Ordered Date</th>
+                    <th>Ordered Time</th>
                     <th>Actions</th>
-                    <th>Orderd DAte</th>
                   </tr>
                 </thead>
                 <tbody>
-  {orders.map((order) => (
-    <tr key={order._id}>
-      <td>{order._id}</td>
-      <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
-      <td>${order.totalPrice}</td>
-      <td>
-        <select
-          className="status-dropdown"
-          value={order.orderStatus}
-          onChange={(e) => handleStatusChange(order._id, e.target.value)}
-        >
-          <option value="Pending">Pending</option>
-          <option value="Processing">Processing</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-      </td>
-      <td>
-        <div className="action-buttons">
-          <button className="icon-btn" onClick={() => openEditModal(order)}>
-            <FaEdit className="edit-icon" />
-          </button>
-          <button className="icon-btn" onClick={() => handleDelete(order._id)}>
-            <FaTrash className="trash-icon" />
-          </button>
-          <button className="icon-btn" onClick={() => handleViewDetails(order._id)}>
-            <FaEye className="view-icon" />
-          </button>
-        </div>
-      </td>
-      <td>{new Date(order.orderedDate).toLocaleDateString()}</td> {/* Display ordered date */}
-      <td>{order.orderedTime}</td> {/* Display ordered time */}
-    </tr>
-  ))}
-</tbody>
-
+                  {orders.map((order) => (
+                    <tr key={order._id}>
+                      <td>{order._id}</td>
+                      <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
+                      <td>${order.totalPrice}</td>
+                      <td>
+                        <select
+                          className={`status-dropdown status-${order.orderStatus.toLowerCase()}`}
+                          value={order.orderStatus}
+                          onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                        >
+                          {["Pending", "Processing", "Shipped", "Delivered", "Cancelled"].map((status) => (
+                            <option key={status} value={status}>{status}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>{new Date(order.orderedDate).toLocaleDateString()}</td>
+                      <td>{order.orderedTime}</td>
+                      <td>
+                        <button className="icon-btn" onClick={() => openEditModal(order)}>
+                          <FaEdit className="edit-icon" />
+                        </button>
+                        <button className="icon-btn" onClick={() => handleDelete(order._id)}>
+                          <FaTrash className="trash-icon" />
+                        </button>
+                        <button className="icon-btn" onClick={() => handleViewDetails(order._id)}>
+                          <FaEye className="view-icon" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </>
         )}
       </div>
+
+      {/* Edit Modal */}
       {editOrder && (
         <div className="modal-overlay">
           <div className="modal-container">
@@ -234,53 +201,51 @@ const AdminOrder = () => {
                 value={editOrder.orderStatus}
                 onChange={(e) => setEditOrder({ ...editOrder, orderStatus: e.target.value })}
               >
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
+                {["Pending", "Processing", "Shipped", "Delivered", "Cancelled"].map((status) => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
               </select>
-              <div className="modal-buttons">
-                <button className="save-btn" type="submit">Save Changes</button>
-                <button className="close-btn" type="button" onClick={closeEditModal}>Close</button>
-              </div>
+              <button type="submit" className="save-btn">Save Changes</button>
             </form>
           </div>
         </div>
       )}
-      {viewOrder && (
+
+    {/* View Modal */}
+{viewOrder && (
   <div className="modal-overlay">
     <div className="modal-container">
-      <div className="modal-header">
-        <h2>Order Details</h2>
-        <button className="close-btn" onClick={closeViewModal}>X</button>
-      </div>
-      <div className="modal-body">
-        <p><strong>Order ID:</strong> {viewOrder._id}</p>
-        <p><strong>User:</strong> {viewOrder.userid?.name} ({viewOrder.userid?.email})</p>
-        <p><strong>Status:</strong> {viewOrder.orderStatus}</p>
-        <p><strong>Total Price:</strong> ${viewOrder.totalPrice}</p>
-        
-        <h3>Items:</h3>
-        <ul className="order-items-list">
-          {viewOrder.items.map((item, index) => (
-            <li key={index} className="order-item">
-              <img src={item.images?.[0]} alt={item.productName} className="order-item-image" />
-              <div className="order-item-details">
-                <strong>{item.productName}</strong>
-                <p>{item.quantity} x ${item.price} = <strong>${item.quantity * item.price}</strong></p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <h2>Order Details</h2>
+      <p><strong>Order ID:</strong> {viewOrder._id}</p>
+      <p><strong>User:</strong> {viewOrder.userid?.name} ({viewOrder.userid?.email})</p>
+      <p><strong>Status:</strong> {viewOrder.orderStatus}</p>
+      <p><strong>Total Price:</strong> ${viewOrder.totalPrice}</p>
+      
+      <h3>Items:</h3>
+      {viewOrder.items && viewOrder.items.length > 0 ? (
+        viewOrder.items.map((item) => (
+          <div key={item._id} className="item-card">
+            <img src={item.productId?.image} alt={item.productId?.name} className="item-image" />
+            <div className="item-info">
+              <p><strong>{item.productId?.name}</strong></p>
+              <p>Quantity: {item.quantity}</p>
+              <p>Price: ${item.price}</p>
+              <p>Total: ${item.quantity * item.price}</p>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No items found in this order.</p>
+      )}
+      
+      <button className="close-btn" onClick={closeViewModal}>Close</button>
     </div>
   </div>
 )}
 
+    
     </div>
   );
 };
 
 export default AdminOrder;
-  

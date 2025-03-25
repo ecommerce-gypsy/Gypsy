@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SalesReport.css';
 
 export const SalesReport = () => {
   const [reportData, setReportData] = useState(null);
   const [orders, setOrders] = useState([]);
-  const [pendingOrders, setPendingOrders] = useState(0); // Number of pending orders
-  const [outOfStockProducts, setOutOfStockProducts] = useState(0); // Number of out-of-stock products
+  const [pendingOrders, setPendingOrders] = useState(0);
+  const [outOfStockProducts, setOutOfStockProducts] = useState(0);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   // Fetch sales report, total revenue, and orders per month
   const fetchSalesReport = async () => {
@@ -28,16 +30,16 @@ export const SalesReport = () => {
       const [revenueResponse, ordersPerMonthResponse] = await Promise.all([
         fetch(`http://localhost:4000/api/sales/admin/total-revenue?${query.toString()}`, {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         }),
         fetch(`http://localhost:4000/api/sales/admin/orders-per-month?${query.toString()}`, {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         }),
       ]);
 
       if (!revenueResponse.ok || !ordersPerMonthResponse.ok) throw new Error('Failed to fetch sales report');
-      
+
       const revenueData = await revenueResponse.json();
       const ordersPerMonthData = await ordersPerMonthResponse.json();
 
@@ -65,7 +67,7 @@ export const SalesReport = () => {
     try {
       const response = await fetch('http://localhost:4000/admin/orders', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
 
       if (!response.ok) throw new Error('Failed to fetch orders');
@@ -90,43 +92,39 @@ export const SalesReport = () => {
     try {
       const response = await fetch('http://localhost:4000/api/sales/pending-orders', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
 
       if (!response.ok) throw new Error('Failed to fetch pending orders');
       const data = await response.json();
-      setPendingOrders(data.pendingOrdersCount); // Assuming this returns the count
+      setPendingOrders(data.pendingOrdersCount);
     } catch (err) {
       setErrorMessage('Error fetching pending orders: ' + err.message);
     }
   };
 
- // Fetch out of stock products count
-const fetchOutOfStockProducts = async () => {
-  const token = localStorage.getItem('auth_token');
-  if (!token) {
-    setErrorMessage('No token found. Please log in.');
-    setLoading(false);
-    return;
-  }
+  // Fetch out-of-stock products count
+  const fetchOutOfStockProducts = async () => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      setErrorMessage('No token found. Please log in.');
+      setLoading(false);
+      return;
+    }
 
-  try {
-    const response = await fetch('http://localhost:4000/api/sales/out-of-stock', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-    });
+    try {
+      const response = await fetch('http://localhost:4000/api/sales/out-of-stock', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      });
 
-    if (!response.ok) throw new Error('Failed to fetch out of stock products');
-    
-    const data = await response.json();
-    
-    // Here we expect the response to contain 'outOfStockCount' and not an array
-    setOutOfStockProducts(data.outOfStockCount); // Set the count directly from the response
-  } catch (err) {
-    setErrorMessage('Error fetching out of stock products: ' + err.message);
-  }
-};
-
+      if (!response.ok) throw new Error('Failed to fetch out of stock products');
+      const data = await response.json();
+      setOutOfStockProducts(data.outOfStockCount);
+    } catch (err) {
+      setErrorMessage('Error fetching out of stock products: ' + err.message);
+    }
+  };
 
   useEffect(() => {
     fetchSalesReport();
@@ -159,23 +157,20 @@ const fetchOutOfStockProducts = async () => {
         <div className="report-box revenue-box">
           <h2>Total Revenue</h2>
           <p className="summary-value">₹{reportData?.totalRevenue}</p>
-          <p className="summary-comparison">Compared to last month</p>
         </div>
 
-        <div className="report-box orders-summary-box">
+        <div className="report-box orders-summary-box"onClick={() => navigate('/adminorder')} style={{ cursor: 'pointer' }}>
           <h2>Total Orders</h2>
           <p className="summary-value">{reportData?.totalOrders}</p>
-          <p className="summary-comparison">Compared to last month</p>
         </div>
 
-        {/* Pending Orders */}
         <div className="report-box pending-orders-box">
           <h2>Pending Orders</h2>
           <p className="summary-value">{pendingOrders}</p>
         </div>
 
-        {/* Out of Stock Products */}
-        <div className="report-box out-of-stock-box">
+        {/* Navigate to Admin Stock Page */}
+        <div className="report-box out-of-stock-box" onClick={() => navigate('/adminoutofstock')} style={{ cursor: 'pointer' }}>
           <h2>Out of Stock Products</h2>
           <p className="summary-value">{outOfStockProducts}</p>
         </div>
@@ -206,7 +201,6 @@ const fetchOutOfStockProducts = async () => {
         </table>
       </div>
 
-      {/* Loading & Error Messages */}
       {loading && <p className="loading-message">Loading...</p>}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>

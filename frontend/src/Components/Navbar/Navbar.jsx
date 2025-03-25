@@ -41,7 +41,7 @@ export const Navbar = () => {
       <ul className="nav-menu">
       
         <li>
-          <Link to="/home">HOME</Link>
+          <Link to="/">HOME</Link>
         </li>
         <li>
           <Link to="/anklets">ANKLETS</Link>

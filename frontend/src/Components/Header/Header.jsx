@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Header.css';
 import searchIcon from '../Assets/search-icon.png';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-// Debounce function to delay the search query
+// Debounce function to optimize API calls
 const debounce = (func, delay) => {
   let timeout;
   return (args) => {
@@ -17,24 +17,22 @@ const Header = () => {
   const [searchInput, setSearchInput] = useState('');
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState(null);
   const searchRef = useRef(null);
 
-  // Toggle the search bar
-  const toggleSearch = () => {
-    setSearchOpen(!searchOpen);
-  };
+  const navigate = useNavigate(); // Navigation hook
 
-  const navigate = useNavigate();  // useNavigate hook for navigation
+  // Toggle the search bar
+  const toggleSearch = () => setSearchOpen(!searchOpen);
 
   // Handle search input change
   const handleSearchChange = (e) => {
     const input = e.target.value;
     setSearchInput(input);
-    fetchResults(input); // Call debounced search function
+    fetchResults(input);
   };
 
-  // Debounced function for fetching search results
+  // Debounced fetch function to reduce API calls
   const fetchResults = debounce(async (query) => {
     if (query.trim() === '') {
       setResults([]);
@@ -42,7 +40,7 @@ const Header = () => {
     }
 
     setIsLoading(true);
-    setError(null); // Reset error state before starting the fetch
+    setError(null);
 
     try {
       const response = await fetch('http://localhost:4000/search', {
@@ -51,41 +49,33 @@ const Header = () => {
         body: JSON.stringify({ query }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
+      if (!response.ok) throw new Error('Failed to fetch products');
 
       const data = await response.json();
       setResults(data);
-      console.log("Data", data);
     } catch (error) {
-      setError('An error occurred while fetching search results. Please try again.');
-      console.error(error); // Log the error for debugging
+      setError('Error fetching search results. Try again.');
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
-  }, 500); // 500ms debounce delay
+  }, 500);
 
   // Handle clicks outside to close the search bar
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchOpen(false); // Close the search bar if clicked outside
+        setSearchOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Handle search result item click
-  const handleClick = (productid) => {
-    console.log("Product ID:", productid); // Log the product ID
-    console.log("Navigating to:", `/product/${productid}`); // Log the full URL
-    navigate(`/product/${productid}`); // Navigate to the product page
+  // Navigate to the selected product
+  const handleProductClick = (productid) => {
+    navigate(`/product/${productid}`);
+    setSearchOpen(false); // Close search after navigation
   };
 
   return (
@@ -106,27 +96,22 @@ const Header = () => {
             onChange={handleSearchChange}
           />
         )}
-      </div>
 
-      {searchOpen && (
-        <div className="search-results">
-          {isLoading && <p>Loading...</p>}
-          {error && <p className="error-message">{error}</p>} {/* Display error message */}
-          {!isLoading && results.length === 0 && searchInput.trim() !== '' && (
-            <p>No results found</p>
-          )}
-          {!isLoading && results.length > 0 && (
-            <div className="results-list">
-              {results.map((product) => {
-                console.log("Product:", product); // Log the product object
-                return (
+        {/* Search Results */}
+        {searchOpen && (
+          <div className="search-results">
+            {isLoading && <p>Loading...</p>}
+            {error && <p className="error-message">{error}</p>}
+            {!isLoading && results.length === 0 && searchInput.trim() !== '' && (
+              <p>No results found</p>
+            )}
+            {!isLoading && results.length > 0 && (
+              <div className="results-list">
+                {results.map((product) => (
                   <div
                     key={product._id}
                     className="result-item"
-                    onClick={() => {
-                      console.log("Result item clicked!"); // Log to confirm the click event
-                      handleClick(product.productid);
-                    }}
+                    onClick={() => handleProductClick(product.productid)}
                   >
                     <img
                       src={product.images[0]}
@@ -138,12 +123,12 @@ const Header = () => {
                       <div className="product-price">₹{product.new_price}</div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

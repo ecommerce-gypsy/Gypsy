@@ -128,7 +128,7 @@ const AdminOutOfStock = () => {
     <div className="admin-layout">
       <Sidebar />
       <div className="admin-container">
-        <h1 className="admin-title">Product Management</h1>
+        <h1 className="admin-title">Product-Stock Management</h1>
         {loading ? (
           <div className="loading-container">
             <ThreeDots color="#0047FF" height={50} width={50} />

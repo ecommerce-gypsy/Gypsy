@@ -53,7 +53,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   
   // Hide Navbar, Header, and Chatbot on /login and /admin pages
-  const hideLayout = location.pathname === '/login' || location.pathname === '/admin'|| location.pathname === '/dashboard'|| location.pathname === '/addproduct'|| location.pathname === '/listproduct'|| location.pathname === '/adminuser'|| location.pathname === '/adminorder'|| location.pathname === '/reviewlist'|| location.pathname === '/adminpanel';
+  const hideLayout = location.pathname === '/login' || location.pathname === '/admin'|| location.pathname === '/dashboard'|| location.pathname === '/addproduct'|| location.pathname === '/listproduct'|| location.pathname === '/adminuser'|| location.pathname === '/adminorder'|| location.pathname === '/reviewlist'|| location.pathname === '/adminpanel'|| location.pathname === '/adminoutofstock'|| location.pathname === '/adminpayment';
 
   return (
     <>
@@ -105,10 +105,11 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/customdesignpage" element={<CustomDesignPage />} />
           <Route path="/AddCustomDesign" element={<AddCustomDesign/>}/>
-      <Route path="/AdminOutOfStock" element={<AdminOutOfStock/>}/>
+      <Route path="/adminoutofstock" element={<AdminOutOfStock/>}/>
       <Route path="/order/:orderId" element={<OrderConfirmation />} />
       <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
-      <Route path="/adminpayment" component={Payment} />
+      <Route path="/adminpayment" element={<Payment/>} />
+      
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -97,3 +97,65 @@
 /* Icons */
 .edit-icon { color: #f39c12; }
 .trash-icon { color: #e74c3c; }
+
+/* Status Dropdown Styling with Light Colors */
+.status-dropdown {
+    padding: 8px;
+    border-radius: 20px; /* Oval Shape */
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Light Colors for Status */
+.status-pending {
+    background-color: #fff7e6; /* Light Orange */
+    color: #d48806;
+}
+
+.status-processing {
+    background-color: #e6f7ff; /* Light Blue */
+    color: #1890ff;
+}
+
+.status-shipped {
+    background-color: #f6ffed; /* Light Green */
+    color: #52c41a;
+}
+
+.status-delivered {
+    background-color: #e6fffa; /* Light Cyan */
+    color: #13c2c2;
+}
+
+.status-cancelled {
+    background-color: #fff1f0; /* Light Red */
+    color: #cf1322;
+}
+/* Order Items Section */
+.item-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .item-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .item-info p {
+    margin: 5px 0;
+  }
+  

@@ -23,7 +23,7 @@ const PaymentDetails = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:4000/api/sales/payments', {
+      const response = await fetch('http://localhost:4000/api/payments', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ const PaymentDetails = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:4000/api/sales/payments/${paymentId}`, {
+      const response = await fetch(`http://localhost:4000/api/payments/${paymentId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -59,7 +59,7 @@ const PaymentDetails = () => {
         throw new Error('Failed to fetch payment details');
       }
       const paymentDetails = await response.json();
-      setViewPayment(paymentDetails);
+      setViewPayment(paymentDetails.payment);
     } catch (err) {
       setErrorMessage('Error fetching payment details: ' + err.message);
     }
@@ -77,7 +77,7 @@ const PaymentDetails = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/api/sales/payments/${paymentId}`, {
+      const response = await fetch(`http://localhost:4000/api/payments/${paymentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -122,6 +122,7 @@ const PaymentDetails = () => {
                     <th>User</th>
                     <th>Amount</th>
                     <th>Status</th>
+                    <th>Payment Date & Time</th> {/* New column for Date & Time */}
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -133,6 +134,10 @@ const PaymentDetails = () => {
                       <td>{payment.user?.email || 'Unknown User'}</td>
                       <td>₹{payment.paymentAmount}</td>
                       <td>{payment.paymentStatus}</td>
+                      <td>
+                        {/* Format the payment date to a readable string */}
+                        {new Date(payment.paymentDate).toLocaleString()}
+                      </td>
                       <td>
                         <button className="view-btn" onClick={() => handleViewDetails(payment._id)}>
                           <FaEye className="view-icon" />
@@ -176,11 +181,24 @@ const PaymentDetails = () => {
                   <>
                     <h3>Order Details:</h3>
                     <p><strong>Order Number:</strong> {viewPayment.order?.orderNumber}</p>
-                    <p><strong>Total Amount:</strong> ₹{viewPayment.order?.totalAmount}</p>
+                    <p><strong>Total Amount:</strong> ₹{viewPayment.order?.totalPrice}</p>
+                    <p><strong>Status:</strong> {viewPayment.order?.orderStatus}</p>
+                    <p><strong>Payment Method:</strong> {viewPayment.order?.paymentMethod}</p>
+                    <p><strong>Payment Status:</strong> {viewPayment.order?.paymentStatus}</p>
+                    <p><strong>Ordered Date:</strong> {new Date(viewPayment.order?.orderedDate).toLocaleString()}</p>
+                    <p><strong>Ordered Time:</strong> {viewPayment.order?.orderedTime}</p>
+                    <h4>Shipping Address:</h4>
+                    <p>{viewPayment.order?.shippingAddress.name}</p>
+                    <p>{viewPayment.order?.shippingAddress.address}, {viewPayment.order?.shippingAddress.city}, {viewPayment.order?.shippingAddress.postalCode}, {viewPayment.order?.shippingAddress.country}</p>
+
+                    <h4>Billing Address:</h4>
+                    <p>{viewPayment.order?.billingAddress.name}</p>
+                    <p>{viewPayment.order?.billingAddress.address}, {viewPayment.order?.billingAddress.city}, {viewPayment.order?.billingAddress.postalCode}, {viewPayment.order?.billingAddress.country}</p>
+
                     <ul>
                       <strong>Items:</strong>
                       {viewPayment.order?.items?.map((item, index) => (
-                        <li key={index}>{item.productName} - ₹{item.price}</li>
+                        <li key={index}>{item.productName} - ₹{item.price} x {item.quantity}</li>
                       ))}
                     </ul>
                   </>

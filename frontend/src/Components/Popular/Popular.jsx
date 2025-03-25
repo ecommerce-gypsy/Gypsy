@@ -19,9 +19,6 @@ export const Popular = () => {
   const [newCollection, setNewCollection] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showChat, setShowChat] = useState(false);
-  const [messages, setMessages] = useState([{ sender: "bot", text: "Hello! How can I assist you today?" }]);
-  const [input, setInput] = useState("");
 
   const navigate = useNavigate();
 
@@ -34,38 +31,13 @@ export const Popular = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("Fetched data:", data);
         setNewCollection(data);
       })
       .catch((err) => {
-        console.error("Error fetching collections:", err);
         setError(err.message);
       })
       .finally(() => setLoading(false));
   }, []);
-
-  const sendMessage = async () => {
-    if (!input.trim()) return;
-
-    const newMessage = { sender: "user", text: input };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-    setInput("");
-
-    try {
-      const response = await axios.post("https://api.openai.com/v1/chat/completions", {
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: input }],
-      }, {
-        headers: { "Authorization": `Bearer YOUR_OPENAI_API_KEY` }
-      });
-
-      const botReply = response.data.choices[0].message.content;
-      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: botReply }]);
-    } catch (error) {
-      console.error("Error fetching response:", error);
-      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: "Sorry, I couldn't process your request." }]);
-    }
-  };
 
   if (loading) {
     return <div className="popular"><h1>Loading...</h1></div>;
@@ -77,36 +49,37 @@ export const Popular = () => {
 
   return (
     <div className="popular-container">
+      {/* PRODUCT CATEGORY SECTION */}
       <section className="product-category-section">
         <h2>PRODUCT CATEGORY</h2>
         <div className="product-category-container">
-          <div className="product-category">
+          <div className="product-category" onClick={() => navigate("/anklets")}>
             <img src={ankletlogo} alt="Anklets" />
-            <button onClick={() => navigate("/anklets")}>More</button>
+            <button>Explore Anklets</button>
           </div>
-          <div className="product-category">
+          <div className="product-category" onClick={() => navigate("/neckpieces")}>
             <img src={necklacelogo} alt="Neckpieces" />
-            <button onClick={() => navigate("/neckpieces")}>More</button>
+            <button>Explore Neckpieces</button>
           </div>
-          <div className="product-category">
+          <div className="product-category" onClick={() => navigate("/bracelets")}>
             <img src={braceletlogo} alt="Bracelets" />
-            <button onClick={() => navigate("/bracelets")}>More</button>
+            <button>Explore Bracelets</button>
           </div>
         </div>
       </section>
 
+      {/* LATEST COLLECTION */}
       <div className="popular">
         <h1>LATEST COLLECTION</h1>
         <hr />
 
-        {/* Fixed Swiper */}
         <div className="swiper-container">
           <Swiper
-            spaceBetween={20}
-            slidesPerView={1} // Default to 1 on small screens
+            spaceBetween={30}
+            slidesPerView={1}
             breakpoints={{
-              640: { slidesPerView: 2 }, // Medium screens: 2 items
-              1024: { slidesPerView: 3 }, // Large screens: 3 items
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
             }}
             navigation
             pagination={{ clickable: true }}
@@ -129,7 +102,6 @@ export const Popular = () => {
               ))}
           </Swiper>
         </div>
-
       </div>
     </div>
   );
