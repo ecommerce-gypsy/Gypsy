@@ -41,29 +41,24 @@ h1 {
   position: relative;
 }
 
-/* Image Container - Ensures Proper Display */
+/* Image Container */
 .neckpiece-image-container {
   width: 100%;
-  height: 250px; /* Adjust height as needed */
+  height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #fff;
   overflow: hidden;
-  border-radius: 0; /* <-- Ensures rectangular shape */
 }
 
-/* Image Styling - Fixed */
+/* Product Image */
 .product-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* <-- Ensures image fills the container while maintaining aspect ratio */
+  object-fit: cover;
   display: block;
-  border-radius: 0; /* <-- Ensures rectangular shape */
 }
-
-
-
 
 /* Out of Stock Badge */
 .out-of-stock-badge {
@@ -96,14 +91,9 @@ h1 {
   background-color: #e91e63;
 }
 
-.add-to-cart-btn:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
-}
-
-/* Customize Button */
-.customize-btn {
-  margin-top: 10px;
+/* View Toggle Button (View More / View Less) */
+.view-toggle-btn {
+  margin-top: 20px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -115,7 +105,7 @@ h1 {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.customize-btn:hover {
+.view-toggle-btn:hover {
   background-color: #0056b3;
   transform: scale(1.05);
 }
@@ -123,11 +113,11 @@ h1 {
 /* Responsive Design */
 @media (max-width: 768px) {
   .neckpiece-image-container {
-    height: 200px; /* Adjusted for smaller screens */
+    height: 200px;
   }
 
   .add-to-cart-btn,
-  .customize-btn {
+  .view-toggle-btn {
     font-size: 1rem;
     padding: 10px;
   }

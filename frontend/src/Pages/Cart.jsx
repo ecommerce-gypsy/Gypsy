@@ -10,10 +10,10 @@ const Cart = () => {
     useContext(CartContext);
   const { addToWishlist } = useContext(WishlistContext);
   const navigate = useNavigate();
-  const [showCheckoutModal, setShowCheckoutModal] = useState(false); // State to control CheckoutModal visibility
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
   useEffect(() => {
-    fetchCart(); // Fetch the cart data on mount
+    fetchCart();
   }, []);
 
   const incrementQuantity = (item) => {
@@ -33,7 +33,6 @@ const Cart = () => {
     removeItem(item);
   };
 
-  // Calculate the total and subtotal, including delivery and platform fees
   const calculateTotal = () => {
     const subtotal = cart.reduce(
       (total, item) => total + item.new_price * item.quantity,
@@ -42,8 +41,6 @@ const Cart = () => {
     const deliveryFee = 99;
     const platformFee = 19;
     const total = subtotal + deliveryFee + platformFee;
-    console.log("Calculated total:", total); // Debugging line in Cart component
-
     return { subtotal, deliveryFee, platformFee, total };
   };
 
@@ -53,11 +50,14 @@ const Cart = () => {
     navigate("/order-confirmation");
   };
 
-  const { subtotal, deliveryFee, platformFee, total } = calculateTotal(); // Calculate totals before passing to CheckoutModal
+  const { subtotal, deliveryFee, platformFee, total } = calculateTotal();
 
-  // Function to handle showing the CheckoutModal
   const openCheckoutModal = () => {
     setShowCheckoutModal(true);
+  };
+
+  const closeCheckoutModal = () => {
+    setShowCheckoutModal(false);
   };
 
   return (
@@ -131,15 +131,15 @@ const Cart = () => {
         <p className="empty-cart">Your cart is empty.</p>
       )}
 
-      {/* Conditionally render the CheckoutModal based on the state */}
       {showCheckoutModal && (
         <CheckoutModal
           cart={cart}
           subtotal={subtotal}
           deliveryFee={deliveryFee}
           platformFee={platformFee}
-          total={total} // Pass the total amount to CheckoutModal
+          total={total}
           handleCheckoutSuccess={handleCheckoutSuccess}
+          onClose={closeCheckoutModal}
         />
       )}
     </div>

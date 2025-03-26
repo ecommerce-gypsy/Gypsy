@@ -15,6 +15,8 @@ const Neckpieces = () => {
 
   const [neckpieces, setNeckpieces] = useState([]);
   const [error, setError] = useState("");
+  const [visibleCount, setVisibleCount] = useState(8);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:4000/neckpieces") // Replace with actual API endpoint
@@ -46,18 +48,25 @@ const Neckpieces = () => {
     }
   };
 
+  const toggleView = () => {
+    if (showAll) {
+      setVisibleCount(8); // Collapse to initial view
+    } else {
+      setVisibleCount(neckpieces.length); // Show all products
+    }
+    setShowAll(!showAll);
+  };
+
   return (
     <div className="neckpieces-container">
-
-   
-      <Breadcrumb/>
-      <NeckPieceBanner/>
-     <h1>Discover the art of refined beauty with our stunning neckpieces!</h1>
+      <Breadcrumb />
+      <NeckPieceBanner />
+      <h1>Discover the art of refined beauty with our stunning neckpieces!</h1>
       {error && <p className="error-message">{error}</p>}
 
       {/* Product Grid */}
       <div className="product-grid">
-        {neckpieces.map((product) => (
+        {neckpieces.slice(0, visibleCount).map((product) => (
           <div className="product-card" key={product.productid}>
             {/* Wishlist Icon */}
             <div
@@ -93,9 +102,7 @@ const Neckpieces = () => {
             </div>
 
             {product.stock === 0 ? (
-              <>
-                <p className="out-of-stock">Out of Stock</p>
-              </>
+              <p className="out-of-stock">Out of Stock</p>
             ) : (
               <>
                 {product.stock < 5 && (
@@ -110,10 +117,12 @@ const Neckpieces = () => {
         ))}
       </div>
 
-      {/* Customize Button */}
-      <button className="customize-btn" onClick={() => navigate("/customize")}>
-        Customize
-      </button>
+      {/* View More / View Less Button */}
+      {neckpieces.length > 8 && (
+        <button className="view-toggle-btn" onClick={toggleView}>
+          {showAll ? "View Less" : "View More"}
+        </button>
+      )}
 
       <Footer />
     </div>

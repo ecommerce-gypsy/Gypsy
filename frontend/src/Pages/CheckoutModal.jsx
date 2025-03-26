@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./CheckoutModal.css";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }) => {
-  const navigate = useNavigate();   
-
+const CheckoutModal = ({ 
+  cart, 
+  subtotal, 
+  total, 
+  handleCheckoutSuccess, 
+  onClose = () => console.log("Modal closed") 
+}) => {
+  const navigate = useNavigate();
+  const modalRef = useRef(null);
   const [shippingAddress, setShippingAddress] = useState({
     name: "",
     address: "",
@@ -20,13 +28,50 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
     country: "",
   });
   const [paymentMethod, setPaymentMethod] = useState("Razorpay");
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
-  const [useBillingAsShipping, setUseBillingAsShipping] = useState(true); // Default to using shipping as billing
+  const [useBillingAsShipping, setUseBillingAsShipping] = useState(true);
+  const [fieldErrors, setFieldErrors] = useState({});
 
-  // Load Razorpay script dynamically
+  // Custom toast notification function
+  const showNotification = (message, type = 'error') => {
+    const toastOptions = {
+      position: "top-center",
+      autoClose: type === 'success' ? 3000 : 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      className: `custom-toast ${type}`,
+    };
+
+    if (type === 'success') {
+      toast.success(message, toastOptions);
+    } else {
+      toast.error(message, toastOptions);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [onClose]);
+
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -37,36 +82,82 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
     });
   };
 
-  // Handle payment and Razorpay integration
-  const handlePayment = async () => {
-    if (!shippingAddress.name || !shippingAddress.address || !shippingAddress.city || !shippingAddress.postalCode || !shippingAddress.country) {
-      setError("Please fill in all the shipping details.");
-      return;
+  const validateForm = () => {
+    const errors = {};
+    let isValid = true;
+
+    if (!shippingAddress.name.trim()) {
+      errors.shippingName = "Full name is required";
+      isValid = false;
+    }
+    if (!shippingAddress.address.trim()) {
+      errors.shippingAddress = "Address is required";
+      isValid = false;
+    }
+    if (!shippingAddress.city.trim()) {
+      errors.shippingCity = "City is required";
+      isValid = false;
+    }
+    if (!shippingAddress.postalCode.trim()) {
+      errors.shippingPostalCode = "Postal code is required";
+      isValid = false;
+    }
+    if (!shippingAddress.country.trim()) {
+      errors.shippingCountry = "Country is required";
+      isValid = false;
     }
 
-    // Check for billing address only if it's different from shipping
-    if (!useBillingAsShipping && (!billingAddress.name || !billingAddress.address || !billingAddress.city || !billingAddress.postalCode || !billingAddress.country)) {
-      setError("Please fill in all the billing details.");
-      return;
+    if (!useBillingAsShipping) {
+      if (!billingAddress.name.trim()) {
+        errors.billingName = "Full name is required";
+        isValid = false;
+      }
+      if (!billingAddress.address.trim()) {
+        errors.billingAddress = "Address is required";
+        isValid = false;
+      }
+      if (!billingAddress.city.trim()) {
+        errors.billingCity = "City is required";
+        isValid = false;
+      }
+      if (!billingAddress.postalCode.trim()) {
+        errors.billingPostalCode = "Postal code is required";
+        isValid = false;
+      }
+      if (!billingAddress.country.trim()) {
+        errors.billingCountry = "Country is required";
+        isValid = false;
+      }
     }
 
     if (!isTermsAccepted) {
-      setError("You must accept the terms and conditions.");
+      errors.terms = "You must accept the terms and conditions";
+      isValid = false;
+    }
+
+    setFieldErrors(errors);
+    return isValid;
+  };
+
+  const handlePayment = async () => {
+    if (!validateForm()) {
+      const firstErrorElement = document.querySelector(".error-message");
+      if (firstErrorElement) {
+        firstErrorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
       return;
     }
 
     setLoading(true);
-
     const isLoaded = await loadRazorpayScript();
     if (!isLoaded) {
-      setError("Failed to load Razorpay. Try again.");
+      showNotification("Failed to load payment processor. Please try again.");
       setLoading(false);
       return;
     }
 
     try {
       const accessToken = localStorage.getItem("auth_token");
-
       const response = await fetch("http://localhost:4000/api/payment/create-order", {
         method: "POST",
         headers: {
@@ -78,15 +169,14 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
           currency: "INR",
           cart,
           shippingAddress,
-          billingAddress: useBillingAsShipping ? shippingAddress : billingAddress, // Send the appropriate billing address
+          billingAddress: useBillingAsShipping ? shippingAddress : billingAddress,
           paymentMethod,
         }),
       });
 
       const orderData = await response.json();
-
       if (!response.ok) {
-        setError(orderData.message || "Failed to create payment order.");
+        showNotification(orderData.message || "Failed to create payment order.");
         setLoading(false);
         return;
       }
@@ -104,7 +194,7 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
             razorpay_payment_id: paymentResult.razorpay_payment_id,
             razorpay_signature: paymentResult.razorpay_signature,
             paymentMethodUsed: paymentResult.method,
-            paymentAmount: total,  // Capturing the selected payment method (UPI, card, etc.)
+            paymentAmount: total,
           };
 
           const verifyResponse = await fetch("http://localhost:4000/api/payment/verify-payment", {
@@ -119,7 +209,7 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
           const verifyResult = await verifyResponse.json();
 
           if (!verifyResponse.ok) {
-            setError(verifyResult.message || "Payment verification failed.");
+            showNotification(verifyResult.message || "Payment verification failed.");
             setLoading(false);
             return;
           }
@@ -152,10 +242,14 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
           const checkoutResult = await checkoutResponse.json();
 
           if (checkoutResponse.ok) {
+            showNotification("Order placed successfully", 'success');
+            setTimeout(() => {
+              showNotification("Cart has been cleared", 'success');
+            }, 1000); // Show second toast after 1 second delay
             handleCheckoutSuccess(checkoutResult.message);
             navigate(`/order/${checkoutResult.orderId}`);
           } else {
-            setError(checkoutResult.message || "Checkout failed.");
+            showNotification(checkoutResult.message || "Checkout failed.");
           }
           setLoading(false);
         },
@@ -169,169 +263,269 @@ const CheckoutModal = ({ cart, subtotal, total, handleCheckoutSuccess, onClose }
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
-      setError("Payment process failed. Try again.");
+      showNotification("Payment process failed. Please try again.");
       setLoading(false);
     }
   };
 
+  const handleClose = (e) => {
+    e?.stopPropagation();
+    onClose();
+  };
+
   return (
     <>
-      <div className="checkout-modal-overlay">
-        <div className="checkout-modal">
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        toastClassName="custom-toast-container"
+        progressClassName="custom-progress"
+      />
+      <div className="checkout-modal-overlay" onClick={handleClose}>
+        <div className="checkout-modal" ref={modalRef} onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
             <h2>Checkout</h2>
-            <button className="close-btn" onClick={onClose}>✖</button>
+            <button 
+              className="close-btn" 
+              onClick={handleClose} 
+              aria-label="Close checkout modal"
+            >
+              <span className="close-icon">×</span>
+            </button>
           </div>
 
-          <div className="modal-content">
-            {/* Order Summary */}
+          <div className="modal-scrollable-content">
             <div className="order-summary">
               <h3>Order Summary</h3>
               <ul>
                 {cart.map((item) => (
                   <li key={item.productid}>
-                    <span>{item.name}</span>
-                    <span>{item.quantity} x ₹{item.new_price}</span>
+                    <span>{item.productName}</span>
+                    <span>{item.quantity} × ₹{item.new_price.toFixed(2)}</span>
                   </li>
                 ))}
               </ul>
-              <div className="subtotal">
-                <span>Subtotal:</span>
-                <span>₹{subtotal}</span>
-              </div>
-              <div className="shipping">
-                <span>Delivery Fee:</span>
-                <span>₹{99}</span>
-              </div>
-              <div className="shipping">
-                <span>Platform Fee:</span>
-                <span>₹{19}</span>
-              </div>
-              <div className="total">
-                <span>Total:</span>
-                <span>₹{subtotal + 118}</span>
+              <div className="price-summary">
+                <div className="price-row">
+                  <span>Subtotal:</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
+                </div>
+                <div className="price-row">
+                  <span>Delivery Fee:</span>
+                  <span>₹99.00</span>
+                </div>
+                <div className="price-row">
+                  <span>Platform Fee:</span>
+                  <span>₹19.00</span>
+                </div>
+                <div className="price-row total-row">
+                  <span>Total:</span>
+                  <span>₹{total.toFixed(2)}</span>
+                </div>
               </div>
             </div>
 
-            {/* Shipping Information */}
-            <div className="shipping-information">
+            <div className="form-section">
               <h3>Shipping Information</h3>
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={shippingAddress.name}
-                onChange={(e) => setShippingAddress({ ...shippingAddress, name: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Address"
-                value={shippingAddress.address}
-                onChange={(e) => setShippingAddress({ ...shippingAddress, address: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="City"
-                value={shippingAddress.city}
-                onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Postal Code"
-                value={shippingAddress.postalCode}
-                onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Country"
-                value={shippingAddress.country}
-                onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
-              />
+              <div className="form-group">
+                <label>Full Name *</label>
+                <input
+                  type="text"
+                  value={shippingAddress.name}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, name: e.target.value })}
+                  className={fieldErrors.shippingName ? "error" : ""}
+                />
+                {fieldErrors.shippingName && (
+                  <div className="error-message animate-error">{fieldErrors.shippingName}</div>
+                )}
+              </div>
+              <div className="form-group">
+                <label>Address *</label>
+                <input
+                  type="text"
+                  value={shippingAddress.address}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, address: e.target.value })}
+                  className={fieldErrors.shippingAddress ? "error" : ""}
+                />
+                {fieldErrors.shippingAddress && (
+                  <div className="error-message animate-error">{fieldErrors.shippingAddress}</div>
+                )}
+              </div>
+              <div className="form-group">
+                <label>City *</label>
+                <input
+                  type="text"
+                  value={shippingAddress.city}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
+                  className={fieldErrors.shippingCity ? "error" : ""}
+                />
+                {fieldErrors.shippingCity && (
+                  <div className="error-message animate-error">{fieldErrors.shippingCity}</div>
+                )}
+              </div>
+              <div className="form-group">
+                <label>Postal Code *</label>
+                <input
+                  type="text"
+                  value={shippingAddress.postalCode}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
+                  className={fieldErrors.shippingPostalCode ? "error" : ""}
+                />
+                {fieldErrors.shippingPostalCode && (
+                  <div className="error-message animate-error">{fieldErrors.shippingPostalCode}</div>
+                )}
+              </div>
+              <div className="form-group">
+                <label>Country *</label>
+                <input
+                  type="text"
+                  value={shippingAddress.country}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
+                  className={fieldErrors.shippingCountry ? "error" : ""}
+                />
+                {fieldErrors.shippingCountry && (
+                  <div className="error-message animate-error">{fieldErrors.shippingCountry}</div>
+                )}
+              </div>
             </div>
 
-            {/* Billing Information */}
-            <div className="billing-information">
+            <div className="form-section">
               <h3>Billing Information</h3>
-              <label>
-                <input
-                  type="radio"
-                  checked={useBillingAsShipping}
-                  onChange={() => setUseBillingAsShipping(true)}
-                />
-                Use Shipping Address as Billing Address
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  checked={!useBillingAsShipping}
-                  onChange={() => setUseBillingAsShipping(false)}
-                />
-                Use Different Billing Address
-              </label>
+              <div className="radio-group">
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    checked={useBillingAsShipping}
+                    onChange={() => setUseBillingAsShipping(true)}
+                  />
+                  Use Shipping Address as Billing Address
+                </label>
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    checked={!useBillingAsShipping}
+                    onChange={() => setUseBillingAsShipping(false)}
+                  />
+                  Use Different Billing Address
+                </label>
+              </div>
 
-              {/* Billing Address Fields (Only show if Use Different Billing Address is selected) */}
               {!useBillingAsShipping && (
                 <>
-                  <input
-                    type="text"
-                    placeholder="Billing Full Name"
-                    value={billingAddress.name}
-                    onChange={(e) => setBillingAddress({ ...billingAddress, name: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Billing Address"
-                    value={billingAddress.address}
-                    onChange={(e) => setBillingAddress({ ...billingAddress, address: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Billing City"
-                    value={billingAddress.city}
-                    onChange={(e) => setBillingAddress({ ...billingAddress, city: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Billing Postal Code"
-                    value={billingAddress.postalCode}
-                    onChange={(e) => setBillingAddress({ ...billingAddress, postalCode: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Billing Country"
-                    value={billingAddress.country}
-                    onChange={(e) => setBillingAddress({ ...billingAddress, country: e.target.value })}
-                  />
+                  <div className="form-group">
+                    <label>Billing Full Name *</label>
+                    <input
+                      type="text"
+                      value={billingAddress.name}
+                      onChange={(e) => setBillingAddress({ ...billingAddress, name: e.target.value })}
+                      className={fieldErrors.billingName ? "error" : ""}
+                    />
+                    {fieldErrors.billingName && (
+                      <div className="error-message animate-error">{fieldErrors.billingName}</div>
+                    )}
+                  </div>
+                  <div className="form-group">
+                    <label>Billing Address *</label>
+                    <input
+                      type="text"
+                      value={billingAddress.address}
+                      onChange={(e) => setBillingAddress({ ...billingAddress, address: e.target.value })}
+                      className={fieldErrors.billingAddress ? "error" : ""}
+                    />
+                    {fieldErrors.billingAddress && (
+                      <div className="error-message animate-error">{fieldErrors.billingAddress}</div>
+                    )}
+                  </div>
+                  <div className="form-group">
+                    <label>Billing City *</label>
+                    <input
+                      type="text"
+                      value={billingAddress.city}
+                      onChange={(e) => setBillingAddress({ ...billingAddress, city: e.target.value })}
+                      className={fieldErrors.billingCity ? "error" : ""}
+                    />
+                    {fieldErrors.billingCity && (
+                      <div className="error-message animate-error">{fieldErrors.billingCity}</div>
+                    )}
+                  </div>
+                  <div className="form-group">
+                    <label>Billing Postal Code *</label>
+                    <input
+                      type="text"
+                      value={billingAddress.postalCode}
+                      onChange={(e) => setBillingAddress({ ...billingAddress, postalCode: e.target.value })}
+                      className={fieldErrors.billingPostalCode ? "error" : ""}
+                    />
+                    {fieldErrors.billingPostalCode && (
+                      <div className="error-message animate-error">{fieldErrors.billingPostalCode}</div>
+                    )}
+                  </div>
+                  <div className="form-group">
+                    <label>Billing Country *</label>
+                    <input
+                      type="text"
+                      value={billingAddress.country}
+                      onChange={(e) => setBillingAddress({ ...billingAddress, country: e.target.value })}
+                      className={fieldErrors.billingCountry ? "error" : ""}
+                    />
+                    {fieldErrors.billingCountry && (
+                      <div className="error-message animate-error">{fieldErrors.billingCountry}</div>
+                    )}
+                  </div>
                 </>
               )}
             </div>
 
-            {/* Payment Information */}
-            <div className="payment-information">
+            <div className="form-section">
               <h3>Payment Information</h3>
-              <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                <option value="Razorpay">Razorpay</option>
-                {/* Add more payment methods if needed */}
-              </select>
+              <div className="form-group">
+                <label>Payment Method</label>
+                <select 
+                  value={paymentMethod} 
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                  <option value="Razorpay">Razorpay</option>
+                </select>
+              </div>
             </div>
 
-            {/* Terms and Conditions */}
             <div className="terms-conditions">
-              <label>
+              <label className="checkbox-option">
                 <input
                   type="checkbox"
                   checked={isTermsAccepted}
                   onChange={() => setIsTermsAccepted(!isTermsAccepted)}
+                  className={fieldErrors.terms ? "error-checkbox" : ""}
                 />
                 I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a>
               </label>
+              {fieldErrors.terms && (
+                <div className="error-message animate-error">{fieldErrors.terms}</div>
+              )}
             </div>
           </div>
 
-          {/* Final Review & Confirmation */}
           <div className="modal-footer">
-            {error && <div className="error-message">{error}</div>}
-            <button className="submit-checkout-btn" onClick={handlePayment} disabled={loading}>
-              {loading ? "Processing..." : "Pay Now"}
+            <button 
+              className="submit-checkout-btn" 
+              onClick={handlePayment} 
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner"></span>
+                  Processing...
+                </>
+              ) : (
+                `Pay ₹${total.toFixed(2)}`
+              )}
             </button>
           </div>
         </div>

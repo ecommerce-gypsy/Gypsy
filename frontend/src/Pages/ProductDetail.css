@@ -238,3 +238,45 @@ body {
   transform: scale(1.05); /* Slight zoom effect */
   color: #ffffff; /* Ensure text color remains white */
 }
+/* Specifications Section */
+.specifications {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.specifications h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #343a40;
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.spec-item {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.spec-key {
+  text-align: left;
+  padding: 10px;
+  font-weight: bold;
+  color: #495057;
+  width: 40%;
+}
+
+.spec-value {
+  text-align: left;
+  padding: 10px;
+  color: #212529;
+}
+
+/* Last row styling */
+.spec-item:last-child {
+  border-bottom: none;
+}

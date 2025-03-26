@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaGoogle, FaLinkedinIn } from "react-icons/fa";
 import "./AuthCard.css";
 import sign from "../Components/Assets/signin.png";
+import Footer from '../Components/Footer/Footer';
 
 
 const AuthCard = () => {
@@ -151,6 +152,7 @@ const AuthCard = () => {
   };
 
   return (
+    <>
     <div className="auth-container">
       <div className={`auth-card ${isSignUp ? "sign-up-mode" : ""}`}>
         {/* Left Panel */}
@@ -262,8 +264,12 @@ const AuthCard = () => {
             </p>
           )}
         </div>
+        
       </div>
+    
+
     </div>
+      <Footer/></>
   );
 };
 

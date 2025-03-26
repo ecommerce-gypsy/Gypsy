@@ -63,8 +63,8 @@ const ProductDetail = () => {
           <strong>₹{product.new_price.toFixed(2)}</strong>
           <span className="old-price">₹{product.old_price.toFixed(2)}</span>
           <span className="discount">(Save {((1 - product.new_price / product.old_price) * 100).toFixed(0)}%)</span>
-        </p>+
-        
+        </p>
+
         <p className="description"><strong>Description:</strong> {product.description}</p>
 
         <div className="category">
@@ -100,19 +100,27 @@ const ProductDetail = () => {
           Buy Now
         </button>
 
-        {/* Specifications Section */}
+        {/* Updated Specifications Section */}
         <div className="specifications">
           <h2>Product Specifications</h2>
-          <ul>
-            {Object.entries(product.specifications || {}).map(([key, value]) => (
-              <li key={key} className="spec-item">
-                <strong>{key}:</strong> {value}
-              </li>
-            ))}
-          </ul>
+          {product.specifications && Object.keys(product.specifications).length > 0 ? (
+            <table className="spec-table">
+              <tbody>
+                {Object.entries(product.specifications).map(([key, value]) => (
+                  <tr key={key} className="spec-item">
+                    <td className="spec-key"><strong>{key.replace(/_/g, " ")}:</strong></td>
+                    <td className="spec-value">{value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No specifications available.</p>
+          )}
         </div>
-         {/* Review Summary Section */}
-         <ReviewSummary productId={productId} />
+
+        {/* Review Summary Section */}
+        <ReviewSummary productId={productId} />
       </div>
     </div>
   );
