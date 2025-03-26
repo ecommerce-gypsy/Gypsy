@@ -60,13 +60,12 @@ router.get('/has-purchased/:productid', authenticateToken, async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
-  
-router.get('/:productid', async (req, res) => {
+  router.get('/:productid', async (req, res) => {
     const { productid } = req.params;
     const { rating, sort } = req.query; // Destructure rating and sort from query params
 
     try {
-        let query = { productid: productid };
+        let query = { productid: productid, status: true }; // Filter for active products
 
         // Apply rating filter if provided (filter by minimum rating)
         if (rating) {
@@ -123,7 +122,6 @@ router.get('/:productid', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
 
 
 module.exports = router;

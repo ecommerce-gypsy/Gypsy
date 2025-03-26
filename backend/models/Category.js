@@ -1,4 +1,20 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const categorySchema = new Schema({
+  name: { type: String, required: true },
+  link: { type: String, required: true },
+  subCategories: [{ 
+    name: { type: String, required: true }, 
+    link: { type: String, required: true }
+  }],
+  // category: { type: String, unique: true } // Consider removing this line if not needed
+});
+
+module.exports = mongoose.model('Category', categorySchema);
+
+
+/*const mongoose = require('mongoose');
 
 const category= new mongoose.Schema({
   category: {
@@ -34,3 +50,4 @@ category.pre('save', function (next) {
 const Category = mongoose.model('Category', category);
 
 module.exports = Category;
+*/

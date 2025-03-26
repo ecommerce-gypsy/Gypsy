@@ -61,6 +61,8 @@ const userSchema = new mongoose.Schema({
     resetToken:{
       type : String,
     },
+    newsletterSubscribed: { type: Boolean, default: false },
+    newsletterSubscriptionDate: { type: Date },
     resetTokenExpiration: { type: Date, default: null },
 }, { timestamps: true 
   });

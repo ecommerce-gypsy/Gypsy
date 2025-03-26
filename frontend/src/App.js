@@ -47,6 +47,11 @@ import "react-toastify/dist/ReactToastify.css";
 import OrderConfirmation from './Pages/OrderConfirmation';
 //import AdminPanel from './Pages/AdminPanel';
 import Payment from './Pages/AdminPayment';
+import CategoryPage from "./Pages/CategoryPage"; 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import AdminCategory from './Pages/AdminCategory';
+
 
 // Helper component to manage layout
 const Layout = ({ children }) => {
@@ -69,6 +74,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Layout>
+      <ToastContainer/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/salesreport" element={<SalesReport />} />
@@ -109,8 +115,10 @@ const App = () => {
       <Route path="/order/:orderId" element={<OrderConfirmation />} />
       <Route path="/order-confirmation/:orderId" component={OrderConfirmation} />
       <Route path="/adminpayment" element={<Payment/>} />
-      
-        </Routes>
+      <Route path="/category/:categoryId" element={<CategoryPage />} /> 
+      <Route path="/admincategory" element={<AdminCategory />} />
+      </Routes>
+       
       </Layout>
     </BrowserRouter>
   );

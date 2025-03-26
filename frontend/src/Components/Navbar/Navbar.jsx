@@ -7,6 +7,7 @@ import heart from "../Assets/heart-logo.png";
 import user from "../Assets/userr.png";
 import { CartContext } from "../../Context/CartContext";
 import MarqueeBanner from "../MarqueeBanner/MarqueeBanner";
+import { CategoryMenu } from '../../Components/CategoryMenu/CategoriesMenu';
 
 export const Navbar = () => {
   const { cartCount } = useContext(CartContext);
@@ -31,7 +32,7 @@ export const Navbar = () => {
   return (
     <div className="navbar">
       <div className="marquee container">
-      {/* Logo Section */}<MarqueeBanner/>
+      {/* Logo Section */}<MarqueeBanner/><CategoryMenu/>
       </div>
       <div className="nav-logo">
         <img src={logo} alt="Logo" />

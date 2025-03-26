@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Order = require('../../models/Order');
 const Product = require('../../models/ProductS');
+const Payment = require('../../models/Payment');
 const router = express.Router();
 const auth = require('../../middleware/auth');  
 const isAdmin = require('../../middleware/isAdmin'); 
@@ -92,6 +93,34 @@ router.get('/pending-orders', auth, isAdmin, async (req, res) => {
       res.status(500).json({ message: 'Error fetching out of stock products', error: err.message });
     }
   });
-  
+  // Get Payment Details
+router.get('/payment/:paymentId',  auth, isAdmin, async (req, res) => {
+  const { paymentId } = req.params;
+  const userId = req.user.id; // Assuming you have a JWT authentication middleware to get the user's ID
+
+  try {
+    // Find the payment using the paymentId, and populate the order and user fields
+    const payment = await Payment.findById(paymentId)
+      .populate('order')  // Populate the associated order
+      .populate('user')   // Populate the associated user
+      .exec();
+
+    if (!payment) {
+      return res.status(404).json({ message: 'Payment not found.' });
+    }
+
+    // Ensure the payment belongs to the authenticated user
+    if (payment.user._id.toString() !== userId.toString()) {
+      return res.status(403).json({ message: 'You are not authorized to view this payment.' });
+    }
+
+    // Return the payment details
+    res.status(200).json({ payment });
+  } catch (err) {
+    console.error('Error fetching payment:', err);
+    res.status(500).json({ message: 'Something went wrong while fetching payment details.' });
+  }
+});
+
   
 module.exports = router;

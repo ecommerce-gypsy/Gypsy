@@ -190,6 +190,19 @@ router.post("/checkout", authenticateToken, async (req, res) => {
     // Send confirmation email
     await sendConfirmationEmail(newOrder, userEmail);
 
+    // Now update the payment with the orderId
+    const payment = await Payment.findOne({
+      razorpay_order_id: razorpay_order_id,
+      razorpay_payment_id: razorpay_payment_id,
+    });
+
+    if (payment) {
+      payment.orderId = savedOrder._id; // Update with the new orderId
+      await payment.save();
+    } else {
+      console.error("Payment not found to associate with the order");
+    }
+
     res.status(201).json({
       message: "Order placed successfully and cart cleared.",
       orderId: newOrder._id,
@@ -200,6 +213,7 @@ router.post("/checkout", authenticateToken, async (req, res) => {
     res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 });
+
 
 module.exports = router;
 

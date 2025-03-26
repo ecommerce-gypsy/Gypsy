@@ -59,7 +59,7 @@ const PaymentDetails = () => {
         throw new Error('Failed to fetch payment details');
       }
       const paymentDetails = await response.json();
-      setViewPayment(paymentDetails.payment);
+      setViewPayment(paymentDetails);
     } catch (err) {
       setErrorMessage('Error fetching payment details: ' + err.message);
     }
@@ -181,24 +181,11 @@ const PaymentDetails = () => {
                   <>
                     <h3>Order Details:</h3>
                     <p><strong>Order Number:</strong> {viewPayment.order?.orderNumber}</p>
-                    <p><strong>Total Amount:</strong> ₹{viewPayment.order?.totalPrice}</p>
-                    <p><strong>Status:</strong> {viewPayment.order?.orderStatus}</p>
-                    <p><strong>Payment Method:</strong> {viewPayment.order?.paymentMethod}</p>
-                    <p><strong>Payment Status:</strong> {viewPayment.order?.paymentStatus}</p>
-                    <p><strong>Ordered Date:</strong> {new Date(viewPayment.order?.orderedDate).toLocaleString()}</p>
-                    <p><strong>Ordered Time:</strong> {viewPayment.order?.orderedTime}</p>
-                    <h4>Shipping Address:</h4>
-                    <p>{viewPayment.order?.shippingAddress.name}</p>
-                    <p>{viewPayment.order?.shippingAddress.address}, {viewPayment.order?.shippingAddress.city}, {viewPayment.order?.shippingAddress.postalCode}, {viewPayment.order?.shippingAddress.country}</p>
-
-                    <h4>Billing Address:</h4>
-                    <p>{viewPayment.order?.billingAddress.name}</p>
-                    <p>{viewPayment.order?.billingAddress.address}, {viewPayment.order?.billingAddress.city}, {viewPayment.order?.billingAddress.postalCode}, {viewPayment.order?.billingAddress.country}</p>
-
+                    <p><strong>Total Amount:</strong> ₹{viewPayment.order?.totalAmount}</p>
                     <ul>
                       <strong>Items:</strong>
                       {viewPayment.order?.items?.map((item, index) => (
-                        <li key={index}>{item.productName} - ₹{item.price} x {item.quantity}</li>
+                        <li key={index}>{item.productName} - ₹{item.price}</li>
                       ))}
                     </ul>
                   </>

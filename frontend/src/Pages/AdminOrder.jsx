@@ -8,6 +8,7 @@ const AdminOrder = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [editOrder, setEditOrder] = useState(null);
   const [viewOrder, setViewOrder] = useState(null);
 
@@ -19,8 +20,14 @@ const AdminOrder = () => {
         setLoading(false);
         return;
       }
+
+      let url = 'http://localhost:4000/admin/orders';
+      if (statusFilter) {
+        url += `?status=${statusFilter}`;
+      }
+
       try {
-        const response = await fetch('http://localhost:4000/admin/orders', {
+        const response = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -38,8 +45,9 @@ const AdminOrder = () => {
         setLoading(false);
       }
     };
+
     fetchOrders();
-  }, []);
+  }, [statusFilter]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     const token = localStorage.getItem('auth_token');
@@ -128,6 +136,19 @@ const AdminOrder = () => {
       <Sidebar />
       <div className="admin-container">
         <h1 className="admin-title">Order Management</h1>
+
+        <div className="filter-container">
+          <label>Filter by Status:</label>
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+
         {loading ? (
           <div className="loading-container">
             <ThreeDots color="#0047FF" height={50} width={50} />
@@ -153,7 +174,7 @@ const AdminOrder = () => {
                     <tr key={order._id}>
                       <td>{order._id}</td>
                       <td>{order.userid ? order.userid.name : 'Unknown User'}</td>
-                      <td>${order.totalPrice}</td>
+                      <td>₹{order.totalPrice}</td>
                       <td>
                         <select
                           className={`status-dropdown status-${order.orderStatus.toLowerCase()}`}
@@ -186,7 +207,6 @@ const AdminOrder = () => {
           </>
         )}
       </div>
-
       {/* Edit Modal */}
       {editOrder && (
         <div className="modal-overlay">
@@ -211,39 +231,45 @@ const AdminOrder = () => {
         </div>
       )}
 
-    {/* View Modal */}
-{viewOrder && (
+      {/* View Modal */}
+      {viewOrder && (
   <div className="modal-overlay">
     <div className="modal-container">
       <h2>Order Details</h2>
       <p><strong>Order ID:</strong> {viewOrder._id}</p>
       <p><strong>User:</strong> {viewOrder.userid?.name} ({viewOrder.userid?.email})</p>
       <p><strong>Status:</strong> {viewOrder.orderStatus}</p>
-      <p><strong>Total Price:</strong> ${viewOrder.totalPrice}</p>
-      
+      <p><strong>Total Price:</strong> ₹{viewOrder.totalPrice}</p>
+
       <h3>Items:</h3>
       {viewOrder.items && viewOrder.items.length > 0 ? (
         viewOrder.items.map((item) => (
           <div key={item._id} className="item-card">
-            <img src={item.productId?.image} alt={item.productId?.name} className="item-image" />
+            {/* Check if images exist */}
+            {item.images && item.images.length > 0 ? (
+              <img src={item.images[0]} alt={item.productName} className="item-image" />
+            ) : (
+              <div className="item-image-placeholder">No Image</div>
+            )}
             <div className="item-info">
-              <p><strong>{item.productId?.name}</strong></p>
+              <p><strong>{item.productName || 'Unknown Product'}</strong></p> {/* Display product name */}
+              <p><strong>Product ID:</strong> {item.productid}</p> {/* Display product ID */}
               <p>Quantity: {item.quantity}</p>
-              <p>Price: ${item.price}</p>
-              <p>Total: ${item.quantity * item.price}</p>
+              <p>Price: ₹{item.price}</p>
+              <p>Total: ₹{item.quantity * item.price}</p>
             </div>
           </div>
         ))
       ) : (
         <p>No items found in this order.</p>
       )}
-      
+
       <button className="close-btn" onClick={closeViewModal}>Close</button>
     </div>
   </div>
 )}
 
-    
+
     </div>
   );
 };

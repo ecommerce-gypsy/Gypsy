@@ -123,15 +123,16 @@ const ReviewList = () => {
   const closeViewModal = () => {
     setViewReview(null);
   };
+
   const handleSaveChanges = async (e) => {
     e.preventDefault(); // Prevent the form from submitting and reloading the page
-  
+
     // Ensure the status is correctly updated
     const updatedReviewData = {
       ...editReview,
-      status: !editReview.status,  // Toggle the status
+      status: editReview.status,  // Directly use the status from the modal
     };
-  
+
     try {
       // Send the update request to the server
       const token = localStorage.getItem('auth_token');
@@ -139,7 +140,7 @@ const ReviewList = () => {
         setErrorMessage('No token found. Please log in.');
         return;
       }
-  
+
       const response = await fetch(`http://localhost:4000/api/review/${editReview._id}`, {
         method: 'PUT',
         headers: {
@@ -147,33 +148,33 @@ const ReviewList = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          status: updatedReviewData.status,
-          // Include other fields like reviewText and rating if needed
-          reviewText: updatedReviewData.reviewText,
-          rating: updatedReviewData.rating,
+          status: updatedReviewData.status, // Send the updated status
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to update review status');
       }
-  
+
       const updatedReview = await response.json();
-  
+
       // Update the review list with the updated review
       setReviews((prevReviews) =>
         prevReviews.map((review) =>
           review._id === updatedReview._id ? updatedReview : review
         )
       );
-  
+
+      // Refetch reviews after update to ensure consistency
+      fetchReviews();
+
       // Close the modal after saving changes
       closeEditModal();
     } catch (err) {
       setErrorMessage('Error updating review: ' + err.message);
     }
   };
-  
+
   return (
     <div className="admin-layout">
       <Sidebar />
@@ -234,51 +235,48 @@ const ReviewList = () => {
       </div>
 
       {/* Edit Review Modal */}
-{editReview && (
-  <div className="modal-overlay">
-    <div className="modal-container">
-      <div className="modal-header">
-        <h2>Edit Review</h2>
-        <button className="close-btn" onClick={closeEditModal}>X</button>
-      </div>
-      <form>
-        <label>Status:</label>
-        <select
-          value={editReview.status ? 'Active' : 'Inactive'}
-          onChange={(e) => setEditReview({ ...editReview, status: e.target.value === 'Active' })}
-        >
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-        <div className="modal-buttons">
-          <button className="save-btn" type="button" onClick={handleSaveChanges}>Save Changes</button>
-          
+      {editReview && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <div className="modal-header">
+              <h2>Edit Review</h2>
+              <button className="close-btn" onClick={closeEditModal}>X</button>
+            </div>
+            <form>
+              <label>Status:</label>
+              <select
+                value={editReview.status ? 'Active' : 'Inactive'}
+                onChange={(e) => setEditReview({ ...editReview, status: e.target.value === 'Active' ? true : false })}
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <div className="modal-buttons">
+                <button className="save-btn" type="button" onClick={handleSaveChanges}>Save Changes</button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-    </div>
-  </div>
-)}
+      )}
 
-{/* View Review Modal */}
-{viewReview && (
-  <div className="modal-overlay">
-    <div className="modal-container">
-      <div className="modal-header">
-        <h2>Review Details</h2>
-        <button className="close-btn" onClick={closeViewModal}>X</button>
-      </div>
-      <div className="modal-body">
-        <p><strong>User:</strong> {viewReview.userid?.email || 'Unknown'}</p>
-        <p><strong>Product:</strong> {viewReview.productid}</p>
-        <p><strong>Review:</strong> {viewReview.reviewText}</p>
-        <p><strong>Rating:</strong> {viewReview.rating}</p>
-        <p><strong>Status:</strong> {viewReview.status ? 'Active' : 'Inactive'}</p>
-      </div>
-      
-    </div>
-  </div>
-)}
-
+      {/* View Review Modal */}
+      {viewReview && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <div className="modal-header">
+              <h2>Review Details</h2>
+              <button className="close-btn" onClick={closeViewModal}>X</button>
+            </div>
+            <div className="modal-body">
+              <p><strong>User:</strong> {viewReview.userid?.email || 'Unknown'}</p>
+              <p><strong>Product:</strong> {viewReview.productid}</p>
+              <p><strong>Review:</strong> {viewReview.reviewText}</p>
+              <p><strong>Rating:</strong> {viewReview.rating}</p>
+              <p><strong>Status:</strong> {viewReview.status ? 'Active' : 'Inactive'}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

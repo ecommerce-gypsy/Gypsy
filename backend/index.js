@@ -51,8 +51,14 @@ app.use('/api/stock', stock);
 const dashboard = require('./routes/dashboard');
 app.use('/api/dashboard', dashboard);
 
+const category = require('./routes/Category');
+app.use('/api/categories', category);
+
 const paydetails = require('./routes/admin/paydetails');
 app.use('/api/payments', paydetails);
+
+const categories = require('./routes/Category');
+app.use('/api/categories ', categories );
 
 app.get("/", (req, res) => {
     res.send("Express App is Running");
@@ -276,6 +282,34 @@ app.get('/allproducts', async (req, res) => {
           }
         });
         
+        app.post('/subscribe-newsletter', async (req, res) => {
+          const { email } = req.body; // Get the email from the request body
+        
+          try {
+            // Find the user by email
+            const user = await Users.findOne({ email });
+        
+            if (!user) {
+              return res.status(404).json({ message: 'User not found' });
+            }
+        
+            // If the user is already subscribed, send a message
+            if (user.newsletterSubscribed) {
+              return res.status(400).json({ message: 'User is already subscribed to the newsletter' });
+            }
+        
+            // Update the user's subscription status
+            user.newsletterSubscribed = true;
+            user.newsletterSubscriptionDate = Date.now(); // Store the subscription date
+            await user.save();
+        
+            return res.status(200).json({ message: 'Subscribed to the newsletter successfully!' });
+          } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Server error', error });
+          }
+        });
+
         
         
 //  New Products (Limit to 4)

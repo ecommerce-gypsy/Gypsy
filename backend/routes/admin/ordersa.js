@@ -5,9 +5,20 @@ const ProductS = require('../../models/ProductS');
 const auth = require('../../middleware/auth');  
 const isAdmin = require('../../middleware/isAdmin'); 
 
+// Inside the router for fetching orders with filtering:
+router.get('/', auth, isAdmin, async (req, res) => {
+  try {
+    const { status } = req.query;
+    const filter = status ? { orderStatus: status } : {};  // Apply filter if status is provided
+    const orders = await Order.find(filter).populate('userid', 'name email');
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching orders', error: err.message });
+  }
+});
 
 // Get all orders
-router.get('/', auth, isAdmin,async (req, res) => {
+router.get('/s', auth, isAdmin,async (req, res) => {
   try {
     const orders = await Order.find().populate('userid', 'name email');
     console.log(orders); 
@@ -84,7 +95,7 @@ router.get('/:id/details', auth, isAdmin, async (req, res) => {
     const order = await Order.findById(id)
       .populate('userid', 'name email')
       .populate('items.productid', 'name price images[0]'); 
-
+    console.log(order);
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }

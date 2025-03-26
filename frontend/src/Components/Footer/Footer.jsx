@@ -1,12 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState(""); // To display success or error message
+
+  // Handle the form submission
+  const handleSubscribe = async (e) => {
+    e.preventDefault(); // Prevent the form from reloading the page
+
+    if (!email) {
+      setMessage("Please enter a valid email!");
+      return;
+    }
+
+    try {
+      // Send POST request to the backend to subscribe the user
+      const response = await fetch("http://localhost:4000/subscribe-newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        setMessage(data.message); // Success message
+      } else {
+        setMessage(data.message); // Error message
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage("Something went wrong. Please try again later.");
+    }
+  };
+
   return (
     <footer className="footer">
       <div className="footer-container">
-        
         {/* Quick Links */}
         <div className="footer-section">
           <h3>Quick Links</h3>
@@ -42,14 +76,17 @@ const Footer = () => {
         {/* Subscription Form */}
         <div className="footer-section footer-subscribe">
           <h3>Stay Updated</h3>
-          <form className="subscription-form">
+          <form className="subscription-form" onSubmit={handleSubscribe}>
             <input
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
             <button type="submit">Subscribe</button>
           </form>
+          {message && <p>{message}</p>} {/* Display the success/error message */}
         </div>
       </div>
 
