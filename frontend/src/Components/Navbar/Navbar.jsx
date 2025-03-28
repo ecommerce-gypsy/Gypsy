@@ -54,6 +54,9 @@ export const Navbar = () => {
           <Link to="/bracelets">BRACELETS</Link>
         </li>
         <li>
+          <Link to="/earrings">EARRINGS</Link>
+        </li>
+        <li>
           <Link to="/CustomDesignPage">CUSTOMIZATION</Link>
         </li>
       </ul>

@@ -387,6 +387,22 @@ app.get('/anklets', async (req, res) => {
     }
     
 });
+// Route to fetch anklet products
+app.get('/earrings', async (req, res) => {
+  try {
+      const earrings = await Product.find({ category: 'earrings' });
+      if (earrings.length === 0) {
+          return res.status(404).json({ success: false, message: 'No earrings found' });
+      }
+      res.json({ success: true, data: earrings });
+      console.log("Fetching earrings...");
+      console.log("earrings found:", earrings);
+  } catch (error) {
+      console.error('Error fetching earrings:', error);
+      res.status(500).json({ success: false, message: 'Failed to fetch earrings', error: error.message });
+  }
+  
+});
 app.get('/anklets/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -577,7 +593,84 @@ app.post('/search', async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
- 
+ app.post('/addproductss', async (req, res) => {
+  const products = await Product.find({}).sort({ productid: -1 }).limit(1);
+  const productid = products.length > 0 ? parseInt(products[products.length - 1].productid, 10) + 1 : 1;
+
+  const {
+    specifications,
+    new_price,
+    old_price,
+    stock,
+    category,
+    subcategory,
+    length,
+    size,
+    piercingType,
+    productName,
+    description,
+    customization,
+    colorOptions,
+    ratings,
+    isActive,
+    images
+  } = req.body;
+
+  // Validate required fields
+  if (!productName || !description || !new_price || !stock || !category || !subcategory || !images || images.length === 0) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Check for category-specific validations
+  if (category === "rings" && !size) {
+    return res.status(400).json({ error: 'Size is required for rings' });
+  }
+
+  if (["neckpieces", "bracelets", "anklets"].includes(category) && !length) {
+    return res.status(400).json({ error: 'Length is required for this category' });
+  }
+
+  if (category === "earrings" && !piercingType) {
+    return res.status(400).json({ error: 'Piercing type is required for earrings' });
+  }
+
+  const newPrice = Number(new_price);
+  const oldPrice = Number(old_price);
+  const stockQuantity = Number(stock);
+
+  console.log(req.body); // Log request data for debugging
+
+  try {
+    const product = new Product({
+      productid,
+      productName,
+      description,
+      category,
+      subcategory,
+      specifications,
+      customization,
+      colorOptions,
+      length,
+      size,  // Ensure size is set for rings
+      piercingType, // Ensure piercingType is set for earrings
+      old_price: oldPrice,
+      new_price: newPrice,
+      stock: stockQuantity,
+      ratings,
+      isActive,
+      images
+    });
+
+    console.log('Product to be saved:', product); // Log product data for debugging
+
+    await product.save();
+    res.json({ success: true, product });
+  } catch (err) {
+    console.log('Error details:', err);  
+    res.status(500).json({ error: err.message });
+  }
+});
+
   app.get('/api/filter', async (req, res) => {
     const { subcategory, material, price } = req.query;
 console.log(req.query);
@@ -972,6 +1065,31 @@ app.delete('/admin/user/:id', async (req, res) => {
     } catch (err) {
       console.error("Error during checkout:", err);
       res.status(500).json({ message: "Something went wrong. Please try again." });
+    }
+  });
+
+  app.post("/orders/:orderid", authenticateToken, async (req, res) => {
+    try {
+      const { orderid } = req.params; // Get the order ID from the request URL
+      console.log(orderid); // Log the order ID for debugging purposes
+  
+      // Fetch the order details using the order ID
+      const order = await Order.findById(orderid)
+        .populate('userid', 'name email') // Populate user info (name, email)
+        .populate('customDesign') // Populate custom design information (if available)
+        .exec();
+  
+      // If the order is not found, send a 404 error response
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+  
+      // Return the order details if found
+      res.json({ success: true, order });
+    } catch (err) {
+      // Log any server error and send a 500 error response
+      console.error('Error fetching order details:', err);
+      res.status(500).json({ message: 'Server error' });
     }
   });
   

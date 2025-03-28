@@ -51,6 +51,7 @@ import CategoryPage from "./Pages/CategoryPage";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AdminCategory from './Pages/AdminCategory';
+import Earrings from './Pages/Earrings';
 
 
 // Helper component to manage layout
@@ -88,6 +89,7 @@ const App = () => {
           <Route path="/listproduct" element={<ListProduct />} />
           <Route path="/sidebar" element={<Sidebar />} />
           <Route path="/anklets" element={<Anklets />} />
+          <Route path="/earrings" element={<Earrings />} />
           <Route path="/ankletbanner" element={<AnkletBanner />} />
           <Route path="/AddressForm" element={<AddressForm />} />
           <Route path="/bracelets" element={<Bracelets />} />

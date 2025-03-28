@@ -113,17 +113,26 @@ const sendConfirmationEmail = (orderData, userEmail) => {
 
   return transporter.sendMail(mailOptions);
 };
-
 router.post("/checkout", authenticateToken, async (req, res) => {
-  const { items, shippingAddress, billingAddress, paymentMethod, totalPrice, userEmail, razorpay_order_id, razorpay_payment_id } = req.body;
+  const { 
+    items, 
+    shippingAddress, 
+    billingAddress, 
+    paymentMethod, 
+    totalPrice, 
+    userEmail, 
+    razorpay_order_id, 
+    razorpay_payment_id 
+  } = req.body;
   const userId = req.user.id;
-
+console.log(req.body);
+  // Check if cart is empty
   if (!items || items.length === 0) {
     return res.status(400).json({ message: "Your cart is empty." });
   }
 
+  // Validate required fields
   const missingFields = [];
-
   if (!shippingAddress) missingFields.push("shippingAddress");
   if (!paymentMethod) missingFields.push("paymentMethod");
   if (!totalPrice) missingFields.push("totalPrice");
@@ -133,6 +142,51 @@ router.post("/checkout", authenticateToken, async (req, res) => {
   if (missingFields.length > 0) {
     return res.status(400).json({
       message: `Missing required fields: ${missingFields.join(", ")}.`
+    });
+  }
+
+  // Validate shipping address fields
+  const shippingErrors = [];
+  if (!shippingAddress.name) shippingErrors.push("shipping name");
+  if (!shippingAddress.address) shippingErrors.push("shipping address");
+  if (!shippingAddress.city) shippingErrors.push("shipping city");
+  if (!shippingAddress.postalCode) shippingErrors.push("shipping postalCode");
+  if (!shippingAddress.country) shippingErrors.push("shipping country");
+  if (shippingAddress.phone && !/^\d{10}$/.test(shippingAddress.phone)) {
+    shippingErrors.push("shipping phone (must be a valid 10-digit number)");
+  }
+
+  if (shippingErrors.length > 0) {
+    return res.status(400).json({
+      message: `Invalid shipping address: missing or invalid ${shippingErrors.join(", ")}.`
+    });
+  }
+
+  // Validate billing address if provided separately
+  let finalBillingAddress = billingAddress || shippingAddress;
+  if (billingAddress) {
+    const billingErrors = [];
+    if (!billingAddress.name) billingErrors.push("billing name");
+    if (!billingAddress.address) billingErrors.push("billing address");
+    if (!billingAddress.city) billingErrors.push("billing city");
+    if (!billingAddress.postalCode) billingErrors.push("billing postalCode");
+    if (!billingAddress.country) billingErrors.push("billing country");
+    if (billingAddress.phone && !/^\d{10}$/.test(billingAddress.phone)) {
+      billingErrors.push("billing phone (must be a valid 10-digit number)");
+    }
+
+    if (billingErrors.length > 0) {
+      return res.status(400).json({
+        message: `Invalid billing address: missing or invalid ${billingErrors.join(", ")}.`
+      });
+    }
+  }
+
+  // Validate payment method
+  const validPaymentMethods = ['Razorpay', 'Credit Card', 'Debit Card', 'UPI'];
+  if (!validPaymentMethods.includes(paymentMethod)) {
+    return res.status(400).json({
+      message: `Invalid payment method. Must be one of: ${validPaymentMethods.join(", ")}.`
     });
   }
 
@@ -151,32 +205,29 @@ router.post("/checkout", authenticateToken, async (req, res) => {
         });
       }
 
-      // Add productName and other relevant fields from the product model
-      item.productName = product.productName;  // Add product name to the item
-      item.price = product.new_price;  // Add price (new_price) from the product model
+      // Add product details to item
+      item.productName = product.productName;
+      item.price = product.new_price;
 
-      // Update product stock after the order
+      // Update product stock
       product.stock -= item.quantity;
       await product.save();
     }
 
-    // If no billing address, assume it is the same as shipping address
-    const finalBillingAddress = billingAddress || shippingAddress;
-
-    // Create a new order and save it to the database
+    // Create new order
     const newOrder = new Order({
       userid: userId,
       items,
       shippingAddress,
       billingAddress: finalBillingAddress,
-      paymentMethod, 
+      paymentMethod,
       totalPrice,
       orderStatus: "Pending",
-      paymentStatus: "Pending", // Initially set as Pending
+      paymentStatus: "Paid", // Since payment is verified before this endpoint
       razorpay_order_id,
-      razorpay_payment_id,  
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      razorpay_payment_id,
+      orderedDate: new Date(),
+      orderedTime: new Date().toLocaleTimeString(),
     });
 
     const savedOrder = await newOrder.save();
@@ -190,14 +241,14 @@ router.post("/checkout", authenticateToken, async (req, res) => {
     // Send confirmation email
     await sendConfirmationEmail(newOrder, userEmail);
 
-    // Now update the payment with the orderId
+    // Update payment with orderId
     const payment = await Payment.findOne({
       razorpay_order_id: razorpay_order_id,
       razorpay_payment_id: razorpay_payment_id,
     });
 
     if (payment) {
-      payment.orderId = savedOrder._id; // Update with the new orderId
+      payment.orderId = savedOrder._id;
       await payment.save();
     } else {
       console.error("Payment not found to associate with the order");
@@ -205,8 +256,8 @@ router.post("/checkout", authenticateToken, async (req, res) => {
 
     res.status(201).json({
       message: "Order placed successfully and cart cleared.",
-      orderId: newOrder._id,
-      orderDetails: newOrder,
+      orderId: savedOrder._id,
+      orderDetails: savedOrder,
     });
   } catch (err) {
     console.error("Error during checkout:", err);

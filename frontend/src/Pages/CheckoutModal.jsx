@@ -15,17 +15,19 @@ const CheckoutModal = ({
   const modalRef = useRef(null);
   const [shippingAddress, setShippingAddress] = useState({
     name: "",
+    phone: "",
     address: "",
     city: "",
     postalCode: "",
-    country: "",
+    country: ""
   });
   const [billingAddress, setBillingAddress] = useState({
     name: "",
+    phone: "",
     address: "",
     city: "",
     postalCode: "",
-    country: "",
+    country: ""
   });
   const [paymentMethod, setPaymentMethod] = useState("Razorpay");
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,6 @@ const CheckoutModal = ({
   const [useBillingAsShipping, setUseBillingAsShipping] = useState(true);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  // Custom toast notification function
   const showNotification = (message, type = 'error') => {
     const toastOptions = {
       position: "top-center",
@@ -106,6 +107,10 @@ const CheckoutModal = ({
       errors.shippingCountry = "Country is required";
       isValid = false;
     }
+    if (shippingAddress.phone && !/^\d{10}$/.test(shippingAddress.phone)) {
+      errors.shippingPhone = "Please enter a valid 10-digit phone number";
+      isValid = false;
+    }
 
     if (!useBillingAsShipping) {
       if (!billingAddress.name.trim()) {
@@ -126,6 +131,10 @@ const CheckoutModal = ({
       }
       if (!billingAddress.country.trim()) {
         errors.billingCountry = "Country is required";
+        isValid = false;
+      }
+      if (billingAddress.phone && !/^\d{10}$/.test(billingAddress.phone)) {
+        errors.billingPhone = "Please enter a valid 10-digit phone number";
         isValid = false;
       }
     }
@@ -182,7 +191,7 @@ const CheckoutModal = ({
       }
 
       const options = {
-        key: "rzp_test_6y4ihF8KtZx61t",
+        key: "rzp_test_vgn6l0o6lKXhrg",
         amount: orderData.amount,
         currency: orderData.currency,
         name: "RP Collections",
@@ -219,6 +228,8 @@ const CheckoutModal = ({
               productid: item.productid,
               quantity: item.quantity,
               price: item.new_price,
+              images: item.images[0],
+              productName: item.productName
             })),
             shippingAddress,
             billingAddress: useBillingAsShipping ? shippingAddress : billingAddress, 
@@ -245,7 +256,7 @@ const CheckoutModal = ({
             showNotification("Order placed successfully", 'success');
             setTimeout(() => {
               showNotification("Cart has been cleared", 'success');
-            }, 1000); // Show second toast after 1 second delay
+            }, 1000);
             handleCheckoutSuccess(checkoutResult.message);
             navigate(`/order/${checkoutResult.orderId}`);
           } else {
@@ -256,6 +267,7 @@ const CheckoutModal = ({
         prefill: {
           name: shippingAddress.name,
           email: localStorage.getItem("user_email"),
+          contact: shippingAddress.phone
         },
         theme: { color: "#3399cc" },
       };
@@ -347,6 +359,19 @@ const CheckoutModal = ({
                 )}
               </div>
               <div className="form-group">
+                <label>Phone Number</label>
+                <input
+                  type="tel"
+                  value={shippingAddress.phone}
+                  onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
+                  className={fieldErrors.shippingPhone ? "error" : ""}
+                  placeholder="Enter 10-digit phone number"
+                />
+                {fieldErrors.shippingPhone && (
+                  <div className="error-message animate-error">{fieldErrors.shippingPhone}</div>
+                )}
+              </div>
+              <div className="form-group">
                 <label>Address *</label>
                 <input
                   type="text"
@@ -432,6 +457,19 @@ const CheckoutModal = ({
                     )}
                   </div>
                   <div className="form-group">
+                    <label>Billing Phone Number</label>
+                    <input
+                      type="tel"
+                      value={billingAddress.phone}
+                      onChange={(e) => setBillingAddress({ ...billingAddress, phone: e.target.value })}
+                      className={fieldErrors.billingPhone ? "error" : ""}
+                      placeholder="Enter 10-digit phone number"
+                    />
+                    {fieldErrors.billingPhone && (
+                      <div className="error-message animate-error">{fieldErrors.billingPhone}</div>
+                    )}
+                  </div>
+                  <div className="form-group">
                     <label>Billing Address *</label>
                     <input
                       type="text"
@@ -492,6 +530,9 @@ const CheckoutModal = ({
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 >
                   <option value="Razorpay">Razorpay</option>
+                  <option value="Credit Card">Credit Card</option>
+                  <option value="Debit Card">Debit Card</option>
+                  <option value="UPI">UPI</option>
                 </select>
               </div>
             </div>

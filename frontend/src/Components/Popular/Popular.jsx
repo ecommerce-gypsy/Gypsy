@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./Popular.css";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -7,7 +6,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
+import { Link } from 'react-router-dom'; 
 import chatIcon from "../Assets/chatIcon.png";
 import ankletlogo from "../Assets/ankletlogo.png";
 import braceletlogo from "../Assets/braceletlogo.png";
@@ -32,6 +31,7 @@ export const Popular = () => {
       })
       .then((data) => {
         setNewCollection(data);
+        console.log(data);
       })
       .catch((err) => {
         setError(err.message);
@@ -91,13 +91,14 @@ export const Popular = () => {
               .filter((item) => item && item.images && item.images[0])
               .map((item, i) => (
                 <SwiperSlide key={i}>
+                  <Link to={`/product/${item.productid}`}>
                   <Item
                     id={item.id}
-                    name={item.name}
+                    name={item.productName}
                     image={item.images[0]}
                     new_price={item.new_price}
                     old_price={item.old_price}
-                  />
+                  /></Link>
                 </SwiperSlide>
               ))}
           </Swiper>

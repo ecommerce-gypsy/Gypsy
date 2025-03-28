@@ -58,7 +58,7 @@ const Bracelets = () => {
     <div className="bracelets-container">
       <Breadcrumb/>
       <BraceletBanner/>
-      <h1>Welcome to the BRACELETS category page!</h1>
+      <h1>Add a Sparkle to Your Wrist!</h1>
 
       {loading ? (
         <p>Loading...</p>  
@@ -117,9 +117,7 @@ const Bracelets = () => {
         </div>
       )}
 
-      {/*<button className="customize-btn" onClick={() => navigate("/customize")}>
-        Customize
-      </button>*/}
+    
       <Footer/>
     </div>
   );

@@ -143,6 +143,7 @@ export const Filter = () => {
                   <img src={product.images[0]} alt={product.name} className="product-image" />
                   <div>{product.name}</div>
                   <div>
+                  <span className="product-name">₹{product.productName}</span>{' '}
                     <span className="new-price">₹{product.new_price}</span>{' '}
                     <span className="old-price">₹{product.old_price}</span>
                   </div>
