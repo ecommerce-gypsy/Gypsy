@@ -17,7 +17,7 @@
 .nav-logo {
   display: flex;
   align-items: center; /* Align logo with menu */
-  margin-left: -200px; /* Space between logo and menu */
+  margin-left: -300px; /* Space between logo and menu */
 }
 
 .nav-logo img {
@@ -47,6 +47,7 @@
   font-weight: 500;
   transition: color 0.3s ease, transform 0.3s ease;
   position: relative;
+  
 }
 
 .nav-menu a::after {

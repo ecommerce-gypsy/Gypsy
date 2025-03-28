@@ -32,7 +32,7 @@ export const Navbar = () => {
   return (
     <div className="navbar">
       <div className="marquee container">
-      {/* Logo Section */}<MarqueeBanner/><CategoryMenu/>
+      {/* Logo Section */}<MarqueeBanner/>
       </div>
       <div className="nav-logo">
         <img src={logo} alt="Logo" />
