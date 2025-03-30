@@ -52,7 +52,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AdminCategory from './Pages/AdminCategory';
 import Earrings from './Pages/Earrings';
-
+import ReturnForm from './Pages/ReturnForm';
+import MyReturns from './Pages/MyReturns';
+import AdminReturns from './Pages/AdminReturns';
 
 // Helper component to manage layout
 const Layout = ({ children }) => {
@@ -119,6 +121,11 @@ const App = () => {
       <Route path="/adminpayment" element={<Payment/>} />
       <Route path="/category/:categoryId" element={<CategoryPage />} /> 
       <Route path="/admincategory" element={<AdminCategory />} />
+
+      <Route path="/return-request" element={<ReturnForm/>} />
+          <Route path="/my-returns" element={<MyReturns/>} />
+          {/* Admin view */}
+          <Route path="/admin/returns" element={<AdminReturns />} />
       </Routes>
        
       </Layout>

@@ -1,21 +1,55 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as fabric from 'fabric';
-
-
 import './CustomDesignPage.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 const CustomDesignPage = () => {
   const canvasRef = useRef(null);
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState([]); // { obj, designId, cost }
   const [customDesigns, setCustomDesigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [drawing, setDrawing] = useState(false);
   const [isEraser, setIsEraser] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [priceMap, setPriceMap] = useState({});
 
   useEffect(() => {
-    // Initialize the canvas
+    // Fetch price details for all materials
+    const fetchPricingDetails = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/custom-designs/price-details');
+        if (!response.ok) throw new Error('Failed to fetch pricing details');
+        const data = await response.json();
+        setPriceMap(data);
+      } catch (error) {
+        setError('Error fetching pricing details: ' + error.message);
+      }
+    };
+
+    // Fetch custom designs
+    const fetchCustomDesigns = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/custom-designs');
+        if (!response.ok) throw new Error('Failed to fetch custom designs');
+        const data = await response.json();
+        const categorizedDesigns = data.reduce((acc, design) => {
+          const category = design.category[0] || 'Uncategorized';
+          if (!acc[category]) acc[category] = [];
+          acc[category].push(design);
+          return acc;
+        }, {});
+        setCustomDesigns(categorizedDesigns);
+      } catch (error) {
+        setError('Error fetching custom designs: ' + error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPricingDetails();
+    fetchCustomDesigns();
+
+    // Initialize canvas
     if (fabric && fabric.Canvas && !canvasRef.current) {
       const canvas = new fabric.Canvas('designCanvas', {
         width: 1000,
@@ -25,21 +59,6 @@ const CustomDesignPage = () => {
       canvasRef.current = canvas;
     }
 
-    // Fetch custom designs
-    const fetchCustomDesigns = () => {
-      fetch('http://localhost:4000/api/custom-designs')
-        .then(response => response.json())
-        .then(data => {
-          setCustomDesigns(data);
-        })
-        .catch(error => {
-          setError('Error fetching custom designs');
-        })
-        .finally(() => setLoading(false));
-    };
-
-    fetchCustomDesigns();
-
     return () => {
       if (canvasRef.current) {
         canvasRef.current.dispose();
@@ -48,112 +67,128 @@ const CustomDesignPage = () => {
     };
   }, []);
 
-  // Add custom design (image) to canvas
-  const addCustomDesign = (imageUrl, left, top) => {
+  const addCustomDesign = (imageUrl, left, top, designId) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const imgElement = new Image();
-    imgElement.crossOrigin = "Anonymous";
+    const pricing = priceMap[designId] || { price: 0, priceMultiplier: 1 };
+    const itemCost = pricing.price * pricing.priceMultiplier;
 
-    imgElement.onload = function() {
+    const imgElement = new Image();
+    imgElement.crossOrigin = 'Anonymous';
+
+    imgElement.onload = function () {
       const img = new fabric.Image(imgElement, {
-        left: left,
-        top: top,
+        left,
+        top,
         width: 150,
         height: 150,
         opacity: 1,
       });
+
+      const canvasWidth = canvas.getWidth();
+      const canvasHeight = canvas.getHeight();
+      if (img.width > canvasWidth || img.height > canvasHeight) {
+        img.scaleToWidth(canvasWidth * 0.8);
+        img.scaleToHeight(canvasHeight * 0.8);
+      }
+
       canvas.add(img);
       canvas.renderAll();
-      setHistory((prevHistory) => [...prevHistory, img]);
+
+      const historyItem = { obj: img, designId, cost: itemCost };
+      setHistory((prev) => [...prev, historyItem]);
+      setTotalPrice((prev) => prev + itemCost);
     };
 
-    imgElement.onerror = function(error) {
-      console.error("Error loading image:", error);
+    imgElement.onerror = function (error) {
+      console.error('Error loading image:', error);
+      setError('Error loading image for design ID: ' + designId);
     };
 
     imgElement.src = imageUrl;
   };
 
-  // Save canvas as image
   const handleSaveAsImage = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const dataURL = canvas.toDataURL({
-      format: 'png',
-      quality: 1.0,
-    });
-
+    const dataURL = canvas.toDataURL({ format: 'png', quality: 1.0 });
     const link = document.createElement('a');
     link.href = dataURL;
     link.download = 'custom-design.png';
     link.click();
   };
 
-  // Handle Drag Start Event
-  const handleDragStart = (e, imageUrl) => {
+  const handleDragStart = (e, imageUrl, designId) => {
     e.dataTransfer.setData('text/plain', imageUrl);
+    e.dataTransfer.setData('designId', designId);
   };
 
-  // Handle Drop Event
   const handleDrop = (e) => {
     e.preventDefault();
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const boundingRect = canvas.getElement().getBoundingClientRect();
-    const left = e.clientX - boundingRect.left;
-    const top = e.clientY - boundingRect.top;
+    let left = e.clientX - boundingRect.left;
+    let top = e.clientY - boundingRect.top;
+
+    const imageWidth = 150;
+    const imageHeight = 150;
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+
+    if (left + imageWidth > canvasWidth) left = canvasWidth - imageWidth;
+    if (left < 0) left = 0;
+    if (top + imageHeight > canvasHeight) top = canvasHeight - imageHeight;
+    if (top < 0) top = 0;
 
     const imageUrl = e.dataTransfer.getData('text/plain');
-    addCustomDesign(imageUrl, left, top);
+    const designId = e.dataTransfer.getData('designId');
+    addCustomDesign(imageUrl, left, top, designId);
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
+  const handleDragOver = (e) => e.preventDefault();
 
-  // Start eraser functionality
   const startErasing = () => {
     const canvas = canvasRef.current;
     setIsEraser(true);
     canvas.isDrawingMode = false;
-    setDrawing(false); // Disable drawing mode when eraser is active
 
-    // Listen to the mouse down event for erasing
     canvas.on('mouse:down', (e) => {
       const obj = canvas.getActiveObject();
       if (obj) {
-        canvas.remove(obj);
-        setHistory((prev) => prev.filter((item) => item !== obj));
+        const historyItem = history.find((item) => item.obj === obj);
+        if (historyItem) {
+          canvas.remove(obj);
+          setHistory((prev) => prev.filter((item) => item.obj !== obj));
+          setTotalPrice((prev) => prev - historyItem.cost);
+        }
       }
     });
   };
 
-  // Undo the last action
   const undo = () => {
     const canvas = canvasRef.current;
-    const lastObject = history[history.length - 1];
-    if (lastObject) {
-      canvas.remove(lastObject);
-      setHistory(history.slice(0, -1)); // Remove from history
+    const lastItem = history[history.length - 1];
+    if (lastItem) {
+      canvas.remove(lastItem.obj);
+      setHistory((prev) => prev.slice(0, -1));
+      setTotalPrice((prev) => prev - lastItem.cost);
     }
   };
 
-  // Clear the entire canvas
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     canvas.clear();
-    setHistory([]); // Reset history
+    setHistory([]);
+    setTotalPrice(0);
   };
 
-  // Change the color of the selected object
   const changeColor = (color) => {
     const canvas = canvasRef.current;
     const activeObject = canvas.getActiveObject();
-
     if (activeObject) {
       activeObject.set({ fill: color });
       canvas.renderAll();
@@ -169,22 +204,33 @@ const CustomDesignPage = () => {
             <p>Loading designs...</p>
           ) : error ? (
             <p style={{ color: 'red' }}>{error}</p>
-          ) : customDesigns.length === 0 ? (
+          ) : Object.keys(customDesigns).length === 0 ? (
             <p>No designs found</p>
           ) : (
-            customDesigns.map((design, index) => (
-              <img
-                key={index}
-                src={design.image}
-                alt={design.name}
-                className="design-icon"
-                title={design.name}
-                draggable
-                onDragStart={(e) => handleDragStart(e, design.image)}
-              />
+            Object.keys(customDesigns).map((category) => (
+              <div key={category}>
+                <h4>{category}</h4>
+                <div className="design-category">
+                  {customDesigns[category].map((design) => {
+                    const pricing = priceMap[design._id] || { price: 0, priceMultiplier: 1 };
+                    const itemCost = (pricing.price * pricing.priceMultiplier).toFixed(2);
+                    return (
+                      <img
+                        key={design._id}
+                        src={design.image}
+                        alt={design.name}
+                        className="design-icon"
+                        title={`${design.name} - ₹${itemCost}`}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, design.image, design._id)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
             ))
           )}
-<h4>--------</h4>
+          <h4>--------</h4>
           <i className="fa fa-eraser fa-2x" title="Eraser Tool" onClick={startErasing}></i>
           <i className="fa fa-undo fa-2x" title="Undo" onClick={undo}></i>
           <i className="fa fa-trash fa-2x" title="Clear Canvas" onClick={clearCanvas}></i>
@@ -192,20 +238,19 @@ const CustomDesignPage = () => {
         </div>
       </div>
 
-      <div
-        className="canvas-container"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
+      <div className="canvas-container" onDrop={handleDrop} onDragOver={handleDragOver}>
         <canvas id="designCanvas"></canvas>
       </div>
 
-      <button onClick={handleSaveAsImage} className="save-btn">
-        Save as Image
-      </button>
+      <button onClick={handleSaveAsImage} className="save-btn">Save as Image</button>
+
+      <div className="price-info">
+        <p>Items Used: {history.length}</p>
+        <p>Total Price: ₹{totalPrice.toFixed(2)}</p>
+      
+      </div>
     </div>
   );
 };
 
 export default CustomDesignPage;
-

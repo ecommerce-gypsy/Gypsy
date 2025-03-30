@@ -155,6 +155,10 @@ function Account() {
     setEditIndex(index);
   };
 
+  const handleReturnRequest = (orderId, productId) => {
+    navigate(`/return-request`, { state: { orderId, productId } });
+  };
+
   const handleDeleteAddress = async (index) => {
     if (!addresses || addresses.length === 0) {
       setNotification({ message: "No addresses available.", type: "info", visible: true });
@@ -426,15 +430,23 @@ function Account() {
                     <p>Status: <span className={`order-status ${order.orderStatus.toLowerCase()}`}>{order.orderStatus}</span></p>
                     <button className="view-details-btn" onClick={() => fetchOrderDetails(order._id)}>View Details</button>
                     {order.orderStatus === "Delivered" && order.items.map((item, idx) => (
-                      <button
-                        key={idx}
-                        className="review-btn"
-                        onClick={() => openReviewModal(item.productid)}
-                        style={{ marginLeft: "10px", padding: "5px 10px", background: "#2196F3", color: "white", border: "none", borderRadius: "4px" }}
-                      >
-                        Write a Review for {item.productName}
-                      </button>
-                    ))}
+  <div key={idx} style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+    <button
+      className="review-btn"
+      onClick={() => openReviewModal(item.productid)}
+      style={{ padding: "5px 10px", background: "#2196F3", color: "white", border: "none", borderRadius: "4px" }}
+    >
+      Write a Review for {item.productName}
+    </button>
+    <button
+      className="return-btn"
+      onClick={() => handleReturnRequest(order._id, item.productid)}
+      style={{ padding: "5px 10px", background: "#FF5733", color: "white", border: "none", borderRadius: "4px" }}
+    >
+      Return {item.productName}
+    </button>
+  </div>
+))}
                   </div>
                 ))
               ) : (

@@ -60,6 +60,9 @@ app.use('/api/payments', paydetails);
 const categories = require('./routes/Category');
 app.use('/api/categories ', categories );
 
+const returns = require('./routes/admin/return');
+app.use('/api/return', returns);
+
 app.get("/", (req, res) => {
     res.send("Express App is Running");
 });

@@ -12,8 +12,6 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
   const { cart, addToCart } = useContext(CartContext);
   const [mainImage, setMainImage] = useState("");
-  const [category, setCategory] = useState("Adult");
-  const [setOption, setSetOption] = useState("Single");
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -35,11 +33,11 @@ const ProductDetail = () => {
     fetchProduct();
   }, [productId]);
 
+  const isInCart = (product) => cart.some((item) => item.productid === product.productid);
+
   const calculateTotalPrice = () => {
     const basePrice = product?.new_price || 0;
-    const categoryMultiplier = category === "Adult" ? 1 : 0.8;
-    const setMultiplier = setOption === "Single" ? 1 : 2;
-    return (basePrice * categoryMultiplier * setMultiplier * quantity).toFixed(2);
+    return (basePrice * quantity).toFixed(2); // Without category and set multiplier
   };
 
   if (loading) return <div>Loading...</div>;
@@ -58,7 +56,7 @@ const ProductDetail = () => {
       </div>
 
       <div className="product-info">
-        <h1>{product.name}</h1>
+        <h1>{product.productName}</h1>
         <p className="price">
           <strong>₹{product.new_price.toFixed(2)}</strong>
           <span className="old-price">₹{product.old_price.toFixed(2)}</span>
@@ -66,22 +64,6 @@ const ProductDetail = () => {
         </p>
 
         <p className="description"><strong>Description:</strong> {product.description}</p>
-
-        <div className="category">
-          <label>Category:</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="Adult">Adult</option>
-            <option value="Child">Child</option>
-          </select>
-        </div>
-
-        <div className="set">
-          <label>Set:</label>
-          <select value={setOption} onChange={(e) => setSetOption(e.target.value)}>
-            <option value="Single">Single</option>
-            <option value="Pair">Pair</option>
-          </select>
-        </div>
 
         <div className="quantity">
           <label>Quantity:</label>
@@ -92,8 +74,15 @@ const ProductDetail = () => {
           <strong>Total Price (Incl. of all Taxes):</strong> <span>₹ {calculateTotalPrice()}</span>
         </div>
 
-        <button className="add-to-cart" onClick={() => !cart.some((item) => item.productid === product.productid) && addToCart(product)}>
-          {cart.some((item) => item.productid === product.productid) ? "In Cart" : "Add to Cart"}
+        <button
+          className="add-to-cart"
+          onClick={() => {
+            if (!isInCart(product)) {
+              addToCart(product);
+            }
+          }}
+        >
+          {isInCart(product) ? "In Cart" : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
         </button>
 
         <button className="buy-now" onClick={() => window.location.href = `/checkout?productId=${productId}&quantity=${quantity}&totalPrice=${calculateTotalPrice()}`}>

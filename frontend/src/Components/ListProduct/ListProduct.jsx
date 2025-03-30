@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ListProduct.css";
 import cross_icon from "../Assets/cross_icon.png";
-import edit from "../Assets/edit.png"; // Assuming you have an edit icon
+import edit from "../Assets/edit.png";
 import Sidebar from "../Sidebar/Sidebar";
 
 const ListProduct = () => {
-  const navigate = useNavigate(); // Hook to handle navigation
+  const navigate = useNavigate();
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -69,11 +69,26 @@ const ListProduct = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "colorOptions") {
+    if (name.includes('specifications.')) {
+      const specField = name.split('.')[1];
+      setCurrentProduct({
+        ...currentProduct,
+        specifications: {
+          ...currentProduct.specifications,
+          [specField]: value
+        }
+      });
+    } else if (name === "colorOptions") {
       const updatedColorOptions = value ? value.split(",").map((item) => item.trim()) : [];
       setCurrentProduct({
         ...currentProduct,
         [name]: updatedColorOptions,
+      });
+    } else if (name === "images") {
+      const updatedImages = value ? value.split(",").map((item) => item.trim()) : [];
+      setCurrentProduct({
+        ...currentProduct,
+        [name]: updatedImages,
       });
     } else {
       setCurrentProduct({
@@ -132,11 +147,9 @@ const ListProduct = () => {
   return (
     <div className="main-container">
       <Sidebar />
-
       <div className="list-product-content">
         <div className="heading-container">
           <div className="heading-box">All Product List</div>
-          {/* Add Product Button */}
           <button className="add-product-button" onClick={() => navigate("/addproduct")}>
             Add Product
           </button>
@@ -218,6 +231,166 @@ const ListProduct = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Edit Product Modal */}
+        {isModalOpen && currentProduct && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Edit Product</h3>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <label>
+                  Title:
+                  <input
+                    type="text"
+                    name="productName"
+                    value={currentProduct.productName || ""}
+                    onChange={handleInputChange}
+                  />
+                </label>
+                <label>
+                  Description:
+                  <input
+                    type="text"
+                    name="description"
+                    value={currentProduct.description || ""}
+                    onChange={handleInputChange}
+                  />
+                </label>
+                <label>
+                  Old Price:
+                  <input
+                    type="number"
+                    name="old_price"
+                    value={currentProduct.old_price || ""}
+                    onChange={handleInputChange}
+                  />
+                </label>
+                <label>
+                  New Price:
+                  <input
+                    type="number"
+                    name="new_price"
+                    value={currentProduct.new_price || ""}
+                    onChange={handleInputChange}
+                  />
+                </label>
+                <label>
+                  Stock:
+                  <input
+                    type="number"
+                    name="stock"
+                    value={currentProduct.stock || ""}
+                    onChange={handleInputChange}
+                  />
+                </label>
+                <label>
+                  Category:
+                  <input
+                    type="text"
+                    name="category"
+                    value={currentProduct.category || ""}
+                    onChange={handleInputChange}
+                  />
+                </label>
+
+                {/* Specifications Section */}
+                <button type="button" onClick={() => setSpecificationsOpen(!specificationsOpen)}>
+                  {specificationsOpen ? "Hide Specifications" : "Edit Specifications"}
+                </button>
+                {specificationsOpen && (
+                  <>
+                    <label>
+                      Material:
+                      <input
+                        type="text"
+                        name="specifications.material"
+                        value={currentProduct.specifications?.material || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                    <label>
+                      Bead Size:
+                      <input
+                        type="text"
+                        name="specifications.beadSize"
+                        value={currentProduct.specifications?.beadSize || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                    <label>
+                      Bead Shape:
+                      <input
+                        type="text"
+                        name="specifications.beadShape"
+                        value={currentProduct.specifications?.beadShape || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                    <label>
+                      Stringing Material:
+                      <input
+                        type="text"
+                        name="specifications.stringingMaterial"
+                        value={currentProduct.specifications?.stringingMaterial || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                    <label>
+                      Closure Type:
+                      <input
+                        type="text"
+                        name="specifications.closureType"
+                        value={currentProduct.specifications?.closureType || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                    <label>
+                      Weight:
+                      <input
+                        type="text"
+                        name="specifications.weight"
+                        value={currentProduct.specifications?.weight || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                  </>
+                )}
+
+                {/* Customization Section */}
+                <button type="button" onClick={() => setCustomizationOpen(!customizationOpen)}>
+                  {customizationOpen ? "Hide Customization" : "Edit Customization"}
+                </button>
+                {customizationOpen && (
+                  <>
+                    <label>
+                      Color Options:
+                      <input
+                        type="text"
+                        name="colorOptions"
+                        value={currentProduct.colorOptions?.join(", ") || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                    <label>
+                      Images (URLs):
+                      <input
+                        type="text"
+                        name="images"
+                        value={currentProduct.images?.join(", ") || ""}
+                        onChange={handleInputChange}
+                      />
+                    </label>
+                  </>
+                )}
+
+                <div className="modal-actions">
+                  <button type="button" onClick={updateProduct}>Update</button>
+                  <button type="button" onClick={closeModal}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
