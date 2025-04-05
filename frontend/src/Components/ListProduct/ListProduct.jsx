@@ -179,51 +179,65 @@ const ListProduct = () => {
           <table className="product-table">
             <thead>
               <tr>
-                <th>Product</th>
+                <th>Product Image</th>
                 <th>Title</th>
                 <th>Old Price</th>
                 <th>New Price</th>
                 <th>Category</th>
                 <th>Stock</th>
-                <th>Edit</th>
-                <th>Remove</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan="8">No products available</td>
+                  <td colSpan="7" className="no-products-message">
+                    <div className="empty-state">
+                      <i className="fas fa-box-open"></i>
+                      <p>No products found</p>
+                    </div>
+                  </td>
                 </tr>
               ) : (
                 filteredProducts.map((product) => (
                   <tr key={product.id}>
                     <td>
-                      <img
-                        src={product.firstImage || "placeholder-image-url"}
-                        alt={product.productName || product.name}
-                        className="product-image"
-                      />
+                      <div className="product-image-container">
+                        <img
+                          src={product.firstImage || "https://via.placeholder.com/100"}
+                          alt={product.productName || product.name}
+                          className="product-image"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://via.placeholder.com/100";
+                          }}
+                        />
+                      </div>
                     </td>
                     <td>{product.productName || product.name}</td>
                     <td>₹{product.old_price}</td>
                     <td>₹{product.new_price}</td>
                     <td>{product.category}</td>
-                    <td>{product.stock || "Out of stock"}</td>
                     <td>
-                      <img
-                        onClick={() => openEditModal(product)}
-                        className="edit"
-                        src={edit}
-                        alt="Edit"
-                      />
+                      <span className={`stock-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                        {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+                      </span>
                     </td>
-                    <td>
-                      <img
+                    <td className="actions-cell">
+                      <button 
+                        className="edit-button"
+                        onClick={() => openEditModal(product)}
+                      >
+                        <img src={edit} alt="Edit" />
+                        <span>Edit</span>
+                      </button>
+                      <button 
+                        className="remove-button"
                         onClick={() => removeProduct(product.id)}
-                        className="remove-icon"
-                        src={cross_icon}
-                        alt="Remove"
-                      />
+                      >
+                        <img src={cross_icon} alt="Remove" />
+                        <span>Remove</span>
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -232,162 +246,233 @@ const ListProduct = () => {
           </table>
         </div>
 
-        {/* Edit Product Modal */}
+        {/* Enhanced Edit Product Modal */}
         {isModalOpen && currentProduct && (
           <div className="modal-overlay">
             <div className="modal">
-              <h3>Edit Product</h3>
-              <form onSubmit={(e) => e.preventDefault()}>
-                <label>
-                  Title:
-                  <input
-                    type="text"
-                    name="productName"
-                    value={currentProduct.productName || ""}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <label>
-                  Description:
-                  <input
-                    type="text"
-                    name="description"
-                    value={currentProduct.description || ""}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <label>
-                  Old Price:
-                  <input
-                    type="number"
-                    name="old_price"
-                    value={currentProduct.old_price || ""}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <label>
-                  New Price:
-                  <input
-                    type="number"
-                    name="new_price"
-                    value={currentProduct.new_price || ""}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <label>
-                  Stock:
-                  <input
-                    type="number"
-                    name="stock"
-                    value={currentProduct.stock || ""}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <label>
-                  Category:
-                  <input
-                    type="text"
-                    name="category"
-                    value={currentProduct.category || ""}
-                    onChange={handleInputChange}
-                  />
-                </label>
-
-                {/* Specifications Section */}
-                <button type="button" onClick={() => setSpecificationsOpen(!specificationsOpen)}>
-                  {specificationsOpen ? "Hide Specifications" : "Edit Specifications"}
+              <div className="modal-header">
+                <h3>Edit Product: {currentProduct.productName}</h3>
+                <button className="close-modal" onClick={closeModal}>
+                  &times;
                 </button>
-                {specificationsOpen && (
-                  <>
-                    <label>
-                      Material:
-                      <input
-                        type="text"
-                        name="specifications.material"
-                        value={currentProduct.specifications?.material || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                    <label>
-                      Bead Size:
-                      <input
-                        type="text"
-                        name="specifications.beadSize"
-                        value={currentProduct.specifications?.beadSize || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                    <label>
-                      Bead Shape:
-                      <input
-                        type="text"
-                        name="specifications.beadShape"
-                        value={currentProduct.specifications?.beadShape || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                    <label>
-                      Stringing Material:
-                      <input
-                        type="text"
-                        name="specifications.stringingMaterial"
-                        value={currentProduct.specifications?.stringingMaterial || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                    <label>
-                      Closure Type:
-                      <input
-                        type="text"
-                        name="specifications.closureType"
-                        value={currentProduct.specifications?.closureType || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                    <label>
-                      Weight:
-                      <input
-                        type="text"
-                        name="specifications.weight"
-                        value={currentProduct.specifications?.weight || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                  </>
-                )}
+              </div>
+              
+              <div className="modal-body">
+                <form onSubmit={(e) => e.preventDefault()}>
+                  <div className="form-section">
+                    <h4>Basic Information</h4>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>
+                          Product Name*
+                          <input
+                            type="text"
+                            name="productName"
+                            value={currentProduct.productName || ""}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </label>
+                      </div>
+                      <div className="form-group">
+                        <label>
+                          Category*
+                          <select
+                            name="category"
+                            value={currentProduct.category || ""}
+                            onChange={handleInputChange}
+                            required
+                          >
+                            <option value="">Select category</option>
+                            {categories.map((category) => (
+                              <option key={category} value={category}>
+                                {category}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
+                    </div>
 
-                {/* Customization Section */}
-                <button type="button" onClick={() => setCustomizationOpen(!customizationOpen)}>
-                  {customizationOpen ? "Hide Customization" : "Edit Customization"}
-                </button>
-                {customizationOpen && (
-                  <>
-                    <label>
-                      Color Options:
-                      <input
-                        type="text"
-                        name="colorOptions"
-                        value={currentProduct.colorOptions?.join(", ") || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                    <label>
-                      Images (URLs):
-                      <input
-                        type="text"
-                        name="images"
-                        value={currentProduct.images?.join(", ") || ""}
-                        onChange={handleInputChange}
-                      />
-                    </label>
-                  </>
-                )}
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>
+                          Old Price (₹)
+                          <input
+                            type="number"
+                            name="old_price"
+                            value={currentProduct.old_price || ""}
+                            onChange={handleInputChange}
+                          />
+                        </label>
+                      </div>
+                      <div className="form-group">
+                        <label>
+                          New Price (₹)*
+                          <input
+                            type="number"
+                            name="new_price"
+                            value={currentProduct.new_price || ""}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </label>
+                      </div>
+                      <div className="form-group">
+                        <label>
+                          Stock Quantity*
+                          <input
+                            type="number"
+                            name="stock"
+                            value={currentProduct.stock || ""}
+                            onChange={handleInputChange}
+                            required
+                          />
+                        </label>
+                      </div>
+                    </div>
 
-                <div className="modal-actions">
-                  <button type="button" onClick={updateProduct}>Update</button>
-                  <button type="button" onClick={closeModal}>Cancel</button>
-                </div>
-              </form>
+                    <div className="form-group">
+                      <label>
+                        Description
+                        <textarea
+                          name="description"
+                          value={currentProduct.description || ""}
+                          onChange={handleInputChange}
+                          rows="3"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Specifications Section */}
+                  <div className="form-section">
+                    <div className="section-header" onClick={() => setSpecificationsOpen(!specificationsOpen)}>
+                      <h4>Specifications</h4>
+                      <span className="toggle-icon">
+                        {specificationsOpen ? '−' : '+'}
+                      </span>
+                    </div>
+                    {specificationsOpen && (
+                      <div className="specifications-grid">
+                        <div className="form-group">
+                          <label>
+                            Material
+                            <input
+                              type="text"
+                              name="specifications.material"
+                              value={currentProduct.specifications?.material || ""}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Bead Size
+                            <input
+                              type="text"
+                              name="specifications.beadSize"
+                              value={currentProduct.specifications?.beadSize || ""}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Bead Shape
+                            <input
+                              type="text"
+                              name="specifications.beadShape"
+                              value={currentProduct.specifications?.beadShape || ""}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Stringing Material
+                            <input
+                              type="text"
+                              name="specifications.stringingMaterial"
+                              value={currentProduct.specifications?.stringingMaterial || ""}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Closure Type
+                            <input
+                              type="text"
+                              name="specifications.closureType"
+                              value={currentProduct.specifications?.closureType || ""}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Weight (grams)
+                            <input
+                              type="text"
+                              name="specifications.weight"
+                              value={currentProduct.specifications?.weight || ""}
+                              onChange={handleInputChange}
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Customization Section */}
+                  <div className="form-section">
+                    <div className="section-header" onClick={() => setCustomizationOpen(!customizationOpen)}>
+                      <h4>Customization Options</h4>
+                      <span className="toggle-icon">
+                        {customizationOpen ? '−' : '+'}
+                      </span>
+                    </div>
+                    {customizationOpen && (
+                      <div className="form-row">
+                        <div className="form-group">
+                          <label>
+                            Color Options (comma separated)
+                            <input
+                              type="text"
+                              name="colorOptions"
+                              value={currentProduct.colorOptions?.join(", ") || ""}
+                              onChange={handleInputChange}
+                              placeholder="e.g., Gold, Silver, Rose Gold"
+                            />
+                          </label>
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Image URLs (comma separated)
+                            <input
+                              type="text"
+                              name="images"
+                              value={currentProduct.images?.join(", ") || ""}
+                              onChange={handleInputChange}
+                              placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="modal-actions">
+                    <button type="button" className="cancel-button" onClick={closeModal}>
+                      Cancel
+                    </button>
+                    <button type="button" className="update-button" onClick={updateProduct}>
+                      Update Product
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         )}

@@ -3,7 +3,6 @@ import './Header.css';
 import searchIcon from '../Assets/search-icon.png';
 import { useNavigate } from 'react-router-dom';
 
-// Debounce function to optimize API calls
 const debounce = (func, delay) => {
   let timeout;
   return (args) => {
@@ -20,19 +19,14 @@ const Header = () => {
   const [error, setError] = useState(null);
   const searchRef = useRef(null);
 
-  const navigate = useNavigate(); // Navigation hook
+  const navigate = useNavigate();
 
-  // Toggle the search bar
-  const toggleSearch = () => setSearchOpen(!searchOpen);
-
-  // Handle search input change
   const handleSearchChange = (e) => {
     const input = e.target.value;
     setSearchInput(input);
     fetchResults(input);
   };
 
-  // Debounced fetch function to reduce API calls
   const fetchResults = debounce(async (query) => {
     if (query.trim() === '') {
       setResults([]);
@@ -61,7 +55,6 @@ const Header = () => {
     }
   }, 500);
 
-  // Handle clicks outside to close the search bar
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -72,38 +65,32 @@ const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Navigate to the selected product
   const handleProductClick = (productid) => {
     navigate(`/product/${productid}`);
-    setSearchOpen(false); // Close search after navigation
+    setSearchOpen(false);
   };
 
   return (
     <div className="header">
       <div className="search-container" ref={searchRef}>
-        <img
-          src={searchIcon}
-          alt="Search"
-          className="header-icon"
-          onClick={toggleSearch}
-        />
-        {searchOpen && (
+        <div className={`search-box ${searchOpen ? 'active' : ''}`}>
+          <img src={searchIcon} alt="Search" className="header-icon" />
           <input
             type="text"
             className="search-input"
             placeholder="Search for products..."
             value={searchInput}
             onChange={handleSearchChange}
+            onFocus={() => setSearchOpen(true)}
           />
-        )}
+        </div>
 
-        {/* Search Results */}
         {searchOpen && (
           <div className="search-results">
-            {isLoading && <p>Loading...</p>}
-            {error && <p className="error-message">{error}</p>}
+            {isLoading && <div className="loading-indicator">Loading...</div>}
+            {error && <div className="error-message">{error}</div>}
             {!isLoading && results.length === 0 && searchInput.trim() !== '' && (
-              <p>No results found</p>
+              <div className="no-results">No products found</div>
             )}
             {!isLoading && results.length > 0 && (
               <div className="results-list">

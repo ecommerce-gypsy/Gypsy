@@ -14,7 +14,8 @@ import dashboard from "../Assets/data.png";
 import review from "../Assets/review.png";
 import stock from "../Assets/stock.png";
 import payment from "../Assets/payment.png";
-
+import returnicon from "../Assets/returnicon.png";
+import design from "../Assets/design.png";
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,8 +37,10 @@ const Sidebar = () => {
     { path: "/adminuser", icon: admin, label: "Admin User" },
     { path: "/adminorder", icon: order, label: "Admin Order" },
     { path: "/reviewlist", icon: review, label: "Admin Review" },
-    {path:"/adminoutofstock",icon:stock,label: "Admin Stock"},
-    {path:"/adminpayment",icon:payment,label: "Admin Payment"}
+    {path:"/adminoutofstock",icon:stock,label: "Out Of Stock"},
+    {path:"/adminpayment",icon:payment,label: "Admin Payment"},
+    {path:"/adminreturns",icon:returnicon,label: "Admin Return"},
+    {path:"/addcustomdesign",icon:design,label: "Add Custom Design"}
   ];
 
   return (

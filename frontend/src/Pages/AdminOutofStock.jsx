@@ -136,11 +136,7 @@ const AdminOutOfStock = () => {
         ) : (
           <>
             {errorMessage && <p className="error-text">{errorMessage}</p>}
-            <div className="status-filter">
-              <button onClick={() => setStatusFilter('all')}>All</button>
-              <button onClick={() => setStatusFilter('in-stock')}>In Stock</button>
-              <button onClick={() => setStatusFilter('out-of-stock')}>Out of Stock</button>
-            </div>
+            
             <div className="table-container">
               <table className="product-table">
                 <thead>
@@ -157,7 +153,7 @@ const AdminOutOfStock = () => {
                     <tr key={product._id}>
                       <td>{product.productName}</td>
                       <td>{product.category}</td>
-                      <td>${product.new_price}</td>
+                      <td>₹{product.new_price}</td>
                       <td>{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</td>
                       <td>
                         <div className="action-buttons">

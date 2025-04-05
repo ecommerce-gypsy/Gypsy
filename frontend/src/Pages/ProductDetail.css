@@ -155,37 +155,77 @@ body {
   font-weight: bold;
   color: #212529;
 }
+
+/* Action Buttons Container */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
 /* Add to Cart Button */
 .add-to-cart {
-  display: block;
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(to right, #ff69b4, #ff3385); /* Rose gradient */
-  color: #ffffff; /* White text */
+  flex: 1;
+  padding: 12px;
+  background: linear-gradient(to right, #ff69b4, #ff3385);
+  color: #ffffff;
   border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: bold;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s; /* Smooth transitions */
-  margin-bottom: 10px;
+  transition: all 0.25s ease;
 }
 
-/* Hover Effect */
 .add-to-cart:hover {
-  background: linear-gradient(to right, #ff3385, #ff69b4); /* Reverse rose gradient */
-  transform: scale(1.05); /* Slight zoom effect */
-  color: #ffffff; /* Ensure text color remains white */
+  background: linear-gradient(to right, #ff3385, #ff69b4);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(255, 51, 133, 0.3);
 }
 
-/* Disabled State */
+.add-to-cart:active {
+  transform: translateY(0);
+}
+
 .add-to-cart:disabled {
-  background: linear-gradient(to right, #aaa, #bbb); /* Neutral gradient for disabled state */
-  color: #666; /* Muted text color */
+  background: #cccccc;
+  color: #666666;
   cursor: not-allowed;
-  transform: none; /* No hover effect for disabled state */
+  transform: none;
+  box-shadow: none;
 }
 
+/* Buy Now Button */
+.buy-now {
+  flex: 1;
+  padding: 12px;
+  background: linear-gradient(to right, #ff3385, #ff0066);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.buy-now:hover {
+  background: linear-gradient(to right, #ff0066, #ff3385);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(255, 0, 102, 0.3);
+}
+
+.buy-now:active {
+  transform: translateY(0);
+}
+
+.buy-now:disabled {
+  background: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 
 /* Offers Section */
 .offers {
@@ -208,36 +248,6 @@ body {
   padding-left: 20px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .product-detail {
-    flex-direction: column;
-  }
-
-  .image-gallery, .product-info {
-    width: 100%;
-  }
-}
-.buy-now{
-  display: block;
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(to right, #ff69b4, #ff3385); /* Rose gradient */
-  color: #ffffff; /* White text */
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s; /* Smooth transitions */
-}
-
-/* Hover Effect */
-.buy-now:hover {
-  background: linear-gradient(to right, #ff3385, #ff69b4); /* Reverse rose gradient */
-  transform: scale(1.05); /* Slight zoom effect */
-  color: #ffffff; /* Ensure text color remains white */
-}
 /* Specifications Section */
 .specifications {
   margin-top: 30px;
@@ -279,4 +289,19 @@ body {
 /* Last row styling */
 .spec-item:last-child {
   border-bottom: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-detail {
+    flex-direction: column;
+  }
+
+  .image-gallery, .product-info {
+    width: 100%;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
 }

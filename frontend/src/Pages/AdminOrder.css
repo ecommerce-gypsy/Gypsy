@@ -15,8 +15,14 @@
     text-align: center; /* Center content */
 }
 
-/* Centered Order Management Heading with Gap */
-.admin-title {
+.admin-title-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    min-width: 300px;
+  }
+  
+  .admin-title {
     display: inline-block;
     background: linear-gradient(90deg, #7A8DF7, #0047FF);
     color: white;
@@ -29,16 +35,13 @@
     transition: all 0.3s ease-in-out;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
-    margin: 0 auto; /* Centers the block */
-    margin-bottom: 20px; /* Added spacing below the title */
-}
-
-/* Hover Effect */
-.admin-title:hover {
+  }
+  
+  .admin-title:hover {
     transform: translateY(-2px);
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-}
-
+  }
+  
 /* Table Styling */
 .order-table {
     width: 100%;

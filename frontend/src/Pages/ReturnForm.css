@@ -1,0 +1,179 @@
+/* Return Form Styles with Animations */
+.return-form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    animation: fadeIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .return-form-container h3 {
+    color: #2d3748;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+    text-align: center;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .return-form-container h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff5722, #ff9a44);
+    border-radius: 3px;
+  }
+  
+  .return-form-container p {
+    color: #4a5568;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .return-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .return-form-container label {
+    display: block;
+    margin-bottom: 10px;
+    color: #2d3748;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
+  
+  .return-form-container textarea,
+  .return-form-container input[type="text"] {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    background-color: #f8fafc;
+  }
+  
+  .return-form-container textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+  
+  .return-form-container textarea:focus,
+  .return-form-container input[type="text"]:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+    background-color: #fff;
+  }
+  
+  .return-form-container textarea:hover,
+  .return-form-container input[type="text"]:hover {
+    border-color: #cbd5e0;
+  }
+  
+  .return-form-container button[type="submit"] {
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #ff5722, #ff7043);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .return-form-container button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: all 0.6s ease;
+  }
+  
+  .return-form-container button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+  }
+  
+  .return-form-container button[type="submit"]:hover::before {
+    left: 100%;
+  }
+  
+  .return-form-container button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Message animations */
+  .return-form-container p[style*="color"] {
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    animation: slideUp 0.4s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  
+  @keyframes slideUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .return-form-container p[style*="red"] {
+    background-color: #fff5f5;
+    border-left: 4px solid #fc8181;
+    color: #c53030;
+  }
+  
+  .return-form-container p[style*="green"] {
+    background-color: #f0fff4;
+    border-left: 4px solid #68d391;
+    color: #2f855a;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .return-form-container {
+      margin: 20px;
+      padding: 20px;
+    }
+    
+    .return-form-container h3 {
+      font-size: 1.4rem;
+    }
+  }

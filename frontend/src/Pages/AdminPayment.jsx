@@ -139,9 +139,7 @@ const PaymentDetails = () => {
                         {new Date(payment.paymentDate).toLocaleString()}
                       </td>
                       <td>
-                        <button className="view-btn" onClick={() => handleViewDetails(payment._id)}>
-                          <FaEye className="view-icon" />
-                        </button>
+                        
                         <Trash2 
                           className="delete-icon" 
                           size={20} 

@@ -22,6 +22,12 @@ const Wishlist = () => {
     toast.error("Item removed from wishlist!");
   };
 
+  // Function to handle image errors
+  const handleImageError = (e) => {
+    e.target.src = 'placeholder.jpg'; // Make sure this file exists in your public folder
+    e.target.onerror = null; // Prevent infinite loop if placeholder also fails
+  };
+
   return (
     <div className="wishlist-container">
       <ToastContainer position="top-center" autoClose={1500} />
@@ -44,9 +50,11 @@ const Wishlist = () => {
             {wishlist.map((item) => (
               <div key={item._id} className="wishlist-item">
                 <img
-                  src={item.images[0] || 'placeholder.jpg'}
+                  src={item.images?.[0]?.url || item.images?.[0] || 'placeholder.jpg'}
                   alt={item.productName || 'Product'}
                   className="wishlist-image"
+                  onError={handleImageError}
+                  loading="lazy"
                 />
                 <div className="wishlist-details">
                   <h3>{item.productName || 'Product Name'}</h3>

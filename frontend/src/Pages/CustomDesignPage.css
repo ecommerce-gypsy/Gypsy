@@ -1,66 +1,395 @@
-/* General layout */
-.container {
+/* Design Studio - Base Styles */
+:root {
+  --primary-color: #4361ee;
+  --primary-dark: #3a56d4;
+  --secondary-color: #3f37c9;
+  --accent-color: #4895ef;
+  --light-color: #f8f9fa;
+  --light-gray: #e9ecef;
+  --medium-gray: #ced4da;
+  --dark-gray: #6c757d;
+  --dark-color: #212529;
+  --success-color: #4cc9f0;
+  --warning-color: #f72585;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --box-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --transition-fast: 0.15s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  background-color: #f5f7fa;
+}
+
+/* Layout Structure */
+.design-studio-container {
   display: flex;
-  padding: 20px;
-  gap: 20px;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Design tools section */
-.design-tools {
-  flex: 0 0 30%; /* Set the width of the tools section to 230% of the screen width */
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-  max-width: 230%; /* Prevent the container from exceeding 230% width */
-  overflow-x: hidden;
+.design-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: var(--box-shadow-sm);
+  z-index: 100;
 }
 
-.design-tools h3 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+.design-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
 }
 
-/* Container for icons (tools) */
-.tools-icons {
+.design-summary {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.summary-label {
+  font-weight: 500;
+  color: var(--dark-gray);
+}
+
+.summary-value {
+  font-weight: 600;
+  color: var(--dark-color);
+  background-color: var(--light-gray);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--border-radius-lg);
+}
+
+.design-workspace {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Toolbar Styles */
+.design-toolbar {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-right: 1px solid var(--light-gray);
+  overflow-y: auto;
+}
+
+.tool-section {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.tool-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--dark-gray);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--light-gray);
+  margin-left: 0.75rem;
+}
+
+/* Design Elements */
+.design-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.design-category {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.category-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dark-color);
+}
+
+.design-items-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.design-item {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--light-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  cursor: grab;
+  transition: var(--transition-medium);
+  border: 1px solid var(--light-gray);
+}
+
+.design-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow-sm);
+  border-color: var(--accent-color);
+}
+
+.design-thumbnail {
+  width: 100%;
+  height: 80px;
+  object-fit: contain;
+  background-color: white;
+  padding: 0.5rem;
+}
+
+.design-meta {
+  padding: 0.5rem;
+  background-color: white;
+  border-top: 1px solid var(--light-gray);
+}
+
+.design-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.design-price {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Tool Grid */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.tool-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-}
-
-/* Individual icon buttons */
-.tools-icons img {
-  width: 50px;
-  height: 50px;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background-color: var(--light-color);
+  border: 1px solid var(--light-gray);
+  border-radius: var(--border-radius-md);
   cursor: pointer;
-  transition: transform 0.3s ease, border 0.3s ease;
-  border-radius: 8px;
-  border: 1px solid transparent;
+  transition: var(--transition-fast);
+  font-size: 0.75rem;
+  color: var(--dark-color);
 }
 
-.tools-icons img:hover {
-  transform: scale(1.1); /* Zoom effect on hover */
-  border-color: #007bff; /* Blue border on hover */
+.tool-button:hover {
+  background-color: var(--light-gray);
 }
 
-.canvas-container {
-  flex: 1;
+.tool-button.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.tool-button i {
+  font-size: 1rem;
+}
+
+.tool-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tool-button-wrapper {
   position: relative;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: visible; /* Change from hidden to visible */
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
+}
+
+.color-picker-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  padding: 0.75rem;
+  background-color: white;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--box-shadow-md);
   z-index: 10;
+  margin-bottom: 0.5rem;
+}
+
+.color-picker-dropdown input[type="color"] {
+  width: 100%;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Canvas Area */
+.canvas-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  position: relative;
 }
 
 #designCanvas {
-  width: 1000px;
-  height: 800px;
-  border: 1px solid #000;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background-color: var(--light-color);
+  border: 1px solid var(--medium-gray);
+}
+
+.canvas-controls {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  background-color: white;
+  border-top: 1px solid var(--light-gray);
+}
+
+.primary-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.primary-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.primary-button:disabled {
+  background-color: var(--medium-gray);
+  cursor: not-allowed;
+}
+
+/* Loading and Error States */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-state {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: rgba(247, 37, 133, 0.1);
+  border-radius: var(--border-radius-md);
+  color: var(--warning-color);
+}
+
+.empty-state {
+  padding: 1rem;
+  text-align: center;
+  color: var(--dark-gray);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .design-workspace {
+    flex-direction: column;
+  }
+  
+  .design-toolbar {
+    flex: 0 0 auto;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid var(--light-gray);
+  }
+  
+  #designCanvas {
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .design-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .design-summary {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .design-items-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .tool-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .tool-button-wrapper {
+    grid-column: span 2;
+  }
 }

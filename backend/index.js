@@ -63,6 +63,9 @@ app.use('/api/categories ', categories );
 const returns = require('./routes/admin/return');
 app.use('/api/return', returns);
 
+const chatbotRoutes = require('./routes/ChatbotRoutes');
+app.use('/api/chatbot', chatbotRoutes); // Mount chatbot routes
+
 app.get("/", (req, res) => {
     res.send("Express App is Running");
 });

@@ -5,56 +5,56 @@ import 'font-awesome/css/font-awesome.min.css';
 
 const CustomDesignPage = () => {
   const canvasRef = useRef(null);
-  const [history, setHistory] = useState([]); // { obj, designId, cost }
+  const [history, setHistory] = useState([]);
   const [customDesigns, setCustomDesigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEraser, setIsEraser] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [priceMap, setPriceMap] = useState({});
+  const [activeTool, setActiveTool] = useState(null);
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   useEffect(() => {
-    // Fetch price details for all materials
-    const fetchPricingDetails = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/custom-designs/price-details');
-        if (!response.ok) throw new Error('Failed to fetch pricing details');
-        const data = await response.json();
-        setPriceMap(data);
-      } catch (error) {
-        setError('Error fetching pricing details: ' + error.message);
-      }
-    };
+        // Fetch price details
+        const priceResponse = await fetch('http://localhost:4000/api/custom-designs/price-details');
+        if (!priceResponse.ok) throw new Error('Failed to fetch pricing details');
+        const priceData = await priceResponse.json();
+        setPriceMap(priceData);
 
-    // Fetch custom designs
-    const fetchCustomDesigns = async () => {
-      try {
-        const response = await fetch('http://localhost:4000/api/custom-designs');
-        if (!response.ok) throw new Error('Failed to fetch custom designs');
-        const data = await response.json();
-        const categorizedDesigns = data.reduce((acc, design) => {
+        // Fetch custom designs
+        const designsResponse = await fetch('http://localhost:4000/api/custom-designs');
+        if (!designsResponse.ok) throw new Error('Failed to fetch custom designs');
+        const designsData = await designsResponse.json();
+        
+        const categorizedDesigns = designsData.reduce((acc, design) => {
           const category = design.category[0] || 'Uncategorized';
           if (!acc[category]) acc[category] = [];
           acc[category].push(design);
           return acc;
         }, {});
+        
         setCustomDesigns(categorizedDesigns);
       } catch (error) {
-        setError('Error fetching custom designs: ' + error.message);
+        setError(error.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPricingDetails();
-    fetchCustomDesigns();
+    fetchData();
 
     // Initialize canvas
     if (fabric && fabric.Canvas && !canvasRef.current) {
       const canvas = new fabric.Canvas('designCanvas', {
         width: 1000,
         height: 800,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#f8f9fa',
+        selectionColor: 'rgba(0, 123, 255, 0.3)',
+        selectionBorderColor: '#007bff',
+        selectionLineWidth: 2,
       });
       canvasRef.current = canvas;
     }
@@ -84,6 +84,16 @@ const CustomDesignPage = () => {
         width: 150,
         height: 150,
         opacity: 1,
+        shadow: new fabric.Shadow({
+          color: 'rgba(0,0,0,0.2)',
+          blur: 5,
+          offsetX: 3,
+          offsetY: 3
+        }),
+        cornerStyle: 'circle',
+        cornerColor: '#007bff',
+        cornerSize: 12,
+        transparentCorners: false
       });
 
       const canvasWidth = canvas.getWidth();
@@ -94,6 +104,7 @@ const CustomDesignPage = () => {
       }
 
       canvas.add(img);
+      canvas.setActiveObject(img);
       canvas.renderAll();
 
       const historyItem = { obj: img, designId, cost: itemCost };
@@ -116,8 +127,10 @@ const CustomDesignPage = () => {
     const dataURL = canvas.toDataURL({ format: 'png', quality: 1.0 });
     const link = document.createElement('a');
     link.href = dataURL;
-    link.download = 'custom-design.png';
+    link.download = `custom-design-${new Date().toISOString().slice(0, 10)}.png`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   const handleDragStart = (e, imageUrl, designId) => {
@@ -154,6 +167,7 @@ const CustomDesignPage = () => {
   const startErasing = () => {
     const canvas = canvasRef.current;
     setIsEraser(true);
+    setActiveTool('eraser');
     canvas.isDrawingMode = false;
 
     canvas.on('mouse:down', (e) => {
@@ -181,9 +195,11 @@ const CustomDesignPage = () => {
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
-    canvas.clear();
-    setHistory([]);
-    setTotalPrice(0);
+    if (window.confirm('Are you sure you want to clear the canvas?')) {
+      canvas.clear();
+      setHistory([]);
+      setTotalPrice(0);
+    }
   };
 
   const changeColor = (color) => {
@@ -193,62 +209,155 @@ const CustomDesignPage = () => {
       activeObject.set({ fill: color });
       canvas.renderAll();
     }
+    setShowColorPicker(false);
+  };
+
+  const toggleColorPicker = () => {
+    setShowColorPicker(!showColorPicker);
+    setActiveTool(showColorPicker ? null : 'color');
   };
 
   return (
-    <div className="container">
-      <div className="design-tools">
-        <h3>Design Tools</h3>
-        <div className="tools-icons">
-          {loading ? (
-            <p>Loading designs...</p>
-          ) : error ? (
-            <p style={{ color: 'red' }}>{error}</p>
-          ) : Object.keys(customDesigns).length === 0 ? (
-            <p>No designs found</p>
-          ) : (
-            Object.keys(customDesigns).map((category) => (
-              <div key={category}>
-                <h4>{category}</h4>
-                <div className="design-category">
-                  {customDesigns[category].map((design) => {
-                    const pricing = priceMap[design._id] || { price: 0, priceMultiplier: 1 };
-                    const itemCost = (pricing.price * pricing.priceMultiplier).toFixed(2);
-                    return (
-                      <img
-                        key={design._id}
-                        src={design.image}
-                        alt={design.name}
-                        className="design-icon"
-                        title={`${design.name} - ₹${itemCost}`}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, design.image, design._id)}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            ))
-          )}
-          <h4>--------</h4>
-          <i className="fa fa-eraser fa-2x" title="Eraser Tool" onClick={startErasing}></i>
-          <i className="fa fa-undo fa-2x" title="Undo" onClick={undo}></i>
-          <i className="fa fa-trash fa-2x" title="Clear Canvas" onClick={clearCanvas}></i>
-          <input type="color" title="Change Color" onChange={(e) => changeColor(e.target.value)} />
+    <div className="design-studio-container">
+      <header className="design-header">
+        <h1>Custom Design Studio</h1>
+        <div className="design-summary">
+          <div className="summary-item">
+            <span className="summary-label">Items:</span>
+            <span className="summary-value">{history.length}</span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-label">Total:</span>
+            <span className="summary-value">₹{totalPrice.toFixed(2)}</span>
+          </div>
         </div>
-      </div>
+      </header>
 
-      <div className="canvas-container" onDrop={handleDrop} onDragOver={handleDragOver}>
-        <canvas id="designCanvas"></canvas>
-      </div>
+      <main className="design-workspace">
+        <aside className="design-toolbar">
+          <section className="tool-section">
+            <h3 className="section-title">Design Elements</h3>
+            {loading ? (
+              <div className="loading-state">
+                <div className="loading-spinner"></div>
+                <p>Loading designs...</p>
+              </div>
+            ) : error ? (
+              <div className="error-state">
+                <i className="fa fa-exclamation-triangle"></i>
+                <p>{error}</p>
+              </div>
+            ) : Object.keys(customDesigns).length === 0 ? (
+              <div className="empty-state">
+                <p>No designs available</p>
+              </div>
+            ) : (
+              <div className="design-categories">
+                {Object.keys(customDesigns).map((category) => (
+                  <div key={category} className="design-category">
+                    <h4 className="category-title">{category}</h4>
+                    <div className="design-items-grid">
+                      {customDesigns[category].map((design) => {
+                        const pricing = priceMap[design._id] || { price: 0, priceMultiplier: 1 };
+                        const itemCost = (pricing.price * pricing.priceMultiplier).toFixed(2);
+                        return (
+                          <div 
+                            key={design._id} 
+                            className="design-item"
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, design.image, design._id)}
+                          >
+                            <img
+                              src={design.image}
+                              alt={design.name}
+                              className="design-thumbnail"
+                            />
+                            <div className="design-meta">
+                              <span className="design-name">{design.name}</span>
+                              <span className="design-price">₹{itemCost}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
 
-      <button onClick={handleSaveAsImage} className="save-btn">Save as Image</button>
+          <section className="tool-section">
+            <h3 className="section-title">Design Tools</h3>
+            <div className="tool-grid">
+              <button 
+                className={`tool-button ${activeTool === 'eraser' ? 'active' : ''}`}
+                onClick={startErasing}
+                title="Eraser Tool"
+              >
+                <i className="fa fa-eraser"></i>
+                <span>Eraser</span>
+              </button>
+              
+              <button 
+                className="tool-button" 
+                onClick={undo}
+                title="Undo Last Action"
+                disabled={history.length === 0}
+              >
+                <i className="fa fa-undo"></i>
+                <span>Undo</span>
+              </button>
+              
+              <button 
+                className="tool-button" 
+                onClick={clearCanvas}
+                title="Clear Canvas"
+                disabled={history.length === 0}
+              >
+                <i className="fa fa-trash"></i>
+                <span>Clear</span>
+              </button>
+              
+              <div className="tool-button-wrapper">
+                <button 
+                  className={`tool-button ${activeTool === 'color' ? 'active' : ''}`}
+                  onClick={toggleColorPicker}
+                  title="Change Color"
+                >
+                  <i className="fa fa-tint"></i>
+                  <span>Color</span>
+                </button>
+                {showColorPicker && (
+                  <div className="color-picker-dropdown">
+                    <input 
+                      type="color" 
+                      onChange={(e) => changeColor(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        </aside>
 
-      <div className="price-info">
-        <p>Items Used: {history.length}</p>
-        <p>Total Price: ₹{totalPrice.toFixed(2)}</p>
-      
-      </div>
+        <section 
+          className="canvas-area"
+          onDrop={handleDrop} 
+          onDragOver={handleDragOver}
+        >
+          <canvas id="designCanvas"></canvas>
+          <div className="canvas-controls">
+            <button 
+              className="save-button primary-button"
+              onClick={handleSaveAsImage}
+              disabled={history.length === 0}
+            >
+              <i className="fa fa-download"></i> Export Design
+            </button>
+          </div>
+        </section>
+      </main>
     </div>
   );
 };

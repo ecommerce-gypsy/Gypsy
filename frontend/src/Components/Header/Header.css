@@ -1,7 +1,7 @@
 /* General Header Styles */
 .header {
   display: flex;
-  justify-content: flex-end; /* Align content to the right */
+  justify-content: flex-start; /* Align content to the left */
   align-items: center;
   padding: 10px 20px;
   background-color: #fff;
@@ -12,35 +12,50 @@
 
 /* Search Container */
 .search-container {
+  position: relative;
   display: flex;
   align-items: center;
-  position: relative;
+  margin-right: -250px;
+}
+
+/* Search Box - Icon and Input */
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px 10px;
+  width: 250px;
+  margin-left: -550px;
+}
+
+/* Ensure search bar aligns to the left */
+.search-container {
+  margin-right: 0; /* Remove any automatic centering */
+}
+
+.header-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
 }
 
 /* Search Input Field */
 .search-input {
-  padding: 10px 14px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  flex-grow: 1;
+  border: none;
   outline: none;
-  width: 250px;
-  transition: width 0.3s ease;
+  font-size: 16px;
+  padding: 8px;
+
 }
 
-/* Search Icon */
-.header-icon {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-/* Position search results to the right */
+/* Position search results */
 .search-results {
   position: absolute;
-  top: 50px; /* Position below the search bar */
-  right: 0; /* Align to the right */
+  top: 40px; /* Position below the search bar */
+  left: 0; /* Align to the left */
   width: 300px;
   background-color: white;
   border: 1px solid #ccc;
@@ -50,6 +65,7 @@
   overflow-y: auto;
   z-index: 1000;
   padding: 15px 10px;
+  margin-left: -550px;
 }
 
 /* Result List */
@@ -109,7 +125,7 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .search-input {
+  .search-box {
     width: 200px;
   }
 

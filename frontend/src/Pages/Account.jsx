@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Account.css";
 import { WishlistContext } from "../Context/WishlistContext";
+import "./Account.css";
 
 function Account() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("personal");
+  const [activeTab, setActiveTab] = useState("orders");
   const [formData, setFormData] = useState({
     street: "",
     city: "",
@@ -30,6 +30,7 @@ function Account() {
   const navigate = useNavigate();
   const { wishlist } = useContext(WishlistContext);
 
+  // Fetch user data and orders
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,9 +41,14 @@ function Account() {
           return;
         }
 
-        const userResponse = await fetch("http://localhost:4000/api/address/account", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const [userResponse, ordersResponse] = await Promise.all([
+          fetch("http://localhost:4000/api/address/account", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch("http://localhost:4000/api/address/orders", {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+        ]);
 
         if (userResponse.ok) {
           const data = await userResponse.json();
@@ -52,10 +58,6 @@ function Account() {
           const errorData = await userResponse.json();
           setError(errorData.message || "Failed to fetch account details.");
         }
-
-        const ordersResponse = await fetch("http://localhost:4000/api/address/orders", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
 
         if (ordersResponse.ok) {
           const orderData = await ordersResponse.json();
@@ -107,46 +109,41 @@ function Account() {
     const token = localStorage.getItem("auth_token");
     if (!token) return;
 
-    if (editIndex !== null) {
-      const address = addresses[editIndex];
-      if (!address || !address._id) {
-        setNotification({ message: "Address not found.", type: "error", visible: true });
-        return;
-      }
-      const response = await fetch(`http://localhost:4000/api/address/update-address/${address._id}`, {
-        method: "PUT",
+    try {
+      const endpoint = editIndex !== null 
+        ? `http://localhost:4000/api/address/update-address/${addresses[editIndex]._id}`
+        : "http://localhost:4000/api/address/add-address";
+      
+      const method = editIndex !== null ? "PUT" : "PUT";
+      
+      const response = await fetch(endpoint, {
+        method,
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
+      
       const data = await response.json();
+      
       if (response.ok) {
         setAddresses(data.user.address);
-        setNotification({ message: "Address updated successfully!", type: "success", visible: true });
+        setNotification({ 
+          message: editIndex !== null 
+            ? "Address updated successfully!" 
+            : "Address added successfully!", 
+          type: "success", 
+          visible: true 
+        });
         setFormData({ street: "", city: "", state: "", pincode: "", phone: "", landmark: "" });
         setEditIndex(null);
       } else {
         setNotification({ message: data.message || "Failed to save address.", type: "error", visible: true });
       }
-    } else {
-      const response = await fetch("http://localhost:4000/api/address/add-address", {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setAddresses(data.user.address);
-        setNotification({ message: "Address added successfully!", type: "success", visible: true });
-        setFormData({ street: "", city: "", state: "", pincode: "", phone: "", landmark: "" });
-      } else {
-        setNotification({ message: data.message || "Failed to save address.", type: "error", visible: true });
-      }
+    } catch (error) {
+      console.error("Error saving address:", error);
+      setNotification({ message: "An error occurred while saving address.", type: "error", visible: true });
     }
   };
 
@@ -156,7 +153,7 @@ function Account() {
   };
 
   const handleReturnRequest = (orderId, productId) => {
-    navigate(`/return-request`, { state: { orderId, productId } });
+    navigate(`/returnform`, { state: { orderId, productId } });
   };
 
   const handleDeleteAddress = async (index) => {
@@ -164,24 +161,33 @@ function Account() {
       setNotification({ message: "No addresses available.", type: "info", visible: true });
       return;
     }
+    
     const addressId = addresses[index]?._id;
     if (!addressId) {
       setNotification({ message: "Address ID not found.", type: "error", visible: true });
       return;
     }
+    
     const token = localStorage.getItem("auth_token");
     if (!token) return;
 
-    const response = await fetch(`http://localhost:4000/api/address/delete-address/${addressId}`, {
-      method: "DELETE",
-      headers: { "Authorization": `Bearer ${token}` },
-    });
-    const data = await response.json();
-    if (response.ok) {
-      setAddresses(data.user.address);
-      setNotification({ message: "Address deleted successfully!", type: "success", visible: true });
-    } else {
-      setNotification({ message: data.message || "Failed to delete address.", type: "error", visible: true });
+    try {
+      const response = await fetch(`http://localhost:4000/api/address/delete-address/${addressId}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setAddresses(data.user.address);
+        setNotification({ message: "Address deleted successfully!", type: "success", visible: true });
+      } else {
+        setNotification({ message: data.message || "Failed to delete address.", type: "error", visible: true });
+      }
+    } catch (error) {
+      console.error("Error deleting address:", error);
+      setNotification({ message: "An error occurred while deleting address.", type: "error", visible: true });
     }
   };
 
@@ -189,11 +195,14 @@ function Account() {
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
+      
       const response = await fetch(`http://localhost:4000/orders/${orderId}`, {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}` },
       });
+      
       const data = await response.json();
+      
       if (response.ok && data.success) {
         setSelectedOrder(data.order);
         setIsModalOpen(true);
@@ -211,15 +220,22 @@ function Account() {
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
+      
       const response = await fetch("http://localhost:4000/api/reviews", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ productid: selectedProductId, rating, reviewText }),
+        body: JSON.stringify({ 
+          productid: selectedProductId, 
+          rating, 
+          reviewText 
+        }),
       });
+      
       const data = await response.json();
+      
       if (response.ok) {
         setSubmitMessage("Review posted successfully");
         setSubmitError("");
@@ -260,260 +276,497 @@ function Account() {
     }
   }, [notification.visible]);
 
-  const OrderDetailsModal = ({ order, closeModal }) => {
-    if (!order) return null;
-    const shippingAddress = order.shippingAddress || {};
-    const billingAddress = order.billingAddress || {};
-
-    return (
-      <div className="modal-overlay">
-        <div className="modal">
-          <h2>Order Details</h2>
-          <div>
-            <h3>Order Items:</h3>
-            {order.items.map((item, index) => (
-              <div key={index}>
-                <img src={item.images[0] || "placeholder.jpg"} alt={item.productName} width="50" height="50" />
-                <p>{item.productName} (x{item.quantity})</p>
-                <p>Price: ₹{item.price}</p>
-              </div>
-            ))}
-          </div>
-          <div>
-            <p><strong>Total Price: ₹{order.totalPrice}</strong></p>
-            <p><strong>Status:</strong> {order.orderStatus}</p>
-            <p><strong>Payment Status:</strong> {order.paymentStatus}</p>
-            <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
-          </div>
-          <div>
-            <h3>Shipping Address:</h3>
-            <p>{shippingAddress.name || "N/A"}</p>
-            <p>{shippingAddress.address || "N/A"}</p>
-            <p>{shippingAddress.city}, {shippingAddress.postalCode || "N/A"}</p>
-            <p>{shippingAddress.country || "N/A"}</p>
-            <p>Contact {shippingAddress.phone || "N/A"}</p>
-          </div>
-          <div>
-            <h3>Billing Address:</h3>
-            <p>{billingAddress.name || "N/A"}</p>
-            <p>{billingAddress.address || "N/A"}</p>
-            <p>{billingAddress.city}, {billingAddress.postalCode || "N/A"}</p>
-            <p>{billingAddress.country || "N/A"}</p>
-            <p>Contact {billingAddress.phone || "N/A"}</p>
-          </div>
-          <button className="close-modal-btn" onClick={closeModal}>Close</button>
-        </div>
-      </div>
-    );
-  };
-
-  const ReviewModal = () => (
-    <div style={{
-      position: "fixed",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      background: "white",
-      padding: "20px",
-      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-      borderRadius: "8px",
-      zIndex: "1000"
-    }}>
-      <div style={{ position: "relative" }}>
-        <span
-          style={{ position: "absolute", top: "5px", right: "10px", cursor: "pointer", fontSize: "20px" }}
-          onClick={() => setShowReviewModal(false)}
-        >
-          ×
-        </span>
-        <h3>Write a Review</h3>
-        {submitMessage && <p style={{ color: "green" }}>{submitMessage}</p>}
-        {submitError && <p style={{ color: "red" }}>{submitError}</p>}
-        <form onSubmit={handleReviewSubmit}>
-          <label>Rating:</label>
-          <div>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <span
-                key={star}
-                style={{ color: star <= rating ? "gold" : "#ccc", cursor: "pointer", fontSize: "24px" }}
-                onClick={() => setRating(star)}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-          <label style={{ display: "block", marginTop: "10px" }}>Review:</label>
-          <textarea
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            style={{ width: "100%", minHeight: "100px", marginTop: "5px" }}
-            placeholder="Write your review here..."
-            required
-          />
-          <button
-            type="submit"
-            style={{ marginTop: "10px", padding: "8px 16px", background: "#4CAF50", color: "white", border: "none", borderRadius: "4px" }}
-          >
-            Submit Review
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-
   const handleWishlistClick = (productId) => {
     navigate(`/product/${productId}`);
   };
 
   if (error) return <div className="error-message">{error}</div>;
-  if (!userData) return <div>Loading...</div>;
+  if (!userData) return <div className="loading-spinner"></div>;
 
   return (
-    <div className="account-container">
-      <div className="account-header">
-        <h1>Account</h1>
-        <p>Name: {userData.name}</p>
-        {userData.addresses && userData.addresses.length > 0 ? (
-          <p>
-            Address: {userData.addresses[0].street}, {userData.addresses[0].landmark}, {userData.addresses[0].city},
-            {userData.addresses[0].state}, {userData.addresses[0].pincode}
-          </p>
-        ) : (
-          <p>Address: Not provided</p>
-        )}
-        {userData.addresses?.[0]?.phone ? (
-          <p>Phone: {userData.addresses[0].phone}</p>
-        ) : (
-          <p>Phone: Not provided</p>
-        )}
-        <button className="logout-button" onClick={handleLogout}>Log out</button>
-      </div>
-
+    <div className="account-dashboard">
+      {/* Notification Alert */}
       {notification.visible && (
         <div className={`notification-alert ${notification.type} ${notification.visible ? "visible" : ""}`}>
           {notification.message}
+          <button className="notification-close" onClick={closeNotification}>
+            &times;
+          </button>
         </div>
       )}
 
-      <div className="tabs">
-        <button className={activeTab === "orders" ? "active" : ""} onClick={() => setActiveTab("orders")}>My Orders</button>
-        <button className={activeTab === "addresses" ? "active" : ""} onClick={() => setActiveTab("addresses")}>My Addresses</button>
-        <button className={activeTab === "wishlist" ? "active" : ""} onClick={() => setActiveTab("wishlist")}>Wishlist</button>
+      {/* User Profile Header */}
+      <div className="profile-header">
+        <div className="profile-avatar">
+          <span>{userData.name.charAt(0).toUpperCase()}</span>
+        </div>
+        <div className="profile-info">
+          <h1>{userData.name}</h1>
+          <p>{userData.email}</p>
+          <button className="logout-btn" onClick={handleLogout}>
+            <i className="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
       </div>
 
-      <div className="tab-content">
+      {/* Dashboard Navigation */}
+      <nav className="dashboard-nav">
+        <ul>
+          <li className={activeTab === "orders" ? "active" : ""} onClick={() => setActiveTab("orders")}>
+            <i className="fas fa-shopping-bag"></i> Orders
+          </li>
+          <li className={activeTab === "addresses" ? "active" : ""} onClick={() => setActiveTab("addresses")}>
+            <i className="fas fa-map-marker-alt"></i> Addresses
+          </li>
+          <li className={activeTab === "wishlist" ? "active" : ""} onClick={() => setActiveTab("wishlist")}>
+            <i className="fas fa-heart"></i> Wishlist
+          </li>
+        </ul>
+      </nav>
+
+      {/* Dashboard Content */}
+      <div className="dashboard-content">
+        {/* Orders Tab */}
         {activeTab === "orders" && (
-          <div className="section-container">
-            <h2>My Orders</h2>
-            <div className="orders-container">
-              {orders.length > 0 ? (
-                orders.map((order, index) => (
-                  <div key={index} className="order-item">
-                    <h3>Order #{order._id}</h3>
-                    <p>Order Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                    <div className="order-items">
-                      {order.items.map((item, itemIdx) => (
-                        <div key={itemIdx} className="order-item-details" style={{ display: "flex", alignItems: "center", margin: "10px 0" }}>
-                          <img
-                            src={item.images[0] || "placeholder.jpg"}
-                            alt={item.productName}
-                            style={{ width: "50px", height: "50px", marginRight: "10px" }}
+          <div className="orders-section">
+            <h2><i className="fas fa-shopping-bag"></i> My Orders</h2>
+            {orders.length > 0 ? (
+              <div className="orders-grid">
+                {orders.map((order) => (
+                  <div key={order._id} className="order-card">
+                    <div className="order-header">
+                      <div>
+                        <span className="order-id">Order #{order._id.slice(-8).toUpperCase()}</span>
+                        <span className="order-date">
+                          {new Date(order.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'short', day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                      <span className={`order-status ${order.orderStatus.toLowerCase()}`}>
+                        {order.orderStatus}
+                      </span>
+                    </div>
+
+                    <div className="order-items-preview">
+                      {order.items.slice(0, 3).map((item, idx) => (
+                        <div key={idx} className="order-item-preview">
+                          <img 
+                            src={item.images[0] || "/placeholder-product.jpg"} 
+                            alt={item.productName} 
+                            className="product-thumbnail"
                           />
-                          <div>
-                            <p>{item.productName} (x{item.quantity})</p>
-                            <p>Price: ₹{item.price}</p>
+                          <div className="product-info">
+                            <h4>{item.productName}</h4>
+                            <p>{item.quantity} × ₹{item.price.toFixed(2)}</p>
                           </div>
                         </div>
                       ))}
+                      {order.items.length > 3 && (
+                        <div className="more-items">
+                          +{order.items.length - 3} more items
+                        </div>
+                      )}
                     </div>
-                    <p>Total Price: ₹{order.totalPrice}</p>
-                    <p>Status: <span className={`order-status ${order.orderStatus.toLowerCase()}`}>{order.orderStatus}</span></p>
-                    <button className="view-details-btn" onClick={() => fetchOrderDetails(order._id)}>View Details</button>
-                    {order.orderStatus === "Delivered" && order.items.map((item, idx) => (
-  <div key={idx} style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-    <button
-      className="review-btn"
-      onClick={() => openReviewModal(item.productid)}
-      style={{ padding: "5px 10px", background: "#2196F3", color: "white", border: "none", borderRadius: "4px" }}
-    >
-      Write a Review for {item.productName}
-    </button>
-    <button
-      className="return-btn"
-      onClick={() => handleReturnRequest(order._id, item.productid)}
-      style={{ padding: "5px 10px", background: "#FF5733", color: "white", border: "none", borderRadius: "4px" }}
-    >
-      Return {item.productName}
-    </button>
-  </div>
-))}
+
+                    <div className="order-footer">
+                      <div className="order-total">
+                        Total: ₹{order.totalPrice.toFixed(2)}
+                      </div>
+                      <div className="order-actions">
+                        <button 
+                          className="view-details-btn"
+                          onClick={() => fetchOrderDetails(order._id)}
+                        >
+                          View Details
+                        </button>
+                      </div>
+                    </div>
+
+                    {order.orderStatus === "Delivered" && (
+                      <div className="post-delivery-actions">
+                        {order.items.map((item, idx) => (
+                          <div key={idx} className="item-actions">
+                            <button
+                              className="review-btn"
+                              onClick={() => openReviewModal(item.productid)}
+                            >
+                              Review {item.productName}
+                            </button>
+                            <button
+                              className="return-btn"
+                              onClick={() => handleReturnRequest(order._id, item.productid)}
+                            >
+                              Return Item
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                ))
-              ) : (
-                <p>You have no orders yet.</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "addresses" && (
-          <div className="section-container">
-            <h2>Manage Addresses</h2>
-            <div className="address-form">
-              <input type="text" name="street" placeholder="Street" value={formData.street} onChange={handleChange} />
-              <input type="text" name="landmark" placeholder="Landmark" value={formData.landmark} onChange={handleChange} />
-              <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
-              <input type="text" name="state" placeholder="State" value={formData.state} onChange={handleChange} />
-              <input type="text" name="pincode" placeholder="Pincode" value={formData.pincode} onChange={handleChange} />
-              <input type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} />
-              <button className="save-btn" onClick={handleSaveAddress}>{editIndex !== null ? "Update" : "Save"} Address</button>
-            </div>
-
-            <h3>Saved Addresses</h3>
-            {addresses.length > 0 ? (
-              <ul>
-                {addresses.map((address, index) => (
-                  <li key={index} className="address-item">
-                    <p>{address.street}, {address.landmark}, {address.city}, {address.state}, {address.pincode}</p>
-                    <p>Phone: {address.phone}</p>
-                    <button className="edit-btn" onClick={() => handleEditAddress(index)}>Edit</button>
-                    <button className="delete-btn" onClick={() => handleDeleteAddress(index)}>Delete</button>
-                  </li>
                 ))}
-              </ul>
+              </div>
             ) : (
-              <p>No addresses saved.</p>
+              <div className="empty-state">
+                <i className="fas fa-shopping-bag fa-3x"></i>
+                <h3>No Orders Yet</h3>
+                <p>You haven't placed any orders with us yet.</p>
+                <button className="shop-now-btn" onClick={() => navigate("/")}>
+                  Start Shopping
+                </button>
+              </div>
             )}
           </div>
         )}
 
-        {activeTab === "wishlist" && (
-          <div className="section-container">
-            <h2>My Wishlist</h2>
-            <div className="wishlist-container">
-              {wishlist.length > 0 ? (
-                wishlist.map((item, index) => (
-                  <div 
-                    key={index} 
-                    className="wishlist-item" 
-                    onClick={() => handleWishlistClick(item.productid)}
-                    style={{ cursor: "pointer" }}
+        {/* Addresses Tab */}
+        {activeTab === "addresses" && (
+          <div className="addresses-section">
+            <h2><i className="fas fa-map-marker-alt"></i> My Addresses</h2>
+            
+            <div className="address-form-container">
+              <h3>{editIndex !== null ? "Edit Address" : "Add New Address"}</h3>
+              <div className="address-form-grid">
+                <div className="form-group">
+                  <label>Street Address*</label>
+                  <input
+                    type="text"
+                    name="street"
+                    value={formData.street}
+                    onChange={handleChange}
+                    placeholder="House No., Building, Street"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Landmark*</label>
+                  <input
+                    type="text"
+                    name="landmark"
+                    value={formData.landmark}
+                    onChange={handleChange}
+                    placeholder="Nearby location"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>City*</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    placeholder="Your city"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>State*</label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    placeholder="Your state"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Pincode*</label>
+                  <input
+                    type="text"
+                    name="pincode"
+                    value={formData.pincode}
+                    onChange={handleChange}
+                    placeholder="6-digit pincode"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Phone Number*</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="10-digit mobile number"
+                  />
+                </div>
+              </div>
+              <div className="form-actions">
+                {editIndex !== null && (
+                  <button 
+                    className="cancel-btn"
+                    onClick={() => {
+                      setFormData({ street: "", city: "", state: "", pincode: "", phone: "", landmark: "" });
+                      setEditIndex(null);
+                    }}
                   >
-                    <img src={item.images?.[0] || "placeholder.jpg"} alt={item.productName || "Product"} />
-                    <p>{item.productName || "Product Name"}</p>
-                    <p>Price: ₹{item.new_price || "Product Price"}</p>
-                  </div>
-                ))
+                    Cancel
+                  </button>
+                )}
+                <button className="save-btn" onClick={handleSaveAddress}>
+                  {editIndex !== null ? "Update Address" : "Save Address"}
+                </button>
+              </div>
+            </div>
+
+            <div className="saved-addresses">
+              <h3>Saved Addresses</h3>
+              {addresses.length > 0 ? (
+                <div className="address-grid">
+                  {addresses.map((address, index) => (
+                    <div key={index} className="address-card">
+                      <div className="address-details">
+                        <p className="address-name">{address.name || "No name"}</p>
+                        <p>{address.street}, {address.landmark}</p>
+                        <p>{address.city}, {address.state} - {address.pincode}</p>
+                        <p className="address-phone">
+                          <i className="fas fa-phone"></i> {address.phone}
+                        </p>
+                      </div>
+                      <div className="address-actions">
+                        <button 
+                          className="edit-btn"
+                          onClick={() => handleEditAddress(index)}
+                        >
+                          <i className="fas fa-edit"></i> Edit
+                        </button>
+                        <button 
+                          className="delete-btn"
+                          onClick={() => handleDeleteAddress(index)}
+                        >
+                          <i className="fas fa-trash"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <p>Your wishlist is empty.</p>
+                <div className="empty-state">
+                  <i className="fas fa-map-marker-alt fa-3x"></i>
+                  <h3>No Saved Addresses</h3>
+                  <p>You haven't saved any addresses yet.</p>
+                </div>
               )}
             </div>
           </div>
         )}
+
+        {/* Wishlist Tab */}
+        {activeTab === "wishlist" && (
+          <div className="wishlist-section">
+            <h2><i className="fas fa-heart"></i> My Wishlist</h2>
+            {wishlist.length > 0 ? (
+              <div className="wishlist-grid">
+                {wishlist.map((item) => (
+                  <div 
+                    key={item.productid} 
+                    className="wishlist-card"
+                    onClick={() => handleWishlistClick(item.productid)}
+                  >
+                    <div className="wishlist-image">
+                      <img 
+                        src={item.images?.[0] || "/placeholder-product.jpg"} 
+                        alt={item.productName || "Product"} 
+                      />
+                      <div className="wishlist-overlay">
+                        <button className="view-product-btn">
+                          View Product
+                        </button>
+                      </div>
+                    </div>
+                    <div className="wishlist-details">
+                      <h3>{item.productName || "Product Name"}</h3>
+                      <p className="price">₹{item.new_price || item.price || "N/A"}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <i className="fas fa-heart fa-3x"></i>
+                <h3>Your Wishlist is Empty</h3>
+                <p>Save items you love to your wishlist for later.</p>
+                <button className="shop-now-btn" onClick={() => navigate("/")}>
+                  Start Shopping
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {isModalOpen && <OrderDetailsModal order={selectedOrder} closeModal={() => setIsModalOpen(false)} />}
-      {showReviewModal && <ReviewModal />}
+      {/* Order Details Modal */}
+      {isModalOpen && selectedOrder && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <div className="modal-header">
+              <h2>Order Details</h2>
+              <button 
+                className="modal-close-btn"
+                onClick={() => setIsModalOpen(false)}
+              >
+                &times;
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="order-summary">
+                <div className="summary-item">
+                  <span>Order ID:</span>
+                  <span>{selectedOrder._id}</span>
+                </div>
+                <div className="summary-item">
+                  <span>Order Date:</span>
+                  <span>
+                    {new Date(selectedOrder.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                  </span>
+                </div>
+                <div className="summary-item">
+                  <span>Status:</span>
+                  <span className={`status-badge ${selectedOrder.orderStatus.toLowerCase()}`}>
+                    {selectedOrder.orderStatus}
+                  </span>
+                </div>
+                <div className="summary-item">
+                  <span>Payment:</span>
+                  <span>
+                    {selectedOrder.paymentMethod} ({selectedOrder.paymentStatus})
+                  </span>
+                </div>
+                <div className="summary-item total">
+                  <span>Total Amount:</span>
+                  <span>₹{selectedOrder.totalPrice.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div className="order-items-details">
+                <h3>Order Items ({selectedOrder.items.length})</h3>
+                <div className="items-list">
+                  {selectedOrder.items.map((item, idx) => (
+                    <div key={idx} className="order-item-detail">
+                      <div className="item-image">
+                        <img 
+                          src={item.images[0] || "/placeholder-product.jpg"} 
+                          alt={item.productName} 
+                        />
+                      </div>
+                      <div className="item-info">
+                        <h4>{item.productName}</h4>
+                        <p>Quantity: {item.quantity}</p>
+                        <p>Price: ₹{item.price.toFixed(2)}</p>
+                        <p>Subtotal: ₹{(item.quantity * item.price).toFixed(2)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="address-details-grid">
+                <div className="address-section">
+                  <h3>Shipping Address</h3>
+                  {selectedOrder.shippingAddress ? (
+                    <>
+                      <p>{selectedOrder.shippingAddress.name}</p>
+                      <p>{selectedOrder.shippingAddress.address}</p>
+                      <p>{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.postalCode}</p>
+                      <p>{selectedOrder.shippingAddress.country}</p>
+                      <p>Phone: {selectedOrder.shippingAddress.phone}</p>
+                    </>
+                  ) : (
+                    <p>No shipping address provided</p>
+                  )}
+                </div>
+                <div className="address-section">
+                  <h3>Billing Address</h3>
+                  {selectedOrder.billingAddress ? (
+                    <>
+                      <p>{selectedOrder.billingAddress.name}</p>
+                      <p>{selectedOrder.billingAddress.address}</p>
+                      <p>{selectedOrder.billingAddress.city}, {selectedOrder.billingAddress.postalCode}</p>
+                      <p>{selectedOrder.billingAddress.country}</p>
+                      <p>Phone: {selectedOrder.billingAddress.phone}</p>
+                    </>
+                  ) : (
+                    <p>Same as shipping address</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                className="close-modal-btn"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div className="modal-overlay">
+          <div className="review-modal-container">
+            <div className="modal-header">
+              <h2>Write a Review</h2>
+              <button 
+                className="modal-close-btn"
+                onClick={() => setShowReviewModal(false)}
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="modal-body">
+              {submitMessage ? (
+                <div className="success-message">
+                  <i className="fas fa-check-circle"></i>
+                  <p>{submitMessage}</p>
+                </div>
+              ) : (
+                <form onSubmit={handleReviewSubmit}>
+                  <div className="form-group">
+                    <label>Your Rating</label>
+                    <div className="rating-stars">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <i
+                          key={star}
+                          className={`fas fa-star ${star <= rating ? "active" : ""}`}
+                          onClick={() => setRating(star)}
+                        ></i>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Your Review</label>
+                    <textarea
+                      value={reviewText}
+                      onChange={(e) => setReviewText(e.target.value)}
+                      placeholder="Share your experience with this product..."
+                      required
+                    ></textarea>
+                  </div>
+
+                  {submitError && (
+                    <div className="error-message">
+                      <i className="fas fa-exclamation-circle"></i>
+                      <p>{submitError}</p>
+                    </div>
+                  )}
+
+                  <div className="form-actions">
+                    <button type="submit" className="submit-review-btn">
+                      Submit Review
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

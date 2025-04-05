@@ -61,7 +61,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   
   // Hide Navbar, Header, and Chatbot on /login and /admin pages
-  const hideLayout = location.pathname === '/login' || location.pathname === '/admin'|| location.pathname === '/dashboard'|| location.pathname === '/addproduct'|| location.pathname === '/listproduct'|| location.pathname === '/adminuser'|| location.pathname === '/adminorder'|| location.pathname === '/reviewlist'|| location.pathname === '/adminpanel'|| location.pathname === '/adminoutofstock'|| location.pathname === '/adminpayment';
+  const hideLayout = location.pathname === '/login' || location.pathname === '/admin'|| location.pathname === '/dashboard'|| location.pathname === '/addproduct'|| location.pathname === '/listproduct'|| location.pathname === '/adminuser'|| location.pathname === '/adminorder'|| location.pathname === '/reviewlist'|| location.pathname === '/adminpanel'|| location.pathname === '/adminoutofstock'|| location.pathname === '/adminpayment'|| location.pathname === '/adminreturns'|| location.pathname === '/addcustomdesign';
 
   return (
     <>
@@ -122,10 +122,18 @@ const App = () => {
       <Route path="/category/:categoryId" element={<CategoryPage />} /> 
       <Route path="/admincategory" element={<AdminCategory />} />
 
-      <Route path="/return-request" element={<ReturnForm/>} />
-          <Route path="/my-returns" element={<MyReturns/>} />
+
+
+      
+      <Route path="/returnform" element={<ReturnForm/>} />
+          <Route path="/myreturns" element={<MyReturns/>} />
           {/* Admin view */}
-          <Route path="/admin/returns" element={<AdminReturns />} />
+          <Route path="/adminreturns" element={<AdminReturns />} />
+
+        {/* <Route path="/return-request" element={<ReturnForm/>} />
+          <Route path="/my-returns" element={<MyReturns/>} />
+       
+          <Route path="/admin/returns" element={<AdminReturns />} />  */}
       </Routes>
        
       </Layout>

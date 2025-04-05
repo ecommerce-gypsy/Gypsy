@@ -37,7 +37,7 @@ const ProductDetail = () => {
 
   const calculateTotalPrice = () => {
     const basePrice = product?.new_price || 0;
-    return (basePrice * quantity).toFixed(2); // Without category and set multiplier
+    return (basePrice * quantity).toFixed(2);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -74,22 +74,23 @@ const ProductDetail = () => {
           <strong>Total Price (Incl. of all Taxes):</strong> <span>₹ {calculateTotalPrice()}</span>
         </div>
 
-        <button
-          className="add-to-cart"
-          onClick={() => {
-            if (!isInCart(product)) {
-              addToCart(product);
-            }
-          }}
-        >
-          {isInCart(product) ? "In Cart" : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
-        </button>
+        <div className="action-buttons">
+          <button
+            className="add-to-cart"
+            onClick={() => {
+              if (!isInCart(product)) {
+                addToCart(product);
+              }
+            }}
+          >
+            {isInCart(product) ? "In Cart" : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+          </button>
 
-        <button className="buy-now" onClick={() => window.location.href = `/checkout?productId=${productId}&quantity=${quantity}&totalPrice=${calculateTotalPrice()}`}>
-          Buy Now
-        </button>
+          <button className="buy-now" onClick={() => window.location.href = `/checkout?productId=${productId}&quantity=${quantity}&totalPrice=${calculateTotalPrice()}`}>
+            Buy Now
+          </button>
+        </div>
 
-        {/* Updated Specifications Section */}
         <div className="specifications">
           <h2>Product Specifications</h2>
           {product.specifications && Object.keys(product.specifications).length > 0 ? (
@@ -108,7 +109,6 @@ const ProductDetail = () => {
           )}
         </div>
 
-        {/* Review Summary Section */}
         <ReviewSummary productId={productId} />
       </div>
     </div>

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './OrderConfirmation.css'; // Import the CSS file
 
 const OrderConfirmation = () => {
-  const { orderId } = useParams();  // Extract orderId from the URL
+  const { orderId } = useParams();
   const [orderDetails, setOrderDetails] = useState(null);
   const [error, setError] = useState(null);
-
-  
-  const token = localStorage.getItem('auth_token'); 
+  const token = localStorage.getItem('auth_token');
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -16,7 +15,7 @@ const OrderConfirmation = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // Add token to headers
+            'Authorization': `Bearer ${token}`,
           },
         });
 
@@ -35,33 +34,63 @@ const OrderConfirmation = () => {
   }, [orderId, token]);
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="error-message">Error: {error}</div>;
   }
 
   if (!orderDetails) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   return (
-    <div>
-      <h2>Order Confirmation</h2>
-      <p>Order ID: {orderDetails._id}</p>
-      <p>Total Price: ₹{orderDetails.totalPrice}</p>
-      <p>Payment Status: {orderDetails.paymentStatus}</p>
-      <h3>Shipping Address</h3>
-      <p>{orderDetails.shippingAddress.name}</p>
-      <p>{orderDetails.shippingAddress.address}</p>
-      <p>{orderDetails.shippingAddress.city}, {orderDetails.shippingAddress.postalCode}</p>
-      <p>{orderDetails.shippingAddress.country}</p>
-      {/* Render ordered items */}
-      <h3>Ordered Items</h3>
-      <ul>
-        {orderDetails.items.map(item => (
-          <li key={item._id}> {/* Use item._id instead of item.productId */}
-            {item.productName} - {item.quantity} x ₹{item.price}
-          </li>
-        ))}
-      </ul>
+    <div className="order-confirmation-container">
+      <div className="confirmation-card">
+        <div className="confirmation-header">
+          <h2>Order Confirmation</h2>
+          <div className="confirmation-badge">Order Placed Successfully</div>
+        </div>
+        
+        <div className="order-summary">
+          <div className="summary-item">
+            <span className="summary-label">Order ID:</span>
+            <span className="summary-value">{orderDetails._id}</span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-label">Total Price:</span>
+            <span className="summary-value">₹{orderDetails.totalPrice.toFixed(2)}</span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-label">Payment Status:</span>
+            <span className={`status-badge ${orderDetails.paymentStatus.toLowerCase()}`}>
+              {orderDetails.paymentStatus}
+            </span>
+          </div>
+        </div>
+
+        <div className="shipping-section">
+          <h3>Shipping Address</h3>
+          <div className="shipping-details">
+            <p>{orderDetails.shippingAddress.name}</p>
+            <p>{orderDetails.shippingAddress.address}</p>
+            <p>{orderDetails.shippingAddress.city}, {orderDetails.shippingAddress.postalCode}</p>
+            <p>{orderDetails.shippingAddress.country}</p>
+          </div>
+        </div>
+
+        <div className="ordered-items">
+          <h3>Ordered Items</h3>
+          <ul className="items-list">
+            {orderDetails.items.map(item => (
+              <li key={item._id} className="item-card">
+                <div className="item-info">
+                  <span className="item-name">{item.productName}</span>
+                  <span className="item-quantity">{item.quantity} × ₹{item.price.toFixed(2)}</span>
+                </div>
+                <div className="item-total">₹{(item.quantity * item.price).toFixed(2)}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
