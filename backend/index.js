@@ -320,14 +320,13 @@ app.get('/allproducts', async (req, res) => {
         
 //  New Products (Limit to 4)
 app.get('/newcollections', async (req, res) => {
-    try {
-        let newcollection = await Product.find({}).sort({ createdAt: -1 }).limit(4);
-        res.json(newcollection);
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Error fetching new collections", error: error.message });
-    }
+  try {
+    let newcollection = await Product.find({}).sort({ date: -1 }).limit(4);
+    res.json(newcollection);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching new collections", error: error.message });
+  }
 });
-
 
 app.get('/:category', async (req, res) => {
     const category = req.params.category;
